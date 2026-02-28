@@ -1,57 +1,94 @@
-# Agent Instructions & Guidelines
+# Agentic AI Coding Starter Template
 
-You are the main overseer of the current implementation. Your goal is to keep the context window clean and use subagents whenever possible to research what is needed and handle lengthy coding tasks. You should use both task lists (todos) alongside subagents to manage tasks optimally while keeping the context window as free as possible.
+A clean, minimalist starter kit for agentic AI-assisted software development. Provides 7 specialized agent personas and 1 methodology skill, built on the [Agent Skills](https://agentskills.io) open standard for cross-tool compatibility.
 
-## 🛑 Handling Ambiguity & Clarification (CRITICAL)
-Under no circumstances should you make assumptions, take creative liberties, or guess the user's intent if a request or path forward is unclear, incomplete, or ambiguous.
+## What's inside
 
-1. **Codebase First:** For implementation details clearly discoverable via code search, proceed autonomously.
-2. **Ask, Don't Guess:** If a task or decision point cannot be definitively resolved by reading the codebase or docs, you MUST pause execution and ask the user a clarifying question. Do not make the decision yourself.
-3. **Provide Options:** Whenever possible, offer 2-3 logical options when asking for clarification to streamline the user's decision process.
+```
+.claude/
+  skills/           # Agent Skills standard (cross-tool compatible)
+    researcher/     # Codebase exploration and investigation
+    planner/        # Product strategy and task breakdown
+    architect/      # System design and technical decisions
+    engineer/       # Implementation and coding standards
+    reviewer/       # Code review, testing, quality assurance
+    debugger/       # Bug diagnosis and root cause analysis
+    designer/       # UI/UX design and user experience
+    zero-assumptions/  # Requirements interrogation methodology
+  agents/           # Claude Code subagents (isolated context)
+  rules/            # Modular coding rules
+CLAUDE.md           # Project-level instructions
+```
 
----
+## Quick start
 
-## 🧠 Project Memories & Hard-Learned Lessons
-Before planning architecture, writing complex logic, or debugging, you MUST review the `docs/memories.md` file. This file contains hard-learned architectural principles, environment quirks, and past debugging resolutions. It exists to prevent you from falling into previously solved traps.
+### Claude Code
 
-> **💡 Rule of Thumb:** If something in this project's architecture continually confuses you, suggest updating the `docs/memories.md` file to warn future agents.
+1. Copy the `.claude/` directory and `CLAUDE.md` into your project root
+2. Start Claude Code in your project
+3. Skills auto-discover. Use `/researcher`, `/architect`, etc. or let Claude invoke them automatically
+4. Subagents are available via `/agents` for isolated task delegation
 
-### 📂 Dynamic Documentation Discovery
-*(Read on-demand via tools/subagents; do not load all at once; use as needed for specific questions/tasks)*
+### Other tools (Cursor, VS Code, Gemini CLI, etc.)
 
-Before beginning any task, architectural planning, or complex debugging, you MUST perform the following steps to understand the project's documentation layout:
-1. **List Directory:** Use your available tools to recursively list the contents of the `docs/` directory (e.g., `tree docs`, `ls -R docs`, or equivalent file-listing commands).
-2. **Analyze the Tree:** Review the generated file tree to identify which specific guidelines, architectural documents, or standards are relevant to the current user request.
-3. **Read On-Demand:** Read only the files you have identified as immediately useful. Do not load all documentation into your context at once.
+The skills in `.claude/skills/` follow the [Agent Skills open standard](https://agentskills.io). Any compatible tool will discover and activate them automatically.
 
----
+For tools that don't support auto-discovery, copy the relevant `SKILL.md` content into your tool's instruction/rules configuration.
 
-## 📌 Pinned Dependencies (DO NOT upgrade without approval)
-* *Add critical dependency versions here (e.g., `framework-name` ^1.2.3 — newer versions break X feature).*
-* *Add secondary critical dependency here.*
+## The 7 agents
 
----
+| Agent | Consolidates | When to use |
+|-------|-------------|-------------|
+| **Researcher** | Feature Researcher, Data Analyst | Investigating how a feature works, tracing code paths, gathering evidence |
+| **Planner** | Product Manager, Scrum Master, PMM | Defining requirements, breaking down work, prioritizing tasks, GTM strategy |
+| **Architect** | System Architect, Tech Lead | Designing systems, evaluating trade-offs, setting technical direction |
+| **Engineer** | Software Engineer | Writing code, implementing features, fixing bugs |
+| **Reviewer** | QA Tester | Reviewing code quality, designing test strategies, identifying edge cases |
+| **Debugger** | Bug Hunter | Diagnosing defects, root cause analysis, systematic debugging |
+| **Designer** | Product Designer | Mapping user journeys, wireframing, accessibility, interaction design |
 
-## ⚠️ Critical Constraints & Quirks
-* *Add project-specific rules here (e.g., "Always use `currentColor` for SVGs").*
-* *Add build-step constraints here (e.g., "Run `yarn custom-build` after modifying CSS").*
-* *Add data access constraints here (e.g., "Always query via the X repository, never directly").*
+### Methodology skill
 
----
+**zero-assumptions** - A rigorous requirements interrogation methodology. Refuses to proceed with vague specifications. Demands precise constraints before implementation. Use it when scoping complex systems.
 
-## 🏗️ Architecture Boundaries & Routing
-* *Define boundaries between microservices or backend/frontend logic here.*
-* *Define specific routing rules or external integration constraints (e.g., mobile deep linking rules).*
-* *Define database migration rules (e.g., "Migrations must be strictly LIFO").*
+## How skills and agents relate
 
----
+**Skills** (`.claude/skills/`) are portable instruction sets following the Agent Skills standard. They load into the current conversation context when activated. They work across all compatible AI tools.
 
-## 🔄 Agent Environment & Task Lifecycle
-* **Git Behavior:** Set `GIT_SEQUENCE_EDITOR=true` for any git commands that open an editor to prevent terminal locking.
-* **Code Modifications:** Favor minimal, surgical changes with the smallest footprint needed. Do not rewrite files unless necessary.
-* **Post-Task Memory Update (CRITICAL):** Before handing off a completed task, briefly reflect on the implementation. If you encountered any new environment quirks, undocumented constraints, or solved a complex bug, you MUST propose an update to `docs/memories.md` so future agents do not repeat the same mistakes.
-* **Task Completion & Handoff (CRITICAL):** When you determine that the main requested task is fully implemented, **DO NOT terminate the session, exit the agentic loop, or mark the task as complete.**
-* Instead, you must immediately halt all code modifications and terminal commands and explicitly ask the user for their next direction by presenting these options in your text response:
-    * `[1]` Finalize the task.
-    * `[2]` Other: I have further instructions or refinements.
-* **Waiting for Input:** If your specific environment has a built-in tool for prompting the user, use it. Otherwise, output the question directly and **wait for the user's reply** before taking any further actions whatsoever.
+**Agents** (`.claude/agents/`) are Claude Code-specific subagents that run in isolated contexts with their own tool restrictions. Each agent preloads its corresponding skill. Use agents when you want context isolation (e.g., research that reads many files without cluttering your main conversation).
+
+**Rules** (`.claude/rules/`) are always-on coding standards loaded into every Claude Code session. They enforce baseline quality without needing explicit invocation.
+
+## Customization
+
+### Add a new agent
+
+1. Create a skill: `.claude/skills/my-agent/SKILL.md` with required `name` and `description` frontmatter
+2. Optionally create a subagent: `.claude/agents/my-agent.md` that preloads the skill
+3. The agent is immediately available
+
+### Modify an existing agent
+
+Edit the `SKILL.md` file directly. Changes take effect in the next session (or immediately if using live reload).
+
+### Remove an agent
+
+Delete its directory from `.claude/skills/` and its file from `.claude/agents/`.
+
+### Add project-specific rules
+
+Create new `.md` files in `.claude/rules/`. They are loaded automatically.
+
+## Design principles
+
+- **Minimalism over completeness** - Each file earns its place. No redundant explanations.
+- **Progressive disclosure** - Only skill metadata loads at startup (~100 tokens each). Full content loads on activation.
+- **Cross-tool portability** - Skills follow the open standard. Agents and rules enhance Claude Code specifically.
+- **Assume capability** - Instructions tell the model what to do, not what it already knows.
+
+## References
+
+- [Agent Skills specification](https://agentskills.io/specification)
+- [Claude Code subagents](https://code.claude.com/docs/en/sub-agents)
+- [Claude Code skills](https://code.claude.com/docs/en/skills)
+- [Skill authoring best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices)
