@@ -111,7 +111,7 @@ Use real identifiers from the target (table names, endpoint paths, role names, f
 - **State the verification surface.** "Verify in: DB row" is concrete and points to where truth lives. "Verify it works" is not a test case.
 - **Use real identifiers.** Real role names, table names, endpoints, field names from the target. Not "the user" — `owner` or `next-anonymous` or whatever the project calls it.
 - **No execution detail.** Do not pin a framework, a selector strategy, or a test runner. The plan must survive being executed manually, by Playwright, by a browser MCP, or by a human QA.
-- **Skipped dimensions are explicit.** Every Step-1 dimension you skipped appears in *Out of scope* with a one-line reason. Silent omission is the failure mode this section prevents.
+- **Skipped dimensions and skipped cases are explicit.** Every Step-1 dimension you skipped appears in *Out of scope* with a one-line reason. Every case you declined to author for a reason — covered by parity, deferred to a sibling test, blocked on missing fixture — also appears in *Out of scope*, named, with the reason. Silent omission is the failure mode this section prevents.
 - **Coverage Summary is load-bearing.** Someone who reads only that paragraph must know which dimensions are covered and which are not.
 
 ## Forbidden
@@ -122,6 +122,7 @@ Use real identifiers from the target (table names, endpoint paths, role names, f
 - "Smoke test" as a category. Smoke tests are a *subset* of cases tagged by priority, not a dimension.
 - Restating the happy path under multiple dimensions. A single case covers happy-path; negative/boundary/state/etc. are *different* cases, not rephrasings.
 - Speculative future cases ("when feature X ships, we will need…"). Either it is in scope, or it is in *Out of scope*.
+- Silent parity-by-inheritance. "The sibling system covers this" is a valid *Out of scope* entry, not a reason to omit the case without record. If a reader cannot tell which cases you decided not to write, the plan is incomplete.
 
 ## Stopping conditions
 

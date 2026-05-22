@@ -36,6 +36,26 @@ For every result path:
 - What happens mid-operation if the actor cancels, the network drops, the page closes?
 - Is there async work spawned by the operation? Verify the work completes and observable side effects land.
 
+For entity-style targets (nodes, documents, files, projects), walk every
+lifecycle verb the entity exposes. The most common Lifecycle planning gap is
+forgetting one of these — cross-check the UI menus *and* the API surface; if
+the user can invoke it, it needs a case (or an *Out of scope* line):
+
+- Create / upload / register
+- Read / open / view
+- Rename
+- Update / edit content
+- Copy / duplicate
+- Move / re-parent
+- Share / unshare
+- Lock / unlock
+- Archive / restore-from-trash
+- Soft-delete / permanent-delete
+- Transfer ownership
+
+Sub-entities owned by the target (attachments, revisions, child comments)
+need the same CRUD walk — each is a lifecycle of its own.
+
 ### 4. Permissions & authorization
 
 Build the matrix. Rows are roles, columns are actions, cells are expected results.
