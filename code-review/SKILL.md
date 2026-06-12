@@ -184,6 +184,8 @@ echo '{"body": "🤖 **Claude review · ISSUE**\n\n...", "position": {"position_
 
 **Verify after posting:** the response note must have `"type": "DiffNote"` and a non-null `position` (a `DiscussionNote` with null position means the anchor was dropped). Then re-fetch the notes and confirm each anchor line's content matches its finding.
 
+**Replying to GitLab Duo threads:** reply in-thread with `glab mr note create <iid> --reply <discussion-id> -m "..."` (`--reply` accepts a full discussion ID or an 8+ char prefix; get IDs from `glab mr note list <iid> -F json`). Always start the reply with `@GitLabDuo` or the bot won't see it. Verify Duo's premises against ground truth before acting on a finding — it reviews blind to SQL function bodies and the lockfile, so its "if X, then bug" findings (and its suggested fixes) are frequently wrong against the real code. Posting notes needs a token with `api` (write) scope; a read-only token (`read_api`/`ai_workflows`) returns `403 insufficient_scope` on POST — re-auth with `glab auth login --hostname <your-gitlab-host>`.
+
 ## Finish with a summary
 
 End the review with:
