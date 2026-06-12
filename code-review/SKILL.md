@@ -1,6 +1,6 @@
 ---
 name: code-review
-description: Reviews code changes for correctness, security, test coverage, and design quality, producing severity-tagged findings. Supports local changes, specific commits, or GitLab merge requests. Use when user requests a code review, asks to review a diff, branch, commits, or MR. Never pushes to remote.
+description: Reviews code changes for correctness, security, test coverage, and design quality, producing severity-tagged findings. Supports local changes, specific commits, or GitLab merge requests. Use when user requests a code review, asks to review a diff, branch, commits, or MR — or asks to post, publish, or clean up review findings as inline MR comments. Never pushes to remote; never posts comments without user approval.
 ---
 
 # Code Review
@@ -19,7 +19,7 @@ When invoked, **always ask the user** which review mode they want before proceed
 >
 > (Or describe what you'd like reviewed and I'll figure it out.)
 
-Wait for the user's answer. Then proceed based on their choice:
+Wait for the user's answer. If the user already specified what to review when invoking the skill, skip the question and infer the mode. Then proceed based on their choice:
 
 ### Mode 1: Local changes
 - Run `git status` and `git branch --show-current` to orient
@@ -38,6 +38,7 @@ Wait for the user's answer. Then proceed based on their choice:
 - Use `glab mr diff <number>` to get the diff
 - Fetch the source branch locally if needed: `git fetch origin <branch>` (read-only fetch only)
 - Review against the MR's target branch, not just main
+- Fetch the existing MR discussion **before** reviewing: `glab mr note list <iid>` (the REST `/discussions` endpoint misses GitLab Duo notes). Build an exclusion list — do not re-report findings already raised in the comments — and use the thread to learn intent and decisions already made
 
 ## Step 0.5: Scope large reviews into modules
 
@@ -158,6 +159,30 @@ Severity levels:
 - Every BLOCKER and ISSUE must include a concrete suggestion or code sketch.
 - Include at least one PRAISE if the change has any merit. Do not fabricate praise.
 - Do not flag things the linter already catches — just report the lint results.
+
+## Publishing findings as MR comments
+
+Only when the user asks — and **never post anything the user hasn't seen and approved**. MR comments are outward-facing; a flood of them reads as spam and is unpleasant to clean up.
+
+1. **Triage first.** Do not propose every finding from the report — re-filter with senior judgment down to the findings genuinely worth an inline comment (real bugs, data integrity, user-visible defects). Drop speculative findings (no repro, low confidence), nitpicks, hygiene items, and likely-intentional design tradeoffs. A handful of sharp comments lands better than full coverage. Re-fetch the MR discussion right before drafting — the thread may have grown since the review — and drop any finding already raised there by anyone (human, Duo, or a previous Claude pass): never duplicate an existing comment.
+2. **Keep each comment short.** 2–5 sentences: what's wrong, why it matters, concrete fix. No essays, no evidence dumps — the reviewer has the code right there.
+3. **Show drafts, then wait.** Present every draft with its anchor (`file:line` plus the code on that line). Apply the user's corrections and re-show what changed. Post only after an explicit go-ahead, and only the approved set.
+4. **Verify after posting** — never trust the POST alone; see the verification paragraph below. Report the verified anchors back to the user.
+
+**Convention:** every Claude-authored comment starts with the line `🤖 **Claude review · <SEVERITY>**`. It identifies machine-authored comments at a glance and doubles as the cleanup key (delete by sweeping `/notes` for bodies starting with the marker).
+
+**Anchoring — verify before posting.** GitLab accepts any plausible line number without error; wrong anchors post "successfully" as misplaced noise.
+1. Get the MR's current `diff_refs` (`glab api projects/:proj/merge_requests/:iid`) and `git fetch` first. Do not assume the local checkout matches origin — the MR head may have moved since you reviewed (pushes and rebases shift line numbers), so verify anchors against the fetched `head_sha` blobs (`git grep ... <head_sha>`), never against the local working tree.
+2. Locate each anchor in the live head: `git grep -nF '<code snippet>' <head_sha> -- <path>`. Anchor on lines the MR **adds**; a context (unchanged) line requires both `old_line` and `new_line` — and usually means you should anchor on the new code that causes the issue instead.
+
+**Posting:** `glab api -f 'position[...]=...'` **silently drops the position** (glab sends a JSON body, so bracket keys never parse into a nested hash) and leaves an unanchored top-level note. Send a nested JSON payload instead:
+
+```bash
+echo '{"body": "🤖 **Claude review · ISSUE**\n\n...", "position": {"position_type": "text", "base_sha": "...", "head_sha": "...", "start_sha": "...", "new_path": "src/file.ts", "new_line": 42}}' \
+  | glab api projects/:proj/merge_requests/:iid/discussions -X POST -H 'Content-Type: application/json' --input -
+```
+
+**Verify after posting:** the response note must have `"type": "DiffNote"` and a non-null `position` (a `DiscussionNote` with null position means the anchor was dropped). Then re-fetch the notes and confirm each anchor line's content matches its finding.
 
 ## Finish with a summary
 

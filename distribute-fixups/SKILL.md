@@ -12,6 +12,7 @@ Folds uncommitted changes back into the commits that introduced the code they mo
 - [ ] Branch has more than one commit ahead of base (single-commit branches do not need this — just amend)
 - [ ] Working tree has changes to distribute (staged or unstaged)
 - [ ] Branch is not already pushed *to a shared remote that others rebuild from* — if it is, confirm with the user before rewriting history
+- [ ] Repo allows non-interactive rebase via `GIT_SEQUENCE_EDITOR=true` (non-interactive convention — never run `git rebase -i` with a real editor)
 
 ## Source of changes
 
@@ -60,21 +61,19 @@ git add <files-or-paths-for-this-commit>
 git commit --fixup=<sha>
 ```
 
-If a single file has hunks belonging to **different** originating commits, split them with `git add -p`. In environments that disallow interactive git, stash, restore one hunk at a time via patch, and commit between each.
+If a single file has hunks belonging to **different** originating commits, split them with `git add -p` (only acceptable interactive use here — there is no non-interactive equivalent that selects hunks). If `-p` is not allowed in your environment, stash, restore one hunk at a time via patch, and commit between each.
 
 Repeat until the working tree is clean.
 
-### 4. Autosquash
+### 4. Autosquash non-interactively
 
 ```bash
-git rebase -i --autosquash <base>
+GIT_SEQUENCE_EDITOR=true git rebase -i --autosquash <base>
 ```
 
-In non-interactive environments (agents, CI), accept the autosquash-ordered todo list as-is by exiting the sequence editor immediately:
+`GIT_SEQUENCE_EDITOR=true` exits the sequence editor immediately, accepting the autosquash-ordered todo list as-is. No interactive prompt.
 
-```bash
-GIT_SEQUENCE_EDITOR=true git rebase --autosquash <base>
-```
+The `-i` is required: on git < 2.44, `--autosquash` without `-i` is silently ignored — the rebase "succeeds" but the `fixup!` commit is replayed as a normal commit at the tip. With `GIT_SEQUENCE_EDITOR=true`, `-i` never actually prompts.
 
 On conflict: resolve in favor of the **consistent end state** the branch is supposed to reach, not whichever side feels safer. `git add` resolved files, `git rebase --continue`. Do not abort unless you are recovering, not navigating.
 
@@ -97,7 +96,7 @@ Only force-push after step 5 passes. Use `--force-with-lease`, never `--force`:
 git push --force-with-lease
 ```
 
-Never force-push to a protected branch (`main`, `master`, release branches). Warn the user if they ask for it on a shared branch.
+Never force-push to `main`. Warn the user if they ask for it on a shared branch.
 
 ## Red flags
 
