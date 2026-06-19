@@ -94,6 +94,8 @@ Follow these steps in order. Do not skip steps.
 
 Read commit messages (`git log main..HEAD`) or ask the user what the change is trying to accomplish. A review without understanding intent is just pattern matching.
 
+If the branch, commits, or MR reference a tracker issue (e.g. Jira `CLOUD-1234`), fetch that issue and read its **acceptance criteria** — that is the ground-truth definition of intent, and it lets you check the diff against what was actually asked for (missing ACs are a common defect class the code alone won't reveal).
+
 ### 2. Read full files, not just diffs
 
 For every changed file, read the complete file (or at minimum the surrounding function/component). Diffs hide context — you need to understand what the changed code interacts with.
@@ -141,10 +143,12 @@ Project-specific red flags live in the consuming project's conventions documenta
 Structure every finding as:
 
 ```
-**[SEVERITY] file_path:line_number — Short title**
+**[F1] [SEVERITY] file_path:line_number — Short title**
 Description of the issue and why it matters.
 Suggested fix (if you have one).
 ```
+
+Prefix each finding with a short stable ID (`F1`, `F2`, …) so the user can answer by id and ask follow-up questions about a specific finding without re-quoting it.
 
 Severity levels:
 - **BLOCKER** — Must fix before merge. Bugs, security issues, data loss risk.
