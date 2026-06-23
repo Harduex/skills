@@ -7,6 +7,7 @@
 - Do the work yourself; only ask me to run what you can't — password/passphrase prompts, interactive auth, key setup. Don't hand me commands you could run.
 - Verify before you assert. Reproduce/check that a regression, concern, or claim is real before reporting it. Don't present plausible-but-unverified findings as fact.
 - Reuse before inventing. Check for an existing util/pattern/helper before writing a new one; match existing naming and conventions. Don't introduce infrastructure the codebase doesn't already have without flagging it and why (especially in tests).
+- Write comments for the reader, not the diff. Comment only non-inferable rationale about the code's current behavior; never narrate the change that introduced it ("new behavior", "legacy way", "ported from…", "transitional until X") and never restate what the code plainly shows. Git history records the change.
 - Stay in scope. Change only what the task needs; don't touch unrelated code. If a change proves unnecessary, revert it.
 - Fan out parallel agents only when accuracy genuinely warrants it (multi-lens review, cross-checking a risky finding) — not for routine work.
 - Give a senior-level recommendation, not an option dump, when I ask your opinion.
