@@ -50,7 +50,7 @@ It flags any box missing a border, a broken side wall, a misaligned corner, or c
   Always bracket the `[protocol/tech]`. The arrowhead shows direction; the preposition keeps it readable in plain left-to-right text. Keep labels short — a long label widens the whole gap.
 - **Skip-level calls** (a system talks to a non-adjacent one) are `SKIP_EDGES`, routed in a channel below the boxes. Same subject/preposition rule.
 - **Mark deltas with `(NEW)`** on whatever the current change adds; everything unmarked is reused.
-- **One sentence under the diagram defines it by negation** ("No new datastore. No second front door. …"). See the `write-design-spec` skill.
+- **One sentence under the diagram defines it by negation** ("No new datastore. No second front door. …") — the same define-by-negation sentence a design spec carries.
 
 ## Workflow
 
