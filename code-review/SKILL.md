@@ -190,6 +190,14 @@ echo '{"body": "🤖 **Claude review · ISSUE**\n\n...", "position": {"position_
 
 **Replying to GitLab Duo threads:** reply in-thread with `glab mr note create <iid> --reply <discussion-id> -m "..."` (`--reply` accepts a full discussion ID or an 8+ char prefix; get IDs from `glab mr note list <iid> -F json`). Always start the reply with `@GitLabDuo` or the bot won't see it. Verify Duo's premises against ground truth before acting on a finding — it reviews blind to SQL function bodies and the lockfile, so its "if X, then bug" findings (and its suggested fixes) are frequently wrong against the real code. Posting notes needs a token with `api` (write) scope; a read-only token (`read_api`/`ai_workflows`) returns `403 insufficient_scope` on POST — re-auth with `glab auth login --hostname <your-gitlab-host>`.
 
+## Acting on review feedback
+
+When you implement a finding from a reviewer — human or automated:
+
+- **A suggested fix is a hypothesis, not an instruction — and can be worse than the bug.** Verify its full effect before applying, *including the rollback / undo path*. Automated reviewers especially reason without full context (they may not see function bodies, lockfiles, or the data model), so a confidently-worded fix — e.g. a destructive schema change that doesn't cleanly reverse — can introduce a new defect while "addressing" the finding.
+- **Scope the fix to exactly what was asked; don't generalize a narrow comment.** "Tighten the permissions on these two fields" means those two fields — not the whole permission set. Over-applying a scoped instruction to adjacent code is a common way to add a regression while resolving a valid comment. When tempted to widen the change, confirm scope with the reviewer first.
+- **Check the tool's native capability before scripting around it.** A flaky CLI call gets a documented flag or supported mode — not a hand-rolled retry/backoff loop.
+
 ## Finish with a summary
 
 End the review with:

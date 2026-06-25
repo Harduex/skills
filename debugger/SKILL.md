@@ -97,6 +97,8 @@ If you catch yourself thinking any of these, **return to Step 2**:
 - "I don't fully understand but this seems to work."
 - "Let me try changing X and see what happens."
 - "It's probably X, let me fix that." (without evidence)
+- "I'll just filter out the unexpected rows/values." Hiding bad **data** behind a filter or guard is a symptom-fix that passes tests while the bad state persists — find why that data exists. Phantom/orphan rows usually trace to a migration or cascade that didn't clean up; trace the data to its origin and fix it there.
+- "Let me restart the service / tweak the config and see if it goes away." That changes the environment instead of isolating the bug — and can manufacture new failures (see the stash diagnostic below).
 
 **After 3+ failed fix attempts, reassess the root cause.** Each fix revealing a new problem in a different place usually signals an architectural mismatch, not a hypothesis problem. Stop and reconsider fundamentals.
 
@@ -105,6 +107,7 @@ If you catch yourself thinking any of these, **return to Step 2**:
 - **git bisect** — find the commit that introduced a regression.
 - **Stack-trace the setter** (shared-state clobber bugs): when global/context state mysteriously flips and reading the code doesn't reveal the writer, wrap the setter to capture a stack trace per call. One repro lists every writer and their order. Reach for this **before** extended theoretical analysis when the writer is non-obvious.
 - **Error boundary hardening** — temporarily wrap risky calls in try/except (or equivalent) to prevent cascading failures that mask the real upstream error. Revert to strict handling after diagnosis.
+- **Stash to isolate code vs. environment.** When a failure might be your uncommitted changes rather than the code/tool/stack, `git stash` and re-test on a clean tree *before* blaming the environment. Restarting services or editing config to "fix" it usually just adds variables and manufactures new failures (e.g. a restart that changes a container IP and breaks a reverse-proxy upstream). One variable at a time; the clean-tree re-test is the cheapest way to split self-inflicted breakage from a real bug.
 
 ## Constraints
 
