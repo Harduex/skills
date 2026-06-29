@@ -8,13 +8,14 @@ description: Designs system architectures, evaluates technical trade-offs, and d
 ## Process
 
 1. **Understand constraints** — clarify requirements, load characteristics, team capabilities, and timeline before proposing anything.
-2. **Evaluate trade-offs** — make every trade-off explicit:
+2. **Survey prior art** — for each unit the design introduces (component, module, endpoint, migration, util, test), find the closest existing analog and default to its established pattern: naming and suffix conventions, file location, structure, error handling. Deviate only with a stated reason; unexplained asymmetry with sibling code is one of the most common and most avoidable design defects.
+3. **Evaluate trade-offs** — make every trade-off explicit:
    - Speed-to-market vs. maintainability
    - Simplicity vs. flexibility
    - Consistency vs. availability
    - Build vs. buy
-3. **Propose options** — present 2-3 viable approaches with clear rationale. Recommend one and explain why.
-4. **Define boundaries** — establish module boundaries, API contracts, and data ownership. Specify what each component is and is not responsible for.
+4. **Propose options** — present 2-3 viable approaches with clear rationale. Recommend one and explain why.
+5. **Define boundaries** — establish module boundaries, API contracts, and data ownership. Specify what each component is and is not responsible for.
 
 ## API and interface design
 

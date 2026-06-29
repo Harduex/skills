@@ -29,6 +29,7 @@ Use these sections, in this order. Skip a section only if it would genuinely be 
 - **State the threat model.** Any spec touching a boundary answers three questions: what does the backend trust, what does it independently verify, what does a hand-crafted/forged request hit? Make this explicit, not implicit.
 - **Numbers in tradeoffs.** When a decision rests on cost or performance, put the number in the *Why* cell. "Tens of KB per request", "~1% size at 5–10× CPU", "30-minute gateway timeout".
 - **Use codebase identifiers.** Real names from the actual code: `global_admin_role`, not `userRole`; `nodeUuids`, not `ids`; `payment-service`, not "the backend service".
+- **Mirror existing patterns.** When the design introduces a unit that already has siblings in the codebase — a component beside components, an op beside ops, a migration beside migrations — name, place, and shape it like the closest existing one (its suffix conventions, file location, structure). Any deliberate divergence from a sibling pattern belongs in the Key decisions table with its reason, so the choice is reviewable instead of accidental.
 - **Define by negation.** Somewhere in the spec, list what it explicitly does *not* do. Half the value of the doc is fencing off what the design has chosen to skip.
 - **Record what you chose against, not just what you chose.** The rejected-alternatives table is load-bearing — it's the artifact that prevents the same architectural debate from re-opening in six months. If a decision didn't have a serious alternative, don't manufacture one; but if it did, the loser belongs in the table with a one-sentence cause-of-death.
 - **Push implementation out.** Pseudo-code, library choice rationale, error-handling minutiae, internal call ordering — these belong in the plan, not the spec. When tempted, write *"implementation detail, lives in the plan"* and move on.
@@ -61,6 +62,7 @@ Use these sections, in this order. Skip a section only if it would genuinely be 
 - [ ] Exact request / response / error contracts using real codebase names
 - [ ] Threat model stated: what is trusted, what is independently verified, what a forged request hits
 - [ ] `# | Decision | Why` table where each *Why* is self-contained and includes numbers where relevant
+- [ ] New units mirror the closest existing sibling's naming/location/structure, or the divergence is recorded in Key decisions
 - [ ] `Option | Why rejected` table covering the architecture branches not taken, the library bake-off, and any contract decisions with a tempting wrong answer — each row self-contained
 - [ ] `When | Where | Result` failure-modes table covering adversarial inputs and race conditions
 - [ ] Out-of-scope section enumerating deferred items *and* deliberate omissions
