@@ -1,13 +1,13 @@
 ---
 name: write-design-spec
-description: Authors concise, reviewable design specs for features and systems. Enforces a fixed structure (TL;DR, ASCII architecture, contract, decisions table, failure-modes table, out of scope) and an assertive, contract-first style. Use when writing a new design doc, rewriting an existing one, or reviewing a spec for shape and clarity.
+description: Authors concise, reviewable design specs (written before implementation) and as-built architecture decision records (ADRs, written after a feature ships) for features and systems. Enforces a fixed structure (TL;DR, ASCII architecture, contract, decisions table, failure-modes table, out of scope) and an assertive, contract-first style. Use when writing or rewriting a design doc, reviewing a spec for shape and clarity, or — once a branch/feature is finished and ready to ship, or when the user explicitly asks — converting it into an ADR ("convert branch to ADR"). The spec is the pre-implementation artifact; the ADR is the post-ship record — do not create an ADR mid-task or speculatively.
 ---
 
 # Writing Design Specs
 
 A design spec describes the *shape* of a solution — contracts, decisions, tradeoffs, non-goals, *and the alternatives that lost*. Not implementation, not background, not narrative. **A reader who only reads the TL;DR must understand ~90% of the design.** Everything below the TL;DR is elaboration.
 
-A spec is the long-lived source of truth for "what we built and why". It is **not** a pre-implementation artifact that gets abandoned the moment code ships. After ship, update the date line to `(as-built: YYYY-MM-DD)`, add a `**Status:** Authoritative.` line, and reconcile any divergence between the spec and the code — the code wins, the spec gets corrected. This is what replaces a separate ADR.
+A spec is the long-lived source of truth for "what we built and why". It is **not** a pre-implementation artifact that gets abandoned the moment code ships. After ship, update the date line to `(as-built: YYYY-MM-DD)`, add a `**Status:** Authoritative.` line, and reconcile any divergence between the spec and the code — the code wins, the spec gets corrected. In a repo with no separate decision log, this *is* the ADR. In a repo that keeps one (e.g. `docs/adrs/`), promote the settled spec into an ADR there with this same structure — see [Converting a shipped branch into an ADR](#converting-a-shipped-branch-into-an-adr).
 
 ## Required structure
 
@@ -53,6 +53,17 @@ Use these sections, in this order. Skip a section only if it would genuinely be 
 5. Sweep the doc for everything the design deliberately *doesn't* do; consolidate into **Out of scope**.
 6. Strip implementation detail: pseudo-code, library APIs, internal ordering, retry policies. Leave the contract, the invariants, and the *why*.
 7. Replace any rich diagram with an ASCII box-and-arrow if it can carry the same information. Keep the rich one only if removing it loses meaning.
+
+## Converting a shipped branch into an ADR
+
+An ADR is the **as-built** counterpart of the spec — the spec is written *before* the code, the ADR *after*, and the code is its source of truth. **Gate first:** create an ADR only once the implementation is finished and ready to ship, or when the user explicitly asks. Never spin one up mid-task or speculatively — a half-built feature has no settled architecture to record. If the repo keeps no decision log (no `docs/adrs/` or equivalent), **ask the user** whether to start one and where; create the location only if they want it, rather than inventing a path.
+
+1. **Match the log's format.** Read the most recent `docs/adrs/ADR-NNNN-*.md` and mirror its frontmatter (`**Date:** … (as-built: YYYY-MM-DD)`, `**Status:**`, `**Scope:**`, a linked `**Implementation:**` block) and section order. The new file is `ADR-<next-number>-<slug>.md` (the first in a freshly created log is `ADR-0001`).
+2. **Gather the as-built facts** from the shipped branch — exact migration/file paths, contract signatures, role grants, indexes, test paths — and link them. Don't copy a pre-build spec's contract verbatim; verify it against what merged.
+3. **Add a `Plan → as-built deltas` table.** Every place the shipped code diverged from the pre-build spec/plan is a row (`Plan | As-built | Why`). This is the highest-value part of an as-built ADR and the thing a plan-only doc cannot capture.
+4. **Draw the diagram with the diagramming skill** if one is in your set; mark `(NEW)` on what the branch adds.
+5. **Keep rollout out.** Feature flags, percentages, and milestone dates are rollout, not architecture — omit them.
+6. **Remove the superseded planning docs.** Once the ADR absorbs them, `git rm` the pre-build design spec / test plan / implementation plan — git history preserves them — and repoint any ADR links off the deleted files. Confirm deletion + commit with the user first.
 
 ## Review checklist
 
