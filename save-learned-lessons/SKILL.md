@@ -25,6 +25,8 @@ For each lesson, pick exactly one destination:
 | Convention specific to *this* project | The project's `CLAUDE.md` / `AGENTS.md` |
 | Reusable technique for a domain | The most relevant existing custom skill — update it. Create a new skill only if none fits. |
 
+When a lesson is really a whole repeatable *workflow* that warrants its own skill — not a single fact — use the extract-a-workflow-into-a-skill capability in your set rather than hand-rolling it here.
+
 Before writing, check for an existing entry that already covers the lesson and
 update it instead of duplicating.
 

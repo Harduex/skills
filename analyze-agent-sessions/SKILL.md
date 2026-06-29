@@ -22,7 +22,7 @@ When NOT to use: a single recent session (just read it); questions answerable fr
 ## Workflow
 
 ### 1. Negotiate the deliverable (don't assume)
-Where the output lives (a `maui-skills` skill / a project `docs/` doc / a personal note) and the focus (process-only, code-only, or **process as the spine + concrete changes**). Use your question tool.
+Where the output lives (a skill in your skills repo / a project `docs/` doc / a personal note) and the focus (process-only, code-only, or **process as the spine + concrete changes**). Use your question tool.
 
 ### 2. Discover transcripts across every involved repo
 Claude Code stores one folder per working directory under `~/.claude/projects/`, named by replacing `/` with `-` in the absolute path (`/home/me/proj` → `-home-me-proj`). Enumerate, then rank by relevance and apply a noise floor:

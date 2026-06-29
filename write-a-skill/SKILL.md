@@ -5,6 +5,8 @@ description: Create new agent skills with proper structure, progressive disclosu
 
 # Writing Skills
 
+_Authoring mechanics. If you're crystallizing a workflow you just ran (with the corrections that shaped it) rather than building from a fresh spec, enter via the extract-a-workflow-into-a-skill capability in your set — it adds the whether / what / where judgment, then leans on the steps below for structure._
+
 ## Process
 
 1. **Gather requirements** - ask user about:
