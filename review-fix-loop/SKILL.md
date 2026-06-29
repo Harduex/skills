@@ -9,6 +9,8 @@ A loop that **finds, fixes, and re-verifies** — not a single-pass review. It *
 
 **Link by capability, not by name.** Each phase below names a *capability* ("a code-review workflow", "a verification workflow"). Invoke whatever skill in your current set provides that capability — discover it from the available skill descriptions at runtime. Skill names drift between projects and over time; capabilities don't. If your set lacks one, do that step directly.
 
+**Bind capabilities → skills at the orchestrator, then pass names down.** A capability phrase does not self-fire: the agent must match it to an installed skill's *description* and invoke that skill **by its real name**. Do this resolution once, up front, where you (the orchestrator) can see the full skill list — then bake the concrete name into each dispatched agent's prompt as an explicit "invoke `<name>` first" step. A subagent can silently skip a vague "use a review workflow"; it won't skip a named instruction. If no installed skill matches a capability, do that step inline.
+
 ## When to use
 
 Substantial branches, features, audits, or pre-merge hardening — where one reviewer or one pass isn't enough. **Not** trivial diffs. Scale lens count and verify-votes to diff size. Needs a way to run subagents in parallel (a workflow / parallel-dispatch tool; sequential agents are the fallback).

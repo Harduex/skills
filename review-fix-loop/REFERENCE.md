@@ -35,7 +35,7 @@ const results = await parallel(LENSES.map(lens => () =>
 return results.filter(Boolean)
 ```
 
-Each `promptFor(lens)` tells the agent to (1) invoke the workflows for its lens, (2) read the real code and verify before reporting, (3) cite `file:line` + the established pattern it deviates from, (4) emit the schema. Then the orchestrator aggregates and writes `review-pass-N.md`.
+Before fan-out, **resolve each lens's capabilities to the actual skill names in your set** (you have the full skill list; a subagent may not) and bake them into `promptFor(lens)` as explicit "invoke `<name>`" steps — don't make the subagent re-match. Each `promptFor(lens)` then tells the agent to (1) invoke those named workflows, (2) read the real code and verify before reporting, (3) cite `file:line` + the established pattern it deviates from, (4) emit the schema. Then the orchestrator aggregates and writes `review-pass-N.md`.
 
 Adversarial-verify pass (step 6): per surviving finding, dispatch ≥1 skeptic prompted to *refute* it (default to "not real" when unsure); keep only findings that survive. Add one fresh full-diff agent for what the fixes introduced.
 
