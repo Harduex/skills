@@ -1,0 +1,58 @@
+{
+  "title": "Acme SaaS — System Map",
+  "subtitle": "— services, stores & the wiring between them",
+  "eyebrow": "example · built with system-graph",
+  "lede": "A small example produced by the <b>system-graph</b> skill. Each service, datastore and external dependency is a node; edges show which service <b>calls</b> which, what <b>reads or writes</b> each store, and what <b>reaches</b> an external API. Click a node to trace it, or toggle a relation to see it everywhere.",
+  "overviewTitle": "How Acme SaaS is wired",
+  "kinds": {
+    "core":      {"label":"Product",    "hue":"#cdd6ea"},
+    "client":    {"label":"Clients",    "hue":"#f0ad4e"},
+    "service":   {"label":"Services",   "hue":"#22d3bb"},
+    "datastore": {"label":"Data stores","hue":"#4ade80"},
+    "external":  {"label":"External",   "hue":"#a78bfa"},
+    "ops":       {"label":"Ops",        "hue":"#38bdf8"}
+  },
+  "nodes": [
+    {"id":"webapp","k":"core","core":true,"t":"Acme SaaS","m":"the product","d":"The product surface everything else supports."},
+
+    {"id":"A-clients","k":"client","anchor":true,"t":"Clients","d":"How users reach the product."},
+    {"id":"A-services","k":"service","anchor":true,"t":"Services","d":"The backend services behind the API."},
+    {"id":"A-data","k":"datastore","anchor":true,"t":"Data stores","d":"Where state lives."},
+    {"id":"A-external","k":"external","anchor":true,"t":"External","d":"Third-party APIs the system depends on."},
+    {"id":"A-ops","k":"ops","anchor":true,"t":"Ops","d":"Build, deploy and observe."},
+
+    {"id":"web-spa","k":"client","cat":"A-clients","t":"web app","m":"React SPA","d":"Browser single-page app."},
+    {"id":"mobile","k":"client","cat":"A-clients","t":"mobile","m":"iOS / Android","d":"Native mobile clients."},
+
+    {"id":"api-gateway","k":"service","cat":"A-services","t":"api-gateway","m":"edge","d":"Routes and authenticates every request; the front door to the backend."},
+    {"id":"auth-svc","k":"service","cat":"A-services","t":"auth-svc","m":"identity","d":"Login, sessions, and permissions."},
+    {"id":"billing-svc","k":"service","cat":"A-services","t":"billing-svc","m":"payments","d":"Subscriptions and invoicing."},
+    {"id":"worker","k":"service","cat":"A-services","t":"worker","m":"async jobs","d":"Background job processor."},
+
+    {"id":"postgres","k":"datastore","cat":"A-data","t":"postgres","m":"primary DB","d":"Relational store of record."},
+    {"id":"redis","k":"datastore","cat":"A-data","t":"redis","m":"cache","d":"Sessions and hot data."},
+    {"id":"s3","k":"datastore","cat":"A-data","t":"s3","m":"blob store","d":"User uploads and generated assets."},
+
+    {"id":"stripe","k":"external","cat":"A-external","t":"Stripe","m":"payments API","d":"Card charges and subscriptions."},
+    {"id":"sendgrid","k":"external","cat":"A-external","t":"SendGrid","m":"email API","d":"Transactional email delivery."},
+
+    {"id":"ci","k":"ops","cat":"A-ops","t":"CI/CD","m":"pipeline","d":"Builds and deploys the services."},
+    {"id":"monitoring","k":"ops","cat":"A-ops","t":"monitoring","m":"observability","d":"Metrics, logs and alerts."}
+  ],
+  "edges": [
+    ["web-spa","api-gateway","drive","REST"],
+    ["mobile","api-gateway","drive","REST"],
+    ["api-gateway","auth-svc","compose","delegates auth"],
+    ["api-gateway","billing-svc","compose"],
+    ["api-gateway","worker","direct","enqueues jobs"],
+    ["auth-svc","postgres","record","users"],
+    ["auth-svc","redis","record","sessions"],
+    ["billing-svc","postgres","record","invoices"],
+    ["worker","postgres","record"],
+    ["worker","s3","record","assets"],
+    ["billing-svc","stripe","span","charges"],
+    ["auth-svc","sendgrid","span","emails"],
+    ["ci","A-services","provision","builds & deploys"],
+    ["monitoring","A-services","span","observes"]
+  ]
+}
