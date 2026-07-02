@@ -111,6 +111,10 @@ For every changed file, read the complete file (or at minimum the surrounding fu
 
 Before reviewing, also read the consuming project's conventions documentation (`CLAUDE.md`, `AGENTS.md`, `CONTRIBUTING.md`, or equivalent) for project-specific constraints — pinned dependencies, banned framework patterns, architectural boundaries between services, asset and data conventions. The skill encodes review *principles*; the project's own docs encode the *facts* you need to apply them.
 
+### 2.5 Reuse check — mechanical, not from memory
+
+For every helper-shaped addition in the diff (new function, hand-rolled inline computation like clamping/pluralizing/formatting), grep the shared utils and the feature's local helpers for an existing equivalent before accepting it. Then **read the candidate's implementation** — a name match can be semantically wrong (e.g. a `pluralize` helper that just appends `s` silently breaks irregular nouns), and recommending it blind introduces the bug you're reviewing against. Recall over the diff does not surface helpers that live outside it; only the search does.
+
 ### 3. Check test coverage
 
 - Are there tests for the changed behavior in `tests/`? If not, flag it.
