@@ -1,6 +1,6 @@
 ---
 name: planning
-description: Defines product requirements, breaks down work into actionable tasks, and prioritizes based on business value. Writes user stories with acceptance criteria. Use when scoping a feature, planning a sprint, writing requirements, or defining product strategy.
+description: Defines product requirements, breaks down work into actionable tasks, and prioritizes based on business value. Writes user stories with acceptance criteria. Use when writing an implementation plan, breaking a feature into ordered tasks with acceptance criteria, planning a sprint or milestone, or when asked to "plan" work before coding.
 ---
 
 # Product Planning
@@ -24,8 +24,9 @@ Break work into actionable, estimable units:
 1. **Define scope** — what is included and explicitly excluded
 2. **Identify dependencies** — what must exist before this work can start
 3. **Write acceptance criteria** — specific, testable conditions for "done"
-4. **Sequence tasks** — order by dependency chain, then priority
-5. **Flag risks** — what could block or delay delivery
+4. **Annotate each task** — `Skills:`, `Reuse:`, `Mirrors:`, `Assumptions:` (see format below)
+5. **Sequence tasks** — order by dependency chain, then priority
+6. **Flag risks** — what could block or delay delivery
 
 ## Requirements format
 
@@ -43,6 +44,12 @@ Break work into actionable, estimable units:
 
 **Out of scope**:
 - [Explicitly excluded items]
+
+**Tasks** (each carries):
+- Skills: [domain/standards skills the executor must invoke before this task]
+- Reuse: [existing helpers/patterns surveyed — name the search performed and its outcome]
+- Mirrors: [closest existing sibling to match]
+- Assumptions: [what this task assumes about the codebase; if execution disproves one, stop and revise the plan]
 ```
 
 ## Principles

@@ -1,6 +1,6 @@
 ---
 name: functional-programming
-description: Functional programming principles for structuring code as Data, Calculations, and Actions. Enforces immutability, pure functions, side-effect isolation, and functional core / mutable shell architecture. Use when writing new features, refactoring code, reviewing architecture, or when user mentions functional programming, pure functions, side effects, immutability, or data-first design.
+description: Functional programming principles for structuring code as Data, Calculations, and Actions. Enforces immutability, pure functions, side-effect isolation, and functional core / mutable shell architecture. Use when writing new features, refactoring code, reviewing architecture, or when user mentions functional programming, pure functions, side effects, immutability, or data-first design; when adding business logic, a handler, a reducer, or state management; when logic is accumulating inside a useEffect or API handler.
 ---
 
 # Functional Programming: Data > Calculations > Actions

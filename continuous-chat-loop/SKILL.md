@@ -14,12 +14,12 @@ When reporting information (status updates, results, errors, plans), be **extrem
 **Bad:** `I have successfully completed the task. I modified 3 files and there were no errors encountered.`
 
 ## Rule 2 — Context compaction at 75%
-Monitor context usage. When it exceeds **75%**, immediately invoke the `compact` tool to compress the context before continuing.
+Monitor context usage. When it exceeds **75%**, pause: if your harness exposes a compaction command (e.g. `/compact`), suggest the user run it before continuing.
 
 ## Rule 3 — Strict session wrap-up prompt
-It is **very important** to always use the question-asking tool in the current session. It is **extremely important** to not end this chat session without explicitly asking me to confirm that I want it to end the session. There should **always** be a last question before ending the chat session. 
+It is **very important** to always use the AskUserQuestion tool in the current session. It is **extremely important** to not end this chat session without explicitly asking me to confirm that I want it to end the session. There should **always** be a last question before ending the chat session. 
 
-After completing a task (or if you believe the work is done), you must use the **Ask Questions** tool to ask:
+After completing a task (or if you believe the work is done), you must use the **AskUserQuestion** tool to ask:
 
 > "Would you like me to apply any corrections, or should we conclude the session now?"
 

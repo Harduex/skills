@@ -104,6 +104,7 @@ If you catch yourself thinking any of these, **return to Step 2**:
 
 ## Diagnostic tools
 
+- **Companion skills.** For UI bugs, reproduce in the live app via your project's browser-driving skill if one exists (real clicks and console output over speculation). For data-shaped bugs (phantom rows, wrong computed values), verify the DB actually matches the stored migrations via your project's schema-sync skill if one exists — local drift mimics code bugs.
 - **git bisect** — find the commit that introduced a regression.
 - **Stack-trace the setter** (shared-state clobber bugs): when global/context state mysteriously flips and reading the code doesn't reveal the writer, wrap the setter to capture a stack trace per call. One repro lists every writer and their order. Reach for this **before** extended theoretical analysis when the writer is non-obvious.
 - **Error boundary hardening** — temporarily wrap risky calls in try/except (or equivalent) to prevent cascading failures that mask the real upstream error. Revert to strict handling after diagnosis.

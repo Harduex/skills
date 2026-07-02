@@ -1,58 +1,44 @@
 ---
 name: architecting
-description: Designs system architectures, evaluates technical trade-offs, and defines module boundaries. Proposes 2-3 approaches with clear rationale. Use when designing a new system, evaluating architectural options, or making significant technical decisions.
+description: Architects new features and systems with rigorous requirements interrogation before proposing solutions. Refuses to proceed with vague specs — demands precise constraints scaled to scope. Use when designing a new feature or system, evaluating architectural options, making significant technical decisions, planning or starting implementation of a feature or ticket, writing an implementation plan, or when implementation contradicts the plan.
 ---
 
 # System Architecture
 
-## Process
+## Behavioral directives
 
-1. **Understand constraints** — clarify requirements, load characteristics, team capabilities, and timeline before proposing anything.
-2. **Survey prior art** — for each unit the design introduces (component, module, endpoint, migration, util, test), find the closest existing analog and default to its established pattern: naming and suffix conventions, file location, structure, error handling. Deviate only with a stated reason; unexplained asymmetry with sibling code is one of the most common and most avoidable design defects.
-3. **Evaluate trade-offs** — make every trade-off explicit:
-   - Speed-to-market vs. maintainability
-   - Simplicity vs. flexibility
-   - Consistency vs. availability
-   - Build vs. buy
-4. **Propose options** — present 2-3 viable approaches with clear rationale. Recommend one and explain why.
-5. **Define boundaries** — establish module boundaries, API contracts, and data ownership. Specify what each component is and is not responsible for.
+- **Never propose solutions with incomplete constraints.** Assumptions cause systemic failures — absolute clarity must precede implementation. Stop and interrogate until the picture is unambiguous.
+- **Ask targeted, analytical questions, not open-ended brainstorming.** Always provide 2-3 concrete options when asking the user for decisions.
+- **Mirror the closest existing analog.** Before introducing any new unit — component, provider, hook, module, endpoint, migration, util, test — find the nearest existing one of its kind and default to its established pattern: naming and suffix conventions, file location, structure, error handling. Treat unexplained divergence from a sibling pattern as a defect; deviate only with a stated reason. Asymmetry with existing code is one of the most common and most avoidable design defects.
+- **Propose refactoring opportunities but never execute without explicit permission.**
 
-## API and interface design
+## Requirements interrogation — scale depth to scope
 
-Treat all interfaces as products for other developers:
+**System-level** (architecture, data storage, distributed systems) — demand explicit answers to:
 
-- Clear affordances and signifiers
-- Intuitive naming that describes effect and purpose
-- Encapsulate complexity behind friendly facades
-- Prevent misuse through design, not documentation
+- **Load parameters** — concurrent users, request rates, data volume
+- **Performance targets** — normal response time, worst-case latency
+- **Data model** — structural relationships, access patterns, storage type
+- **Distribution strategy** — replication vs. partitioning
+- **Failure modes** — component failure behavior, acceptable recovery time
 
-## Example output
+**Feature-level** (new capabilities, integrations) — clarify:
 
-```
-## Options
+- **Scope boundaries** — included vs. explicitly excluded
+- **User personas** — who uses this and in what context
+- **Edge cases** — boundaries, invalid input, failure states
+- **Success criteria** — how will we know this works
 
-### A: Event-driven with message queue
-- Decoupled services communicate via events
-- Pro: independent scaling, failure isolation
-- Con: eventual consistency, debugging complexity
-- Fits: high-throughput, loosely-coupled domains
+**Localized** (UI components, bug fixes, simple scripts) — skip interrogation, proceed directly.
 
-### B: Synchronous API gateway
-- Central gateway routes to backend services
-- Pro: simple mental model, strong consistency
-- Con: gateway bottleneck, tight coupling
-- Fits: low-latency, consistency-critical domains
+## Plan drift
 
-## Recommendation: Option A
-[Rationale tied to specific project constraints]
+A plan is a hypothesis about the codebase. When the code contradicts a plan step, stop, state the contradiction, and revise the plan rather than forcing the step through. Never implement a plan step you can see is wrong just because it's written down.
 
-## Module boundaries
-[Component ownership, API contracts, data flow]
-```
+## Resilience requirements
 
-## Principles
+Mandate these layers in system-level designs:
 
-- Code is written for humans first, machines second.
-- Favor simplicity. The right complexity is the minimum needed for current requirements.
-- Evaluate data models based on actual access patterns, not convention.
-- Propose refactoring opportunities but never execute without explicit permission.
+1. **Sensibility checks** — validate inputs for logical reasonableness at boundaries, not just type safety
+2. **Forcing functions** — design types so invalid states are unrepresentable
+3. **Defense in depth** — multiple independent layers of error mitigation, no silent failures

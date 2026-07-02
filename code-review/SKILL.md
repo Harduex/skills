@@ -7,6 +7,8 @@ description: Reviews code changes for correctness, security, test coverage, and 
 
 **NEVER push, force-push, or write to any remote/origin branch. All remote operations are read-only.**
 
+**Core rule: read full files, not just diffs, and catalog the sibling patterns before judging new code (Step 2). A diff-only review is pattern matching, and sibling asymmetry is the defect class it reliably misses.**
+
 ## Step 0: Ask the user what to review
 
 When invoked, **always ask the user** which review mode they want before proceeding:
@@ -130,7 +132,7 @@ Report tool results but focus your review on what tools *cannot* catch.
 - **Correctness**: Edge cases, null/undefined handling (no `strictNullChecks`!), race conditions, error propagation, async/await correctness
 - **Security**: Injection vectors, auth/authz gaps, secrets in code, unsafe deserialization (see [REFERENCE.md](REFERENCE.md))
 - **Design**: Does the change increase or decrease complexity? Is it in the right layer? Does it duplicate existing abstractions?
-- **Pattern symmetry**: When the change introduces something new alongside existing siblings, does it follow the conventions those siblings established? Compare across every layer the new code touches — data shapes, naming, schema/type definitions, permissions, request/response shapes, UI placement and styling, error handling, server-vs-client responsibility split. Every divergence should be either deliberate (with a justification you can articulate) or flagged as a bug. Common asymmetry traps: stuffing typed fields into generic JSON blobs when siblings expose them as first-class typed fields; choosing a different pipeline/architecture than equivalent siblings without a clear reason; missing UI affordances that siblings have; reply/derivative endpoints that re-accept fields their parent already supplies; one-off naming when siblings share a convention.
+- **Pattern symmetry**: When the change introduces something new alongside existing siblings, does it follow the conventions those siblings established? Compare across every layer the new code touches — data shapes, naming, schema/type definitions, permissions, request/response shapes, UI placement and styling, error handling, server-vs-client responsibility split. Every divergence should be either deliberate (with a justification you can articulate) or flagged as a bug. Common asymmetry traps: stuffing typed fields into generic JSON blobs when siblings expose them as first-class typed fields; choosing a different pipeline/architecture than equivalent siblings without a clear reason; missing UI affordances that siblings have; reply/derivative endpoints that re-accept fields their parent already supplies; one-off naming when siblings share a convention. When the change mirrors an existing feature, enumerate the analog's surfaces (search its identifier) and diff the change against that list — absent surfaces are findings, not assumptions.
 - **Readability**: Would a new team member understand this code without the commit message?
 - **Consistency**: Does it follow the conventions the surrounding code already establishes — import paths/aliases, naming, file organization, and the rules the project's lint/format config enforces? Don't manually flag what the formatter or linter already catches; do flag patterns that are consistent across the codebase but not enforced by tooling.
 
@@ -175,20 +177,7 @@ Only when the user asks — and **never post anything the user hasn't seen and a
 
 **Convention:** every Claude-authored comment starts with the line `🤖 **Claude review · <SEVERITY>**`. It identifies machine-authored comments at a glance and doubles as the cleanup key (delete by sweeping `/notes` for bodies starting with the marker).
 
-**Anchoring — verify before posting.** GitLab accepts any plausible line number without error; wrong anchors post "successfully" as misplaced noise.
-1. Get the MR's current `diff_refs` (`glab api projects/:proj/merge_requests/:iid`) and `git fetch` first. Do not assume the local checkout matches origin — the MR head may have moved since you reviewed (pushes and rebases shift line numbers), so verify anchors against the fetched `head_sha` blobs (`git grep ... <head_sha>`), never against the local working tree.
-2. Locate each anchor in the live head: `git grep -nF '<code snippet>' <head_sha> -- <path>`. Anchor on lines the MR **adds**; a context (unchanged) line requires both `old_line` and `new_line` — and usually means you should anchor on the new code that causes the issue instead.
-
-**Posting:** `glab api -f 'position[...]=...'` **silently drops the position** (glab sends a JSON body, so bracket keys never parse into a nested hash) and leaves an unanchored top-level note. Send a nested JSON payload instead:
-
-```bash
-echo '{"body": "🤖 **Claude review · ISSUE**\n\n...", "position": {"position_type": "text", "base_sha": "...", "head_sha": "...", "start_sha": "...", "new_path": "src/file.ts", "new_line": 42}}' \
-  | glab api projects/:proj/merge_requests/:iid/discussions -X POST -H 'Content-Type: application/json' --input -
-```
-
-**Verify after posting:** the response note must have `"type": "DiffNote"` and a non-null `position` (a `DiscussionNote` with null position means the anchor was dropped). Then re-fetch the notes and confirm each anchor line's content matches its finding.
-
-**Replying to GitLab Duo threads:** reply in-thread with `glab mr note create <iid> --reply <discussion-id> -m "..."` (`--reply` accepts a full discussion ID or an 8+ char prefix; get IDs from `glab mr note list <iid> -F json`). Always start the reply with `@GitLabDuo` or the bot won't see it. Verify Duo's premises against ground truth before acting on a finding — it reviews blind to SQL function bodies and the lockfile, so its "if X, then bug" findings (and its suggested fixes) are frequently wrong against the real code. Posting notes needs a token with `api` (write) scope; a read-only token (`read_api`/`ai_workflows`) returns `403 insufficient_scope` on POST — re-auth with `glab auth login --hostname <your-gitlab-host>`.
+**Mechanics live in [REFERENCE.md](REFERENCE.md#publishing-mechanics-gitlab):** anchor verification against the fetched MR `head_sha` (never the local tree), the nested-JSON POST (`glab api -f` silently drops `position`), post-verification (`DiffNote` + non-null position), and replying to GitLab Duo threads. Follow them exactly — wrong anchors post "successfully" as misplaced noise.
 
 ## Acting on review feedback
 

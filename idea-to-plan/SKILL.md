@@ -28,40 +28,6 @@ Turn vague ideas into minimal, validated specs and plans by **testing assumption
 **When NOT to use:** Task is already well-defined with a clear spec. User says "just build it."
 
 
-## Process
-
-
-```dot
-digraph idea_to_plan {
-   rankdir=TB;
-
-
-   explore [label="Explore context\nRead code, docs, patterns" shape=box];
-   clarify [label="Clarify intent\nOne question at a time" shape=box];
-   research [label="Research options\nSearch before inventing" shape=box];
-   propose [label="Propose 2-3 approaches\nWith trade-offs" shape=box];
-   present [label="Present design\nSection by section" shape=box];
-   challenge [label="Challenge assumption\nTest it with evidence" shape=diamond];
-   simplify [label="Simplify\nRemove what evidence\nsays is unnecessary" shape=box];
-   spec [label="Write spec\nDocument what survived" shape=box];
-   plan [label="Write plan\nBite-sized tasks" shape=box];
-
-
-   explore -> clarify;
-   clarify -> research [label="if unknowns"];
-   clarify -> propose [label="if clear"];
-   research -> propose;
-   propose -> present;
-   present -> challenge [label="user or self\nchallenges"];
-   present -> spec [label="approved"];
-   challenge -> simplify [label="assumption\ndisproven"];
-   challenge -> present [label="assumption\nconfirmed"];
-   simplify -> present [label="revised design"];
-   spec -> plan;
-}
-```
-
-
 ## Step by Step
 
 
@@ -160,6 +126,15 @@ Convert the spec into bite-sized implementation tasks with:
 - Complete code in every step
 - Exact commands with expected output
 - Commit points after each task
+
+Additionally, each task carries:
+
+- **Skills:** the domain/standards skills the executor must invoke before this task
+- **Reuse:** existing helpers/patterns surveyed — name the search performed and its outcome
+- **Mirrors:** the closest existing sibling to match
+- **Assumptions:** what this task assumes about the codebase
+
+Standing instruction in every plan: if the code contradicts a listed assumption, stop, re-derive, and revise the plan; do not force the step through.
 
 
 ## Red Flags

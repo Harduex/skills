@@ -32,6 +32,7 @@ Substantial branches, features, audits, or pre-merge hardening — where one rev
 - **G3 — Verify findings before acting.** Agents emit confident false positives. Reproduce/trace each before fixing; a disproven finding produces **no** change.
 - **G4 — Know what the loop misses → hand to the human.** Product/UX judgment ("should this even appear?") and live visual behavior are not reliably caught by code review. Surface them as decisions; don't loop on them.
 - **G5 — Serialize commits.** Parallel agents can't race the index. One commit per fix; disjoint files; the orchestrator commits.
+- **G6 — Subagent-report caveats are binding.** Before applying an edit a subagent analyzed, re-read that report's warnings about the exact code being touched; a flagged caveat blocks the edit until addressed. Summaries get skimmed — the caveat is usually the most valuable line in them.
 
 ## Capabilities by phase
 

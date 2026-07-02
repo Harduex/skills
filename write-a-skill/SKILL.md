@@ -107,6 +107,10 @@ Split into separate files when:
 - Content has distinct domains (finance vs sales schemas)
 - Advanced features are rarely needed
 
+## Cross-Skill References
+
+In a generic/portable skill, reference other skills **by capability, never by name** ("your set's browser-driving skill, if one exists") — names drift between sets and projects; capabilities don't. Hard names are allowed only inside a project-specific skill referring to siblings in the same co-maintained set.
+
 ## Review Checklist
 
 After drafting, verify:
@@ -117,3 +121,4 @@ After drafting, verify:
 - [ ] Consistent terminology
 - [ ] Concrete examples included
 - [ ] References one level deep
+- [ ] Cross-skill references follow the capability-vs-name rule above

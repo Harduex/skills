@@ -1,6 +1,6 @@
 ---
 name: zero-assumptions
-description: Rigorous requirements interrogation methodology that refuses to proceed with vague specifications. Demands precise constraints before implementation. Applies conditional depth based on scope. Use when scoping complex systems, defining architecture, or when requirements feel incomplete.
+description: Rigorous requirements interrogation methodology that refuses to proceed with vague specifications. Demands precise constraints before implementation. Applies conditional depth based on scope. Use when told "zero assumptions", "don't assume", or "you assumed wrong"; before implementing any non-trivial request that lacks constraints, load, or failure behavior; or when about to guess a requirement instead of asking. For full feature/system design, prefer your set's architecture/design skill if it embeds this interrogation.
 ---
 
 # Zero Assumptions Methodology

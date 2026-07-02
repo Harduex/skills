@@ -1,12 +1,13 @@
 ---
 name: designing
-description: Designs user interfaces and experiences. Maps user journeys, creates wireframes, defines interaction states, and ensures accessibility. Use when designing new interfaces, improving user flows, evaluating usability, or planning interaction patterns.
+description: Designs user experiences — user flows, wireframes, interaction states, component behavior specs, and UX critique. Use when mapping a user journey, wireframing a screen, defining a component's interaction/empty/error states, evaluating usability, or critiquing an existing UX; for concrete styling/tokens, use the project's design-system skill if one exists.
 ---
 
 # Product Design
 
 ## Process
 
+0. **Inventory what exists** — survey existing components and interaction patterns and reuse before inventing; load the project's design-system skill if one is present.
 1. **Understand the user** — identify the persona, their goal, and context (device, environment, skill level).
 2. **Map the journey** — chart the path from intent to completion. Identify every step, decision point, and dead end.
 3. **Design the flow** — create the simplest path from intent to outcome. Remove every non-essential step.

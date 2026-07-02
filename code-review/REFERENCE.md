@@ -84,3 +84,20 @@ Focus human review on what the tooling cannot catch:
 - Null/undefined safety in projects that relax compiler strictness
 - Architectural boundary violations
 - Missing tests for non-trivial behavior
+
+## Publishing Mechanics (GitLab)
+
+**Anchoring — verify before posting.** GitLab accepts any plausible line number without error; wrong anchors post "successfully" as misplaced noise.
+1. Get the MR's current `diff_refs` (`glab api projects/:proj/merge_requests/:iid`) and `git fetch` first. Do not assume the local checkout matches origin — the MR head may have moved since you reviewed (pushes and rebases shift line numbers), so verify anchors against the fetched `head_sha` blobs (`git grep ... <head_sha>`), never against the local working tree.
+2. Locate each anchor in the live head: `git grep -nF '<code snippet>' <head_sha> -- <path>`. Anchor on lines the MR **adds**; a context (unchanged) line requires both `old_line` and `new_line` — and usually means you should anchor on the new code that causes the issue instead.
+
+**Posting:** `glab api -f 'position[...]=...'` **silently drops the position** (glab sends a JSON body, so bracket keys never parse into a nested hash) and leaves an unanchored top-level note. Send a nested JSON payload instead:
+
+```bash
+echo '{"body": "🤖 **Claude review · ISSUE**\n\n...", "position": {"position_type": "text", "base_sha": "...", "head_sha": "...", "start_sha": "...", "new_path": "src/file.ts", "new_line": 42}}' \
+  | glab api projects/:proj/merge_requests/:iid/discussions -X POST -H 'Content-Type: application/json' --input -
+```
+
+**Verify after posting:** the response note must have `"type": "DiffNote"` and a non-null `position` (a `DiscussionNote` with null position means the anchor was dropped). Then re-fetch the notes and confirm each anchor line's content matches its finding.
+
+**Replying to GitLab Duo threads:** reply in-thread with `glab mr note create <iid> --reply <discussion-id> -m "..."` (`--reply` accepts a full discussion ID or an 8+ char prefix; get IDs from `glab mr note list <iid> -F json`). Always start the reply with `@GitLabDuo` or the bot won't see it. Verify Duo's premises against ground truth before acting on a finding — it reviews blind to SQL function bodies and the lockfile, so its "if X, then bug" findings (and its suggested fixes) are frequently wrong against the real code. Posting notes needs a token with `api` (write) scope; a read-only token (`read_api`/`ai_workflows`) returns `403 insufficient_scope` on POST — re-auth with `glab auth login --hostname <your-gitlab-host>`.

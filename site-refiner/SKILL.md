@@ -1,6 +1,6 @@
 ---
 name: site-refiner
-description: Analyzes any static website codebase, maps out the site structure, and guides the user through a page-by-page review to implement corrections, content updates, and improvements. Uses the ask questions tool to maintain an interactive loop.
+description: Analyzes any static website codebase, maps out the site structure, and guides the user through a page-by-page review to implement corrections, content updates, and improvements. Use when reviewing, refining, auditing, or updating an existing static site page by page — e.g. "review my site", "go through my pages", "update the site content", or fixing SEO/accessibility issues across pages. Maintains an interactive question loop for each page.
 argument-hint: "optional starting page or specific directory"
 ---
 
