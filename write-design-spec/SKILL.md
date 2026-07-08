@@ -64,7 +64,7 @@ An ADR is the **as-built** counterpart of the spec — the spec is written *befo
 3. **Add a `Plan → as-built deltas` table.** Every place the shipped code diverged from the pre-build spec/plan is a row (`Plan | As-built | Why`). This is the highest-value part of an as-built ADR and the thing a plan-only doc cannot capture.
 4. **Draw the diagram with the diagramming skill** if one is in your set; mark `(NEW)` on what the branch adds.
 5. **Keep rollout out.** Feature flags, percentages, and milestone dates are rollout, not architecture — omit them.
-6. **Remove the superseded planning docs.** Once the ADR absorbs them, `git rm` the pre-build design spec / test plan / implementation plan — git history preserves them — and repoint any ADR links off the deleted files. Confirm deletion + commit with the user first.
+6. **Remove the superseded planning docs.** Once the ADR absorbs them, `git rm` the pre-build design spec / test plan / implementation plan **in the same commit that adds the ADR**, with the commit message noting they are preserved in git history — and repoint any ADR links off the deleted files. Confirm deletion + commit with the user first. When a finished branch carries planning artifacts but does not warrant an ADR (bug fix, small feature), propose a plain `Drop <feature> planning artifacts` commit instead — the artifacts still leave the tree at branch close.
 
 ## Review checklist
 
