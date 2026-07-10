@@ -111,9 +111,13 @@ For every changed file, read the complete file (or at minimum the surrounding fu
 
 Before reviewing, also read the consuming project's conventions documentation (`CLAUDE.md`, `AGENTS.md`, `CONTRIBUTING.md`, or equivalent) for project-specific constraints — pinned dependencies, banned framework patterns, architectural boundaries between services, asset and data conventions. The skill encodes review *principles*; the project's own docs encode the *facts* you need to apply them.
 
-### 2.5 Reuse check — mechanical, not from memory
+### 2.5 Reuse and extraction check — mechanical, not from memory
 
-For every helper-shaped addition in the diff (new function, hand-rolled inline computation like clamping/pluralizing/formatting), grep the shared utils and the feature's local helpers for an existing equivalent before accepting it. Then **read the candidate's implementation** — a name match can be semantically wrong (e.g. a `pluralize` helper that just appends `s` silently breaks irregular nouns), and recommending it blind introduces the bug you're reviewing against. Recall over the diff does not surface helpers that live outside it; only the search does.
+**Direction 1 — hand-rolled code that should use an existing helper.** For every helper-shaped addition in the diff (new function, hand-rolled inline computation like clamping/pluralizing/formatting, inline type/MIME checks), grep the shared utils and the feature's local helpers for an existing equivalent before accepting it. Then **read the candidate's implementation** — a name match can be semantically wrong (e.g. a `pluralize` helper that just appends `s` silently breaks irregular nouns), and recommending it blind introduces the bug you're reviewing against. Check the swap both ways: a helper that reads fields the call site's data doesn't actually carry (e.g. discriminators the feeding query never selects) changes behavior — that swap is a defect, not a cleanup. Recall over the diff does not surface helpers that live outside it; only the search does.
+
+When you confirm one instance, **sweep the whole branch diff for the same class** and report the full list of sites in a single finding — "replace everywhere in the MR" fixes land; drip-fed single-site nits don't. Scope the sweep to lines the branch adds; pre-existing occurrences (even in changed files) are out of scope.
+
+**Direction 2 — duplicated logic that should be extracted.** Scan the branch-added code for the same non-trivial logic pasted 3+ times; that's a finding — propose one small local helper/hook next to its consumers. Hold anything bigger to a strict bar: a **new** abstraction (module, wrapper, generalized hook) is only a finding if it has 2+ genuinely-identical consumers *today* and reduces net lines/complexity — surface resemblance between mechanisms that vary independently is not a candidate. Duplication between the branch and pre-existing code elsewhere in the codebase is real but does not belong in this review: mention it in one line as follow-up-ticket material, never as a finding to fix in the MR.
 
 ### 3. Check test coverage
 
@@ -136,7 +140,7 @@ Report tool results but focus your review on what tools *cannot* catch.
 - **Correctness**: Edge cases, null/undefined handling (no `strictNullChecks`!), race conditions, error propagation, async/await correctness
 - **Security**: Injection vectors, auth/authz gaps, secrets in code, unsafe deserialization (see [REFERENCE.md](REFERENCE.md))
 - **Design**: Does the change increase or decrease complexity? Is it in the right layer? Does it duplicate existing abstractions?
-- **Pattern symmetry**: When the change introduces something new alongside existing siblings, does it follow the conventions those siblings established? Compare across every layer the new code touches — data shapes, naming, schema/type definitions, permissions, request/response shapes, UI placement and styling, error handling, server-vs-client responsibility split. Every divergence should be either deliberate (with a justification you can articulate) or flagged as a bug. Common asymmetry traps: stuffing typed fields into generic JSON blobs when siblings expose them as first-class typed fields; choosing a different pipeline/architecture than equivalent siblings without a clear reason; missing UI affordances that siblings have; reply/derivative endpoints that re-accept fields their parent already supplies; one-off naming when siblings share a convention. When the change mirrors an existing feature, enumerate the analog's surfaces (search its identifier) and diff the change against that list — absent surfaces are findings, not assumptions.
+- **Pattern symmetry**: When the change introduces something new alongside existing siblings, does it follow the conventions those siblings established? Compare across every layer the new code touches — data shapes, naming, schema/type definitions, permissions, request/response shapes, UI placement and styling, error handling, server-vs-client responsibility split. Every divergence should be either deliberate (with a justification you can articulate) or flagged as a bug. Common asymmetry traps: stuffing typed fields into generic JSON blobs when siblings expose them as first-class typed fields; choosing a different pipeline/architecture than equivalent siblings without a clear reason; missing UI affordances that siblings have; reply/derivative endpoints that re-accept fields their parent already supplies; one-off naming when siblings share a convention. When the change mirrors an existing feature, enumerate the analog's surfaces (search its identifier) and diff the change against that list — absent surfaces are findings, not assumptions. **Symmetry is not a veto on improving new code**: when a reviewer proposes trimming dead permissions, dead config, or legacy cruft from the *new* entity, "the siblings carry it too" is not a reason to reject — cleaning what the new code doesn't need wins over matching the siblings' accumulated baggage. Symmetry arguments protect behavior and conventions, not inherited clutter.
 - **Readability**: Would a new team member understand this code without the commit message?
 - **Consistency**: Does it follow the conventions the surrounding code already establishes — import paths/aliases, naming, file organization, and the rules the project's lint/format config enforces? Don't manually flag what the formatter or linter already catches; do flag patterns that are consistent across the codebase but not enforced by tooling.
 
@@ -145,6 +149,32 @@ Report tool results but focus your review on what tools *cannot* catch.
 Project-specific red flags live in the consuming project's conventions documentation (`CLAUDE.md`, `AGENTS.md`, `CONTRIBUTING.md`, or equivalent), not in this skill. Read that documentation before reviewing — typical contents include pinned dependency versions, banned framework patterns, architectural boundaries between services, asset/data conventions, and any "we tried this and it failed" lore. Apply those red flags during the review alongside the general dimensions above.
 
 ## Deliver findings
+
+### The report bar — only findings that will actually get fixed
+
+The report is a short list of findings the author will act on, not a transcript of everything you noticed. A finding earns its place only when all three hold:
+
+1. **Verified** — you confirmed the defect against the real code path or runtime, not "may/likely/could". A finding whose premise you haven't checked is a hypothesis; verify it or drop it.
+2. **Consequential** — it produces a wrong behavior, a leak/race, a security gap, dead weight, or a divergence from a sibling pattern. State the concrete failure or the sibling that does it right.
+3. **Actionable in this branch** — the fix fits the MR's scope. Codebase-wide cleanups and refactors of pre-existing code are follow-up-ticket material, compressed to one line at the end of the report.
+
+Calibration from a mined corpus of ~90 real review findings across 14 sessions — what actually gets fixed vs. ignored:
+
+| Reliably fixed — report | Never acted on — drop |
+|---|---|
+| Verified reproducible bugs (races, leaks, nondeterminism, CI breakers) with the failure scenario spelled out | Speculative findings — no repro, "unverified at runtime", theoretical edge states |
+| Hand-rolled reimplementation of an existing helper (Step 2.5) — highest accept rate of any category | NITPICK-grade style/naming/formatting — zero were ever fixed; omit the section entirely |
+| Sibling-pattern divergence framed as "sibling X already does Y" (abstract DRY framing gets no traction) | Doc/comment wording, API description polish |
+| Dead code, dead config, unused permissions introduced by the branch | Error-handling philosophy (fail-loud vs. collapse) with no observed failure |
+| A load-bearing comment the change made false | Pre-existing issues the diff didn't introduce (one line, at most, as follow-up material) |
+| Same logic pasted 3+ times in branch-added code → one small helper | Perf concerns without measured impact (e.g. indexes on tiny tables), dev-only tooling, latent type-hygiene |
+| | "Extract a new module / generalize this hook" without 2+ identical consumers today |
+
+**Missing-test findings:** on someone else's MR, don't report them — they are never acted on. On a branch you (or the session) own, flag a coverage gap only when it's load-bearing and cheap to add with the suite's existing infrastructure, and offer to write the test rather than just demanding it.
+
+A typical branch review should deliver **~5–10 findings**. If you have more that pass the bar, deliver them — but if the list is long because borderline items crept in, re-triage before delivering: historically the author acts on the first handful and the rest becomes noise that erodes trust in the sharp ones.
+
+### Format
 
 Structure every finding as:
 
@@ -158,16 +188,15 @@ Prefix each finding with a short stable ID (`F1`, `F2`, …) so the user can ans
 
 Severity levels:
 - **BLOCKER** — Must fix before merge. Bugs, security issues, data loss risk.
-- **ISSUE** — Should fix. Design problems, missing tests, unclear logic.
-- **SUGGESTION** — Optional improvement. Better naming, simpler approach, minor readability.
-- **NITPICK** — Take it or leave it. Style, formatting, personal preference.
-- **PRAISE** — Highlight good work. Elegant solution, solid test, good refactoring.
+- **ISSUE** — Should fix. Verified design problems, behavior divergence from siblings, dead weight.
+- **SUGGESTION** — Optional improvement that still passes the report bar (e.g. a confirmed helper-reuse swap, a small dedup extraction).
+
+There is deliberately no NITPICK level — anything that would earn it doesn't pass the report bar. There is also no PRAISE category: if part of the change is genuinely well built, say so in one clause of the closing summary, not as a finding.
 
 ### Rules for good feedback
 
 - Frame critiques as questions: "Would it be clearer if..." not "This is wrong."
 - Every BLOCKER and ISSUE must include a concrete suggestion or code sketch.
-- Include at least one PRAISE if the change has any merit. Do not fabricate praise.
 - Do not flag things the linter already catches — just report the lint results.
 
 ## Publishing findings as MR comments
