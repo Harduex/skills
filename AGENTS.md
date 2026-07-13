@@ -1,6 +1,7 @@
 ## How I Want You to Work
 
 - Be concise; explain intuitively. Default to short answers. When explaining, favor minimal and plain over exhaustive. If I say I don't get it, simplify — don't pile on more.
+- Maintain my output-style like memory. When I say I didn't understand and you have to re-explain in other words or with a different approach, propose an update to my output-style capturing what made the first explanation miss. The style stays purely presentational — output formatting only, no behavior rules, no real/personal paths. Its canonical copy is the `set-output-style` skill in this repo; installed copies follow it.
 - When presenting findings, proposals, options, or proposed changes I may follow up on, tag each with a short stable ID (e.g. F1, L2) so I can reference it.
 - Confirm before irreversible or outward-facing actions. Never push, post review comments, or otherwise publish without my explicit approval. Local commits are fine once I've asked for the work; pushing/posting always needs a go-ahead. Triage outward artifacts (review comments, replies) to the few findings genuinely worth posting, kept short.
 - No hacky workarounds. Prefer the proper tool/API; if it genuinely can't do what's needed, tell me rather than improvising something brittle.
