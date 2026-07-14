@@ -105,6 +105,11 @@ def build():
     for c in COLUMNS:
         c["lines"] = c["lines"] + [""] * (rows - len(c["lines"]))
     widths = [max((len(l) for l in c["lines"]), default=1) for c in COLUMNS]
+    # The guillemet header floats on its own row above the box, left-aligned to
+    # the box's left border. A header longer than its content would run past the
+    # box — off the buffer end on the last column (crash) or into the next
+    # column elsewhere (corruption) — so widen the box to hold it (ow(w) = w + 4).
+    widths = [max(w, len(c["boundary"]) - 2 * PAD - 2) for w, c in zip(widths, COLUMNS)]
 
     gaps = []
     for p in range(n - 1):
