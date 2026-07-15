@@ -67,7 +67,7 @@ The journal is the audit trail and the Reflexion memory: failures are logged wit
 
 ## Resume protocol (the cross-session guarantee)
 
-**Starting a session, or right after a compaction:** run `scripts/status.sh <slug>` for an instant read of task progress, the next task, and the latest journal entry, then read `plan.md` orientation → scan task statuses → read the last one or two `journal.md` entries → resume at the first non-`done` task. Do **not** let a session-start summary override the files (L4, and "trust live state, not snapshots").
+**Starting a session, or right after a compaction:** run `$SKILL/scripts/status.sh <slug>` for an instant read of task progress, the next task, and the latest journal entry, then read `plan.md` orientation → scan task statuses → read the last one or two `journal.md` entries → resume at the first non-`done` task. Do **not** let a session-start summary override the files (L4, and "trust live state, not snapshots").
 
 **Before an expected compaction or at session end:** refresh the `plan.md` orientation header and append a `journal.md` entry ending in a concrete `Next:`. Invoke your set's checkpoint/handoff capability to produce that header — it already knows how to write a no-context-needed resume block; here you persist it to a file instead of emitting a prompt.
 
@@ -85,7 +85,7 @@ The journal is the audit trail and the Reflexion memory: failures are logged wit
 }
 ```
 
-**Fallback — deterministic, no subagents.** Run `scripts/check.sh <slug>`: it executes the contract's declared commands and reports pass/fail per item. Or run the commands by hand and read exit codes. Determinism satisfies L2 for the *checks* themselves, but you lose fresh-eyes review — compensate by reviewing the diff cold at the gate (Standalone fallbacks → Check) before declaring green.
+**Fallback — deterministic, no subagents.** Run `$SKILL/scripts/check.sh <slug>`: it executes the contract's declared commands and reports pass/fail per item. Or run the commands by hand and read exit codes. Determinism satisfies L2 for the *checks* themselves, but you lose fresh-eyes review — compensate by reviewing the diff cold at the gate (Standalone fallbacks → Check) before declaring green.
 
 Only the schema flows back to the orchestrator, so its context stays clean across many cycles.
 
@@ -106,10 +106,45 @@ The loop prefers a matching skill in your set for each phase (SKILL.md → Capab
 - **Research (per task).** Before editing, trace the code paths the task touches from entry point to the change site; open the nearest existing analog end-to-end and note the conventions to match; cite `file:line`.
 - **Build.** Mirror the sibling's structure, naming, and error handling. Keep logic in pure functions where practical and isolate side effects at the edges. Change only what the task needs.
 - **Test (test-first).** Write the failing test first and confirm it fails for the right reason (red); implement to green. Cover the new/risky branches and the boundaries. A test that still passes when the code is wrong is worse than no test.
-- **Check.** Run `scripts/check.sh <slug>` (or every contract command by hand) and show the output. Then review the diff cold for correctness/security (auth boundaries, injection, data loss), state and concurrency (cancellation, re-entry, races), error/degrade paths, and symmetry with siblings. With subagents, review in a fresh agent; without, review as a distinct pass after re-reading the diff from scratch.
+- **Check.** Run `$SKILL/scripts/check.sh <slug>` (or every contract command by hand) and show the output. Then review the diff cold for correctness/security (auth boundaries, injection, data loss), state and concurrency (cancellation, re-entry, races), error/degrade paths, and symmetry with siblings. With subagents, review in a fresh agent; without, review as a distinct pass after re-reading the diff from scratch.
 - **Debug (on a failing check).** Reproduce reliably; form one hypothesis; instrument to confirm or refute it rather than guess-patching; fix the root cause, not the symptom; re-run the check.
 - **Git hygiene (pre-handoff).** One logical change per commit; each commit builds green on its own; no add-then-remove churn; imperative subject lines stating the why. Never push without explicit approval.
 - **Leak check (pre-publish).** Scan the diff (and history, on a first publish) for secrets, tokens, PII, and machine-local paths. Publishing is irreversible regardless → it goes through the human checkpoint (L3).
+
+## Evolving the harness (self-improvement)
+
+The loop runs on a harness — instruction files (`AGENTS.md`/`CLAUDE.md`), skills, and memory. It may improve that harness, but under strict discipline (L8): a **real recurring reason**, a **clear proposal**, and the **human's go-ahead** before anything durable is written.
+
+**The signal is the journal, not a hunch.** `journal.md` is the loop's Reflexion memory — every cycle logs what happened and why. Harness evolution reads *that record* for a pattern; it does not invent one from a single cycle.
+
+**Triggers — act only when one is clearly met:**
+- The same correction or mistake recurred across ≥2 cycles (the journal shows it twice).
+- You discovered a convention the instruction files don't capture and a future task would trip on it.
+- A reusable, multi-step workflow emerged that no existing skill covers.
+- A skill you invoked was wrong, stale, or missing the exact pitfall you just hit.
+- Recurring spec/contract ambiguity points to a missing checklist item.
+
+**Anti-triggers — leave these as a journal note, never a harness edit:**
+- A one-off preference or a single occurrence (one correction ≠ a standing rule).
+- Anything the instruction files / skills already cover.
+- Speculation ("might be useful later") with no observed need in this run.
+
+**Routing — send each learning to the home where future sessions will actually read it:**
+
+| Learning | Home | Capability to invoke | Commit in |
+|---|---|---|---|
+| Project convention / gotcha / durable preference | instruction file or memory | lessons-capture / instruction-file optimization | the repo that owns the file |
+| A reusable workflow no skill covers | a new skill | skill authoring / workflow extraction | your skills repo |
+| A skill was wrong / stale / missing a pitfall | that skill | skill authoring | your skills repo |
+| Better contract items / test coverage for this domain | this run's `contract.md` + your design-spec/test-planning workflow | test-case planning | `docs/loop/<slug>/` (local, this run) |
+
+**Protocol (propose → gate → apply → record):**
+1. **Propose, don't apply.** Surface: *what* you learned, *why* it recurs (cite the journal cycles), *which home* it belongs in, and a one-line diff summary. Harness edits are durable and outward-facing → same human gate as any irreversible action (L3).
+2. **Wait for the go-ahead.** No approval → it stays a journal note.
+3. **Apply via the routed capability** — don't hand-roll what a skill-authoring or lessons-capture workflow does properly.
+4. **Commit it in its proper repo** in the same session (uncommitted harness work is lost work) and **log the outcome** in `journal.md`.
+
+Keep the run's working state in `docs/loop/`; durable lessons graduate *out* of it. `docs/loop/<slug>/` is disposable per-feature scaffolding — the harness is where knowledge lives for the next feature.
 
 ## Knobs (defaults, and how to change them)
 
@@ -120,11 +155,11 @@ The loop prefers a matching skill in your set for each phase (SKILL.md → Capab
 
 ## Scripts
 
-Run from the repository root. `init.sh` and `status.sh` touch only `docs/loop/`; `check.sh` additionally runs the checks you declared in the contract.
+**These three scripts ship *inside this skill* — they are the containment boundary.** The tooling stays in the skill; only the *state* (`docs/loop/<slug>/`) is written into the repo. Invoke each by its path under this skill's base directory — `$SKILL/scripts/…`, where `$SKILL` is the directory the harness prints when the skill loads — with your working directory at the repo root, so `docs/loop/` resolves against the project. **Never copy them into the project** (that scatters the harness across the repo and forks a second copy that silently drifts from the skill). `init.sh`/`status.sh` touch only `docs/loop/`; `check.sh` additionally runs the checks you declared in the contract.
 
-- **`scripts/init.sh <slug> ["Title"]`** — canonical generator for the three state files. Validates the slug (kebab-case), creates `docs/loop/<slug>/`, and refuses to overwrite an existing loop (state is precious — deleting it is a deliberate act, not a re-init). Stamps a `loop initialized` entry into `journal.md` so the log starts from cycle zero. These templates are the source of truth for the schemas shown above; if you change the shape, change it here.
-- **`scripts/status.sh [slug]`** — read-only. With no argument, lists every loop under `docs/loop/`. With a slug, prints task counts by status, the next non-`done` task, and the latest journal entry. It never runs your project's checks and never edits anything; it exists to make "read state from disk first" (L4) a one-command habit at session start.
-- **`scripts/check.sh <slug>`** — the deterministic checker. Runs the commands declared in `contract.md` and reports pass/fail per item, skipping any row still set to `<command>`; exits 0 only when every runnable check passes. Running the real commands is what makes self-grading impossible (L2) and keeps the contract the single source of truth (L1/L6).
+- **`$SKILL/scripts/init.sh <slug> ["Title"]`** — canonical generator for the three state files. Validates the slug (kebab-case), creates `docs/loop/<slug>/`, and refuses to overwrite an existing loop (state is precious — deleting it is a deliberate act, not a re-init). Stamps a `loop initialized` entry into `journal.md` so the log starts from cycle zero. These templates are the source of truth for the schemas shown above; if you change the shape, change it here.
+- **`$SKILL/scripts/status.sh [slug]`** — read-only. With no argument, lists every loop under `docs/loop/`. With a slug, prints task counts by status, the next non-`done` task, and the latest journal entry. It never runs your project's checks and never edits anything; it exists to make "read state from disk first" (L4) a one-command habit at session start.
+- **`$SKILL/scripts/check.sh <slug>`** — the deterministic checker. Runs the commands declared in `contract.md` and reports pass/fail per item, skipping any row still set to `<command>`; exits 0 only when every runnable check passes. Running the real commands is what makes self-grading impossible (L2) and keeps the contract the single source of truth (L1/L6).
 
 ## Failure-mode catalog
 
@@ -140,3 +175,4 @@ Run from the repository root. `init.sh` and `status.sh` touch only `docs/loop/`;
 | Non-atomic tasks | a fresh session or subagent can't execute a task as written | tasks written for a zero-context reader; split before dispatch |
 | Context bloat | orchestrator fills with subagent transcripts | checker returns the schema (pass/fail + first failure), never a transcript |
 | Over-firing | full loop spun up for a one-file change | the scope guard — just make trivial changes directly |
+| Harness churn | loop rewrites skills / instruction files on a one-off or on speculation | **L8** — a real recurring signal in the journal + a human-gated proposal; one occurrence is a journal note |

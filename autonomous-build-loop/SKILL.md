@@ -5,11 +5,15 @@ description: Drives a whole feature from a short prompt to merge-ready with mini
 
 # Autonomous Build Loop
 
+Operate at a principal-engineer altitude: correctness and reversibility over speed, evidence over confidence, and the smallest change that satisfies the contract. Every rule below is that stance made checkable.
+
 A loop that **drives a feature from prompt to merge-ready on its own** — it plans, builds, tests, and verifies in cycles, keeps its state in files so a fresh session resumes exactly where the last stopped, and pauses for you only at irreversible actions. It *orchestrates* your other workflows when they exist and *falls back* to built-in procedures when they don't — so it composes in a rich harness and still runs standalone in a bare one. Its own machinery (contract, state, cycle, checker, retry, checkpoint) needs nothing beyond a shell, git, and file access.
 
 **Link by capability, not by name.** Each phase below names a *capability* ("a planning workflow", "a verification workflow"). Invoke whatever skill in your current set provides it — discover it from the available skill descriptions at runtime. Names drift between projects; capabilities don't. If your set lacks one, use the built-in fallback for that phase ([REFERENCE.md](REFERENCE.md) → Standalone fallbacks) — the loop is self-sufficient and requires no other skill installed.
 
 **Bind capabilities → skills at the orchestrator, then pass names down.** A capability phrase does not self-fire. Resolve it once, up front, where you (the orchestrator) can see the full skill list, then bake the concrete `invoke <name>` into each dispatched agent's prompt. A subagent silently skips a vague "use a planning workflow"; it won't skip a named instruction. If nothing matches, do the step inline.
+
+**Scripts stay in the skill; only state goes in the repo.** The three helper scripts ship *inside this skill* under `scripts/`. Invoke each by its path under this skill's base directory — written `$SKILL/scripts/…` below, where `$SKILL` is the directory the harness prints when the skill loads — with your working directory at the repo root. They write only to `docs/loop/<slug>/`. **Never copy them into the project**: the containment boundary is the whole point — the tooling lives in the skill, and only the *state* is committed to the repo's `docs/`.
 
 ## When to use
 
@@ -19,7 +23,7 @@ A multi-step feature or ticket you want driven end-to-end from a short prompt. *
 
 1. **Spec.** Invoke your set's requirements-interrogation / idea-validation capability until the goal is unambiguous. Do not proceed on assumptions.
 2. **Contract.** Turn the spec into a **machine-checkable done-list**: every item backed by a command with an exit code (`pnpm test`, `tsc --noEmit`, a demoable acceptance check). Reject any item you can't express as a check — a vague goal can never halt the loop. Your test-planning capability feeds this.
-3. **State.** Scaffold `docs/loop/<slug>/` deterministically with `scripts/init.sh <slug>` — it stamps out `contract.md`, `plan.md`, `journal.md` (schemas in [REFERENCE.md](REFERENCE.md)) and refuses to clobber an existing loop. Fill `plan.md` via your planning capability: an orientation header (goal, key paths, build/test commands) plus ordered, self-contained tasks each carrying a status (`todo|doing|done|blocked`). Use your checkpoint/handoff capability to write that header — it's the self-contained orientation a fresh agent reads first.
+3. **State.** Scaffold `docs/loop/<slug>/` deterministically with `$SKILL/scripts/init.sh <slug>` — it stamps out `contract.md`, `plan.md`, `journal.md` (schemas in [REFERENCE.md](REFERENCE.md)) and refuses to clobber an existing loop. Fill `plan.md` via your planning capability: an orientation header (goal, key paths, build/test commands) plus ordered, self-contained tasks each carrying a status (`todo|doing|done|blocked`). Use your checkpoint/handoff capability to write that header — it's the self-contained orientation a fresh agent reads first.
 
 ## One cycle — repeat until the contract is green
 
@@ -27,7 +31,7 @@ A multi-step feature or ticket you want driven end-to-end from a short prompt. *
 2. **Pick** the next unblocked task.
 3. **Build.** Invoke the capability-right skill(s) for it (the domain workflow for the area; functional-core principles). Author tests first: red → green.
 4. **Commit.** One local commit per task. Reversible, so allowed without asking.
-5. **Check** — run `scripts/check.sh <slug>` (executes the contract's declared commands, pass/fail per item) or dispatch a fresh-context subagent to review. Deterministic execution *or* fresh eyes — never self-grade in the working context.
+5. **Check** — run `$SKILL/scripts/check.sh <slug>` (executes the contract's declared commands, pass/fail per item) or dispatch a fresh-context subagent to review. Deterministic execution *or* fresh eyes — never self-grade in the working context.
 6. **Record.** Append the measured result to `journal.md`; flip the task's status in `plan.md`.
 7. **On failure**, log the error *and the contract line it broke*; route to your debugging capability; retry bounded (≤3), each retry carrying the error forward — never re-run the same failing prompt verbatim. Still failing → escalate to the human.
 8. **Gate.** Contract fully green → stop, summarize, refresh the `plan.md` header for handoff. Otherwise → next cycle.
@@ -42,6 +46,7 @@ A multi-step feature or ticket you want driven end-to-end from a short prompt. *
 - **L5 — Retries carry the error, are bounded, and escalate.** A verbatim re-prompt loops forever; three informed attempts then a human.
 - **L6 — Every cycle logs a measured result.** An unmeasured "done" is a vibe. `journal.md` records the check output, not a claim.
 - **L7 — The plan is a hypothesis; the code wins.** When execution contradicts a plan step, stop, note it in `journal.md`, and re-derive — don't force a step you can see is wrong.
+- **L8 — The harness is editable, but evolving it is a reasoned, human-gated act.** Improve the instruction files, skills, and memory the loop runs on when the journal shows a *recurring, reusable* gap — never on a one-off, never silently, never without the human's go-ahead. Durable harness edits are irreversible-class (L3).
 
 ## Capabilities by phase
 
@@ -59,9 +64,18 @@ Prefer the matching skill in your set (by its description). If none exists, use 
 | On failure | systematic debugging (root cause before patch) |
 | Pre-handoff | git-history hygiene — linearize commits / distribute fixups; leak audit before any publish |
 | Recurrence | feed repeated failures back into your design-spec and test-planning workflows |
+| Harness evolution | lessons-capture / instruction-file optimization; skill authoring & workflow extraction — see *Evolving the harness* |
+
+## Evolving the harness (self-improvement)
+
+The loop may improve the harness it runs on — instruction files, skills, memory — but only for a real, observed reason, and never silently. Signals accumulate in `journal.md` as you work; act on those, don't invent them.
+
+**Trigger only when the journal shows a durable, reusable gap** — the same correction or mistake recurred across cycles; you found a convention the instruction files don't capture; a multi-step workflow emerged that no existing skill covers; or a skill you invoked was wrong, stale, or missing the pitfall you just hit. **Do not** act on a one-off preference, anything already documented, or speculation ("might help later"). One occurrence is a journal note, not a harness change (L8).
+
+**When a trigger fires, propose — never auto-apply.** Harness edits are durable and outward-facing, so they sit behind the same human gate as any irreversible action (L3/L8). Surface a clear proposal: *what* you learned, *why* it recurs (cite the journal cycles), *which home* it belongs in, and a one-line summary of the change. On the go-ahead, apply it via the right capability, commit it in its proper repo, and log the outcome in `journal.md`. Route by capability: a project convention → your lessons-capture / instruction-file capability; a reusable workflow → your skill-authoring / workflow-extraction capability; a stale skill → edit that skill. The run's working state stays in `docs/loop/`; durable lessons graduate *out* to where future sessions will read them. Mechanics: [REFERENCE.md](REFERENCE.md) → *Evolving the harness*.
 
 ## What the loop hands to the human, never loops on
 
-Product/UX judgment ("should this exist at all?"), anything not expressible as an exit-code check, and every irreversible action. Surface these as decisions; don't spin on them.
+Product/UX judgment ("should this exist at all?"), anything not expressible as an exit-code check, every irreversible action, and every harness-evolution proposal (L8 — surfaced with a reason, never auto-applied). Surface these as decisions; don't spin on them.
 
 See [REFERENCE.md](REFERENCE.md) for the state-file schemas, the contract format with examples, the resume protocol, the checker-dispatch mechanics, and the failure-mode catalog.
