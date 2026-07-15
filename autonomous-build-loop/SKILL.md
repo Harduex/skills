@@ -22,16 +22,16 @@ A multi-step feature or ticket you want driven end-to-end from a short prompt. *
 ## Setup — once per task
 
 1. **Spec.** Invoke your set's requirements-interrogation / idea-validation capability until the goal is unambiguous. Do not proceed on assumptions.
-2. **Contract.** Turn the spec into a **machine-checkable done-list**: every item backed by a command with an exit code (`pnpm test`, `tsc --noEmit`, a demoable acceptance check). Reject any item you can't express as a check — a vague goal can never halt the loop. Your test-planning capability feeds this.
+2. **Contract.** Turn the spec into a **machine-checkable done-list**: every item backed by a command with an exit code (`pnpm test`, `tsc --noEmit`, a demoable acceptance check). Reject any item you can't express as a check — a vague goal can never halt the loop. Your test-planning capability feeds this. For a **bug-fix** item, the contract also names its **baseline repro** — the observable failure to demonstrate on the unchanged code — so "done" is a red→green transition, not just a green check (L9).
 3. **State.** Scaffold `docs/loop/<slug>/` deterministically with `$SKILL/scripts/init.sh <slug>` — it stamps out `contract.md`, `plan.md`, `journal.md` (schemas in [REFERENCE.md](REFERENCE.md)) and refuses to clobber an existing loop. Fill `plan.md` via your planning capability: an orientation header (goal, key paths, build/test commands) plus ordered, self-contained tasks each carrying a status (`todo|doing|done|blocked`). Use your checkpoint/handoff capability to write that header — it's the self-contained orientation a fresh agent reads first.
 
 ## One cycle — repeat until the contract is green
 
 1. **Read state.** Re-read `plan.md` and the tail of `journal.md` from disk. Trust the files, not memory or session-start context.
 2. **Pick** the next unblocked task.
-3. **Build.** Invoke the capability-right skill(s) for it (the domain workflow for the area; functional-core principles). Author tests first: red → green.
+3. **Build.** Invoke the capability-right skill(s) for it (the domain workflow for the area; functional-core principles). Author tests first: red → green. For a bug fix, first reproduce the failure on the *unchanged* baseline (confirm it's red for the right reason) before touching code — otherwise you can't tell a real fix from a no-op (L9).
 4. **Commit.** One local commit per task. Reversible, so allowed without asking.
-5. **Check** — run `$SKILL/scripts/check.sh <slug>` (executes the contract's declared commands, pass/fail per item) or dispatch a fresh-context subagent to review. Deterministic execution *or* fresh eyes — never self-grade in the working context.
+5. **Check** — run `$SKILL/scripts/check.sh <slug>` (executes the contract's declared commands, pass/fail per item) or dispatch a fresh-context subagent to review. Deterministic execution *or* fresh eyes — never self-grade in the working context. A "pre-existing / not caused by this change" verdict — yours or the checker's — is only as trustworthy as its scope: it holds only if *every* change on the branch touching the affected surface was examined (L9).
 6. **Record.** Append the measured result to `journal.md`; flip the task's status in `plan.md`.
 7. **On failure**, log the error *and the contract line it broke*; route to your debugging capability; retry bounded (≤3), each retry carrying the error forward — never re-run the same failing prompt verbatim. Still failing → escalate to the human.
 8. **Gate.** Contract fully green → stop, summarize, refresh the `plan.md` header for handoff. Otherwise → next cycle.
@@ -47,6 +47,7 @@ A multi-step feature or ticket you want driven end-to-end from a short prompt. *
 - **L6 — Every cycle logs a measured result.** An unmeasured "done" is a vibe. `journal.md` records the check output, not a claim.
 - **L7 — The plan is a hypothesis; the code wins.** When execution contradicts a plan step, stop, note it in `journal.md`, and re-derive — don't force a step you can see is wrong.
 - **L8 — The harness is editable, but evolving it is a reasoned, human-gated act.** Improve the instruction files, skills, and memory the loop runs on when the journal shows a *recurring, reusable* gap — never on a one-off, never silently, never without the human's go-ahead. Durable harness edits are irreversible-class (L3).
+- **L9 — A fix is verified only against a demonstrated baseline.** For a bug fix, reproduce the failure *before* the change (red for the right reason), then show it gone *after* (green). An after-state check alone can "fix" a bug that never existed, or hide that the change itself *caused* the symptom — both look green. When a human reports "it works on the reference/baseline build," that is an empirical before/after; trust it over static-diff reasoning and re-open the diagnosis.
 
 ## Capabilities by phase
 

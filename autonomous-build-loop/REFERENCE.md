@@ -176,3 +176,4 @@ Keep the run's working state in `docs/loop/`; durable lessons graduate *out* of 
 | Context bloat | orchestrator fills with subagent transcripts | checker returns the schema (pass/fail + first failure), never a transcript |
 | Over-firing | full loop spun up for a one-file change | the scope guard — just make trivial changes directly |
 | Harness churn | loop rewrites skills / instruction files on a one-off or on speculation | **L8** — a real recurring signal in the journal + a human-gated proposal; one occurrence is a journal note |
+| Fix of nothing / self-inflicted symptom | a fix is "verified" by its after-state only — but the bug never existed, or the change itself caused the symptom | **L9** — reproduce the failure on the unchanged baseline first; verify as an A/B (before vs after), and trust a human's baseline/reference A/B over static-diff reasoning |
