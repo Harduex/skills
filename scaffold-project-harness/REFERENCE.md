@@ -94,6 +94,44 @@ and `.claude/skills/` are overwritten on every install."
 - Only project facts live here — mechanics stay in the generic browser-driving
   skill this one wraps; keep SKILL.md a thin entry point.
 
+### local-stack
+
+- How to start, stop, and seed the local environment (exact commands).
+- Env/config file locations and how runtime config is loaded.
+- Known failure modes and their recovery runbook ("stack broken? read this
+  before restarting anything").
+
+### release-ops
+
+- Environments and what deploys where; the promotion path.
+- CI/CD pipeline quirks: what blocks a merge, what runs when, known flakes.
+- Release process and feature-flag workflow (how to gate a new feature).
+
+### observability
+
+- Where logs, metrics, and analytics events actually live (which datastore
+  per signal — often not the app database) and how to query each.
+- How to add a new event/metric so it lands in the right place.
+- Dashboards/alerts worth knowing and what feeds them.
+
+### background-jobs skill (named after the stack)
+
+- Job/queue conventions: where handlers live, how to add one.
+- Retry, parking, and dead-letter semantics.
+- How to run and observe a job locally.
+
+### auth-model (when not absorbed by db-ops)
+
+- Roles/identities and how a request acquires one.
+- How to protect a new route/resource; where the checks live.
+- Test identities and how to impersonate each role locally.
+
+### i18n (if localized)
+
+- How to add a user-facing string end-to-end.
+- Translation workflow and file locations; what must never be hardcoded.
+- Locale-specific pitfalls the repo has hit (dates, plurals, RTL).
+
 ### domain playbook (verb-named, e.g. adding-<entity>)
 
 - Every surface a new instance must touch (lists, search, detail views,

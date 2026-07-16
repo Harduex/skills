@@ -35,6 +35,12 @@ Read the package manifests and top-level layout, then fill this mapping — one 
 | Database & migrations | after the stack, e.g. `hasura-ops`, `prisma-migrations`, `alembic-ops` | technology noun, no project prefix |
 | E2E / integration tests | `<project>-<framework>-tests`, e.g. `acme-playwright-tests` | project-prefixed (fixture-bound) |
 | Live browser testing | `<project>-<tool>`, e.g. `acme-chrome-devtools` | project-prefixed wrapper over your set's generic browser-driving skill |
+| Local dev environment | `local-stack` | fixed name |
+| Deploy / release process | `release-ops` | fixed name |
+| Logs, metrics, analytics events | `observability` | fixed name |
+| Background jobs / workers | after the stack, e.g. `pubsub-workers`, `celery-jobs` | technology noun, no project prefix |
+| Auth model (when not absorbed by the db-ops skill) | `auth-model` | fixed name |
+| Localization | `i18n` | fixed name |
 | Recurring multi-surface task | verb-named playbook, e.g. `adding-<entity>`, `sync-<thing>` | verb/gerund |
 
 Naming rules in one line: convention skills are technology nouns (they trigger on natural vocabulary); a project prefix is reserved for skills inseparable from project fixtures (test accounts, seeded data, dev URLs); workflows and playbooks get verb names.
