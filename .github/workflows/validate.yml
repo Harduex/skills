@@ -1,0 +1,58 @@
+name: validate
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Validate bundles
+        run: python3 scripts/generate_bundles.py --check
+
+      - name: Lint flat-catalog SKILL.md frontmatter
+        run: |
+          python3 - <<'PY'
+          import os, sys
+
+          errors = []
+          for name in sorted(os.listdir(".")):
+              skill_md = os.path.join(name, "SKILL.md")
+              if not (os.path.isdir(name) and os.path.isfile(skill_md)):
+                  continue
+              with open(skill_md, encoding="utf-8") as f:
+                  text = f.read()
+              parts = text.split("---", 2)
+              if not text.startswith("---") or len(parts) < 3:
+                  errors.append(f"{name}: missing or malformed frontmatter")
+                  continue
+              meta, key = {}, None
+              for line in parts[1].splitlines():
+                  if line and not line[0].isspace() and ":" in line:
+                      key, _, val = line.partition(":")
+                      key = key.strip()
+                      meta[key] = val.strip()
+                  elif key is not None and line.strip():
+                      meta[key] = (meta[key] + " " + line.strip()).strip()
+              if meta.get("name") != name:
+                  errors.append(f"{name}: frontmatter name {meta.get('name')!r} != folder")
+              desc = meta.get("description", "")
+              if not desc:
+                  errors.append(f"{name}: empty description")
+              elif len(desc) > 1024:
+                  errors.append(f"{name}: description exceeds 1024 chars")
+
+          if errors:
+              print("\n".join("error: " + e for e in errors))
+              sys.exit(1)
+          print("frontmatter lint passed")
+          PY
+
+      - name: Unit tests
+        run: python3 -m unittest discover -s tests

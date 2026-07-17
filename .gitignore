@@ -1,2 +1,6 @@
 # Claude Code session artifacts
 tmpclaude-*
+
+# Python
+__pycache__/
+*.pyc
