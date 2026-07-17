@@ -1,0 +1,65 @@
+{
+  "version": "0.1.0",
+  "bundles": [
+    {
+      "name": "harness-evolution",
+      "description": "The core Evolving Harness loop: extract skills from sessions, save learned lessons, analyze agent sessions, and evolve the skill repo - includes the framework router.",
+      "hooks": "hooks/session-start.json",
+      "skills": [
+        "using-evolving-harness",
+        "extract-skill-from-session",
+        "save-learned-lessons",
+        "analyze-agent-sessions",
+        "optimizing-skill-repo",
+        "write-a-skill",
+        "system-harness-graph",
+        "auditing-agent-infra",
+        "scaffold-project-harness"
+      ]
+    },
+    {
+      "name": "delivery-lifecycle",
+      "description": "Gated idea-to-shipped pipeline: plan, design, spec, test cases, autonomous build loop, review, verification, checkpoint.",
+      "skills": [
+        "idea-to-plan",
+        "architecting",
+        "designing",
+        "write-design-spec",
+        "planning",
+        "write-test-cases",
+        "autonomous-build-loop",
+        "debugger",
+        "code-review",
+        "review-fix-loop",
+        "verify-before-done",
+        "checkpoint",
+        "architecture-diagrams",
+        "improve-codebase-architecture"
+      ]
+    },
+    {
+      "name": "git-ops",
+      "description": "Git hygiene and delivery ops: linear history, fixup distribution, PR comment handling, shipped-state audits, secret-leak audits.",
+      "skills": [
+        "linear-git-history",
+        "distribute-fixups",
+        "address-comments",
+        "what-is-shipped",
+        "auditing-repo-for-leaks"
+      ]
+    },
+    {
+      "name": "thinking",
+      "description": "Reasoning and research toolkit: deep research, adversarial questioning, zero-assumption analysis, teaching, quick-wins triage.",
+      "skills": [
+        "deep-research",
+        "researching",
+        "genius-thinking",
+        "grill-me",
+        "zero-assumptions",
+        "teach",
+        "quick-wins-analysis"
+      ]
+    }
+  ]
+}

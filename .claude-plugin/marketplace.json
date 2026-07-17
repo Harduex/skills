@@ -1,0 +1,29 @@
+{
+  "name": "evolving-harness",
+  "owner": {
+    "name": "Harduex",
+    "url": "https://github.com/Harduex"
+  },
+  "plugins": [
+    {
+      "name": "harness-evolution",
+      "source": "./plugins/harness-evolution",
+      "description": "The core Evolving Harness loop: extract skills from sessions, save learned lessons, analyze agent sessions, and evolve the skill repo - includes the framework router."
+    },
+    {
+      "name": "delivery-lifecycle",
+      "source": "./plugins/delivery-lifecycle",
+      "description": "Gated idea-to-shipped pipeline: plan, design, spec, test cases, autonomous build loop, review, verification, checkpoint."
+    },
+    {
+      "name": "git-ops",
+      "source": "./plugins/git-ops",
+      "description": "Git hygiene and delivery ops: linear history, fixup distribution, PR comment handling, shipped-state audits, secret-leak audits."
+    },
+    {
+      "name": "thinking",
+      "source": "./plugins/thinking",
+      "description": "Reasoning and research toolkit: deep research, adversarial questioning, zero-assumption analysis, teaching, quick-wins triage."
+    }
+  ]
+}
