@@ -86,6 +86,37 @@ prints the `git tag` command. Versioning: **major** = a skill removed/renamed or
 a lifecycle change; **minor** = bundle membership change; **patch** = wording,
 script, or CI fixes.
 
+### Deploying a new or updated skill
+
+Follow this exact order when a skill is added, edited, or renamed and you're
+asked to deploy it. **Never hand-edit `plugins/`** — it is generated.
+
+1. **Author the skill at the flat root** — a folder named exactly as the skill,
+   containing `SKILL.md` with valid frontmatter (`name` matching the folder,
+   non-empty `description`). See `write-a-skill/`. Editing an existing skill in
+   place needs no other structural change.
+2. **Decide bundle membership.** A *new* skill either joins one bundle in
+   `bundles.json` (add its folder name to that bundle's `skills` list) or stays
+   root-only (installable individually, listed under "root-only" in this
+   README). Renames must be updated in `bundles.json` too. A pure edit to an
+   existing skill changes nothing here.
+3. **Bump the version** to match what changed (only if `bundles.json` or a skill
+   name changed — a wording-only skill edit is a `patch`):
+   `python3 scripts/bump_version.py [major|minor|patch]`, then fill in the new
+   `CHANGELOG.md` entry.
+4. **Regenerate and validate:** `python3 scripts/generate_bundles.py` then
+   `python3 scripts/generate_bundles.py --check`; run `python3 -m unittest
+   discover -s tests`.
+5. **Commit** the root skill change, `bundles.json`, `CHANGELOG.md`, and the
+   regenerated `plugins/` together. **Get the human's approval before pushing.**
+6. **Push and tag** (human-gated): `git push origin master`, then push the tag
+   the bump printed (`git tag vX.Y.Z && git push origin vX.Y.Z`) and, if
+   desired, `gh release create vX.Y.Z`.
+
+Both install paths pick the change up automatically: `npx skills add
+Harduex/skills` sees the flat folder, and bundle users get it on their next
+`/plugin` update of the affected bundle.
+
 ## Creating skills
 
 See the `write-a-skill/` folder for the authoring guide.
