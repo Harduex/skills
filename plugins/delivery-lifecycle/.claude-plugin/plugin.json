@@ -1,0 +1,5 @@
+{
+  "name": "delivery-lifecycle",
+  "description": "Gated idea-to-shipped pipeline: plan, design, spec, test cases, autonomous build loop, review, verification, checkpoint.",
+  "version": "0.1.0"
+}

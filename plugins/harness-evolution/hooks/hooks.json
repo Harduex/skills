@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'This workspace uses the Evolving Harness framework. For any non-trivial software task, consult the using-evolving-harness skill FIRST to route the work through the lifecycle and its gates. Before ending a substantial session, run its evolution loop (save-learned-lessons / extract-skill-from-session).'"
+          }
+        ]
+      }
+    ]
+  }
+}
