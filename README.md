@@ -94,20 +94,23 @@ asked to deploy it. **Never hand-edit `plugins/`** — it is generated.
    containing `SKILL.md` with valid frontmatter (`name` matching the folder,
    non-empty `description`). See `write-a-skill/`. Editing an existing skill in
    place needs no other structural change.
-2. **Decide bundle membership.** A *new* skill either joins one bundle in
-   `bundles.json` (add its folder name to that bundle's `skills` list) or stays
-   root-only (installable individually, listed under "root-only" in this
-   README). Renames must be updated in `bundles.json` too. A pure edit to an
-   existing skill changes nothing here.
-3. **Bump the version** to match what changed (only if `bundles.json` or a skill
-   name changed — a wording-only skill edit is a `patch`):
-   `python3 scripts/bump_version.py [major|minor|patch]`, then fill in the new
-   `CHANGELOG.md` entry.
-4. **Regenerate and validate:** `python3 scripts/generate_bundles.py` then
+2. **Decide bundle membership.** A *new* skill joins exactly one bundle in
+   `bundles.json` (add its folder name to that bundle's `skills` list). Renames
+   must be updated in `bundles.json` too. A pure edit to an existing skill
+   changes nothing here.
+3. **Regenerate, validate, and commit the change:**
+   `python3 scripts/generate_bundles.py` then
    `python3 scripts/generate_bundles.py --check`; run `python3 -m unittest
-   discover -s tests`.
-5. **Commit** the root skill change, `bundles.json`, `CHANGELOG.md`, and the
-   regenerated `plugins/` together. **Get the human's approval before pushing.**
+   discover -s tests`. Commit the root skill change, `bundles.json`, and the
+   regenerated `plugins/` together.
+4. **Bump the version on the now-clean tree** (`bump_version.py` refuses a
+   dirty tree so the bump stays an isolated, reviewable change):
+   `python3 scripts/bump_version.py [major|minor|patch]` — a wording-only
+   skill edit is a `patch` — then fill in the new `CHANGELOG.md` entry.
+5. **Regenerate and commit the release:** rerun the generate/check/test
+   commands from step 3, then commit `bundles.json`, `CHANGELOG.md`, and
+   `plugins/` as the release commit. **Get the human's approval before
+   pushing.**
 6. **Push and tag** (human-gated): `git push origin master`, then push the tag
    the bump printed (`git tag vX.Y.Z && git push origin vX.Y.Z`) and, if
    desired, `gh release create vX.Y.Z`.
