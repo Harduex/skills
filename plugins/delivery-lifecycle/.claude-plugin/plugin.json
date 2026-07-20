@@ -1,5 +1,5 @@
 {
   "name": "delivery-lifecycle",
-  "description": "Gated idea-to-shipped pipeline: plan, design, spec, test cases, autonomous build loop, review, verification, checkpoint.",
+  "description": "Gated idea-to-shipped pipeline: plan, design, spec, test cases, autonomous build loop, review, verification, checkpoint - plus formal verification, functional-programming guidance, and site refinement.",
   "version": "0.1.0"
 }

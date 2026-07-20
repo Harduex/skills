@@ -3,7 +3,7 @@
   "bundles": [
     {
       "name": "harness-evolution",
-      "description": "The core Evolving Harness loop: extract skills from sessions, save learned lessons, analyze agent sessions, and evolve the skill repo - includes the framework router.",
+      "description": "The core Evolving Harness loop: extract skills from sessions, save learned lessons, analyze agent sessions, and evolve the skill repo - includes the framework router and output-style setup.",
       "hooks": "hooks/session-start.json",
       "skills": [
         "using-evolving-harness",
@@ -14,12 +14,13 @@
         "write-a-skill",
         "system-harness-graph",
         "auditing-agent-infra",
-        "scaffold-project-harness"
+        "scaffold-project-harness",
+        "set-output-style"
       ]
     },
     {
       "name": "delivery-lifecycle",
-      "description": "Gated idea-to-shipped pipeline: plan, design, spec, test cases, autonomous build loop, review, verification, checkpoint.",
+      "description": "Gated idea-to-shipped pipeline: plan, design, spec, test cases, autonomous build loop, review, verification, checkpoint - plus formal verification, functional-programming guidance, and site refinement.",
       "skills": [
         "idea-to-plan",
         "architecting",
@@ -34,7 +35,10 @@
         "verify-before-done",
         "checkpoint",
         "architecture-diagrams",
-        "improve-codebase-architecture"
+        "improve-codebase-architecture",
+        "formal-verification",
+        "functional-programming",
+        "site-refiner"
       ]
     },
     {
