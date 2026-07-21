@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.0.1
+
+- `address-comments`: documented GitLab reply-posting pitfalls in the forge
+  mechanics reference — `glab api .../discussions/<id>/notes -f body=@file`
+  posts the literal `@path` (unlike `gh`'s `-F`) and `--input -` fails
+  `HTTP 415`; use the documented `glab mr note create --reply -m "$(cat …)"`,
+  and verify the *stored note body* after posting, not just placement.
+
 ## v1.0.0
 
 - Removed the obsolete `continuous-chat-loop` skill (major bump).

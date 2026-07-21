@@ -1,5 +1,5 @@
 {
   "name": "harness-evolution",
   "description": "The core Evolving Harness loop: extract skills from sessions, save learned lessons, analyze agent sessions, and evolve the skill repo - includes the framework router and output-style setup.",
-  "version": "1.0.0"
+  "version": "1.0.1"
 }
