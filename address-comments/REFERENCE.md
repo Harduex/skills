@@ -40,6 +40,9 @@ Write the body to a file first (dodges shell quoting of backticks/markdown), the
 glab mr note create <iid> --reply <discussion-id> -m "$(cat /path/to/reply.md)"
 ```
 
+- Use this documented subcommand — do **not** hand-roll a reply through `glab api .../discussions/<id>/notes`. `glab`'s `-f body=@file` posts the *literal* text `@file` (it does **not** read the file the way `gh`'s `-F` does), and `--input -` fails with `HTTP 415` (no content-type set). If forced onto the raw API, pass `-f "body=$BODY"` after `BODY="$(cat reply.md)"` (backticks in a variable value aren't re-evaluated); likewise to fix a botched note in place: `glab api ".../merge_requests/<iid>/notes/<note-id>" -X PUT -f "body=$BODY"`.
+- `--file` is mutually exclusive with `--reply`, so a threaded reply must pass the body via `-m "$(cat reply.md)"`, not `--file`.
+
 Posting needs a token with `api` (write) scope; `read_api`-class tokens fail with `403 insufficient_scope` — ask the user to re-auth (`glab auth login --hostname <host>`), never script around it.
 
 ## GitHub (`gh`)
@@ -79,7 +82,7 @@ gh pr comment <n> --body-file /path/to/reply.md
 
 ## Both forges
 
-- **Verify after posting:** re-fetch the thread and confirm the note landed *threaded in the right discussion*, not as a stray top-level comment. Never trust the POST exit code alone.
+- **Verify after posting:** re-fetch the thread and confirm the note landed *threaded in the right discussion* (not a stray top-level comment) **and that the stored body is correct** — a mis-passed body field returns `200` with garbage (e.g. a literal `@path`) as the note text. Never trust the POST exit code alone.
 - A ` ```suggestion ` block's header offsets a line *range* relative to the anchor (e.g. GitLab's `suggestion:-1+0`) — read the full range.
 - One commit per addressed comment/concern, ordered to match the report IDs, so each reply can cite its SHA. The repo's message convention applies (ticket prefix etc.).
 - Splitting one file across two comments: stage per hunk (`git add -p`); for entangled hunks, temporarily revert one fix, commit the other, re-apply.
