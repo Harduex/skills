@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.0.2
+
+- `address-comments`: corrected the GitLab raw-API reply note — `glab api
+  --input -` needs an explicit `-H 'Content-Type: application/json'` (else
+  `HTTP 415`); it is usable, not a dead end. Now consistent with the
+  `code-review` skill's posting form.
+
 ## v1.0.1
 
 - `address-comments`: documented GitLab reply-posting pitfalls in the forge
