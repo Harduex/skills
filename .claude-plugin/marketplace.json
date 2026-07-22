@@ -1,5 +1,5 @@
 {
-  "name": "evolving-harness",
+  "name": "harduex",
   "owner": {
     "name": "Harduex",
     "url": "https://github.com/Harduex"
@@ -24,6 +24,15 @@
       "name": "thinking",
       "source": "./plugins/thinking",
       "description": "Reasoning and research toolkit: deep research, adversarial questioning, zero-assumption analysis, teaching, quick-wins triage."
+    },
+    {
+      "name": "agentic-notebook",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/Harduex/agentic-notebook.git",
+        "sha": "1870e12a4b9077a0256c2175f2e2856261baadfe"
+      },
+      "description": "Source-grounded, NotebookLM-style research notebook over any local folder of documents — grounded Q&A with verifiable citations, plus study guides, briefing docs, mind maps, podcast scripts and more."
     }
   ]
 }

@@ -48,19 +48,19 @@ install any skill individually.
 
 ```
 /plugin marketplace add Harduex/skills
-/plugin install harness-evolution@evolving-harness
+/plugin install harness-evolution@harduex
 /reload-plugins
 ```
 
 Swap `harness-evolution` for any bundle above. The marketplace is named
-`evolving-harness`. Use `/plugin list` and `/plugin marketplace list` to see
+`harduex`. Use `/plugin list` and `/plugin marketplace list` to see
 what's installed.
 
 ### Uninstall
 
 ```
-/plugin uninstall harness-evolution@evolving-harness
-/plugin marketplace remove evolving-harness
+/plugin uninstall harness-evolution@harduex
+/plugin marketplace remove harduex
 /reload-plugins
 ```
 
@@ -118,6 +118,19 @@ asked to deploy it. **Never hand-edit `plugins/`** — it is generated.
 Both install paths pick the change up automatically: `npx skills add
 Harduex/skills` sees the flat folder, and bundle users get it on their next
 `/plugin` update of the affected bundle.
+
+### Releasing the `agentic-notebook` plugin (cross-repo)
+
+The `harduex` marketplace also serves
+[`agentic-notebook`](https://github.com/Harduex/agentic-notebook), which lives
+in its own repo. Its marketplace entry pins a commit `sha`, so a release there
+does **not** reach users until the pin is updated here:
+
+1. Release in the `agentic-notebook` repo as usual (its own version and history).
+2. In `.claude-plugin/marketplace.json`, update the `agentic-notebook` entry's
+   `sha` to the new release commit.
+3. Commit and push this repo. Do **not** run `bump_version.py` — it governs only
+   the four bundles' shared version, not this plugin.
 
 ## Creating skills
 
