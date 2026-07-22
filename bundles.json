@@ -4,7 +4,6 @@
     {
       "name": "harness-evolution",
       "description": "The core Evolving Harness loop: extract skills from sessions, save learned lessons, analyze agent sessions, and evolve the skill repo - includes the framework router and output-style setup.",
-      "hooks": "hooks/session-start.json",
       "skills": [
         "using-evolving-harness",
         "extract-skill-from-session",
