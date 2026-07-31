@@ -1,5 +1,18 @@
 # Changelog
 
+## v1.2.0
+
+- **New skill `general-coding-standards`** (delivery-lifecycle): language-agnostic coding
+  standards translated from ASD-STE100 Simplified Technical English (Issue 9).
+  40 rules in six banded, stable-ID sections — naming (controlled vocabulary +
+  per-project glossary), statements/functions (guards first, one action per
+  statement, size triggers), modules, errors/logs (severity + condition +
+  consequence), prose (comments, docs, commits), and consistency. Ships a
+  starter vocabulary (approved verbs, banned vague words), a review mode with
+  rule-ID-tagged findings, and STE-MAPPING.md tracing all 53 rules + 8 general
+  recommendations + the dictionary to their coding equivalents — each source
+  rule fully paraphrased and page-referenced, no verbatim spec text.
+
 ## v1.1.0
 
 - **New skill `filming-verification`** (delivery-lifecycle): record a short,
