@@ -1,5 +1,32 @@
 # Changelog
 
+## v1.1.0
+
+- **New skill `filming-verification`** (delivery-lifecycle): record a short,
+  caption-annotated screen video that proves a change works, in place of a
+  written test report. Covers the film/prose/nothing decision, captioning with
+  *measured* values, the ~1.5x readability ceiling (captions dominate the
+  runtime, so speeding past it hides the evidence), verifying the film by
+  extracting frames before delivering it, and two drivers — a test runner with
+  built-in recording, or a browser-automation MCP plus an OS screen recorder
+  that can show but not assert.
+- `verify-before-done`: added the deliverable policy — chat prose with stable
+  IDs (`TC-3`, `F2`) is the default; a file only when a reader outside the
+  conversation needs it or the human asked; a film replaces the written report
+  and its screenshots.
+- `code-review`: findings belong in the conversation, not a report file; offer a
+  film once for user-visible changes prose can't settle, never on backend,
+  schema, or refactor-only diffs.
+- `review-fix-loop`: pass lists and the final summary stay in chat (new **G7**)
+  instead of `review-pass-N.md` / `review-final-report.md` — report files
+  written for the person you are already talking to get deleted, and writing
+  them slows the loop.
+- `architecting`: reconciled with the downstream `maui-skills` copy, which had
+  drifted — took that copy's more concrete plan-drift paragraph and kept this
+  one's stronger interrogation directives, then ordered the design-time rules
+  (directives, interrogation, resilience) before the execution-time one (plan
+  drift). The two files are now identical.
+
 ## v1.0.2
 
 - `address-comments`: corrected the GitLab raw-API reply note — `glab api

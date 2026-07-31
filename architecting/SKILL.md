@@ -31,10 +31,6 @@ description: Architects new features and systems with rigorous requirements inte
 
 **Localized** (UI components, bug fixes, simple scripts) — skip interrogation, proceed directly.
 
-## Plan drift
-
-A plan is a hypothesis about the codebase. When the code contradicts a plan step, stop, state the contradiction, and revise the plan rather than forcing the step through. Never implement a plan step you can see is wrong just because it's written down.
-
 ## Resilience requirements
 
 Mandate these layers in system-level designs:
@@ -42,3 +38,7 @@ Mandate these layers in system-level designs:
 1. **Sensibility checks** — validate inputs for logical reasonableness at boundaries, not just type safety
 2. **Forcing functions** — design types so invalid states are unrepresentable
 3. **Defense in depth** — multiple independent layers of error mitigation, no silent failures
+
+## Plan drift
+
+A plan is a hypothesis about the codebase. When the code contradicts a plan step — a helper the plan assumed doesn't exist, a sibling does it differently, the schema differs — stop, state the contradiction, and revise the plan (or ask) rather than forcing the step through. Never implement a plan step you can see is wrong just because it's written down.
