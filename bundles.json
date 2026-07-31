@@ -19,7 +19,7 @@
     },
     {
       "name": "delivery-lifecycle",
-      "description": "Gated idea-to-shipped pipeline: plan, design, spec, test cases, autonomous build loop, review, verification, checkpoint - plus formal verification, functional-programming guidance, and site refinement.",
+      "description": "Gated idea-to-shipped pipeline: plan, design, spec, test cases, autonomous build loop, review, verification, checkpoint - plus formal verification, functional-programming guidance, ASD-STE100-derived coding standards, and site refinement.",
       "skills": [
         "idea-to-plan",
         "architecting",
@@ -38,6 +38,7 @@
         "improve-codebase-architecture",
         "formal-verification",
         "functional-programming",
+        "general-coding-standards",
         "site-refiner"
       ]
     },
