@@ -18,6 +18,15 @@ Before saying done / fixed / implemented / passing, or committing a nontrivial c
    - CLI/script → run the real command on real input
 3. **Show the evidence** — paste the test output, the observed behavior, the response body. A claim without its evidence is a hypothesis.
 
+## Where the evidence goes
+
+Default to **chat prose with stable IDs** (`TC-3`, `F2`) so the human can answer "about F2…".
+That is the form they actually engage with.
+
+- **A file only when it has a reader who is not in this conversation** — an MR body, a ticket, a handoff — or when they asked for a file. Verification reports written for the person you're talking to get deleted; don't produce them by reflex.
+- **User-visible behavior that prose can't settle** → offer to film it, via your set's verification-filming workflow if it has one. A film replaces the written report and its screenshots; never both.
+- Keep any such artifact untracked unless asked, and if it vanishes mid-session assume the human removed it — say so in one line, don't recreate it, don't investigate your tooling.
+
 ## If you cannot verify
 
 Say so explicitly: "implemented, NOT verified — needs X" beats a false "done". Never let a handoff imply verification that didn't happen; the human testing your unverified work is the failure mode this skill exists to prevent.

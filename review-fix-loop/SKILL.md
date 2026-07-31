@@ -19,11 +19,11 @@ Substantial branches, features, audits, or pre-merge hardening — where one rev
 
 1. **Scope** — get the diff (`git diff <base>...HEAD`); enumerate the changed surfaces (backend, data, UI, tests, infra).
 2. **Review — parallel, lens-split.** Dispatch one agent per lens. Each agent **invokes the review/domain workflows relevant to its lens** and returns **structured, severity-tagged findings** (a schema — so only findings, not transcripts, return to you). Lenses: *correctness/security · logic/data · UI · tests · **symmetry with existing patterns*** (G2).
-3. **Aggregate** — dedupe across lenses; write `review-pass-N.md` (stable IDs, severity, `file:line`). **Verify every finding against the code yourself before accepting it** (G3).
+3. **Aggregate** — dedupe across lenses into a pass list with stable IDs, severity and `file:line`. Keep it **in the conversation** unless the human asked for a file or a non-participant reads it (G7). **Verify every finding against the code yourself before accepting it** (G3).
 4. **Fix** — resolve Critical + High + clear high-value items. **One commit per fix, never amend** (G5). Parallel fixers edit *disjoint* files (no git); you serialize the commits. Do small surgical fixes inline.
 5. **Verify** — typecheck + lint + tests green via your verification workflow; report evidence, not claims.
 6. **Adversarially verify the fixes** — a skeptic pass over the fix diffs (each verifier tries to *refute*), plus one fresh full-diff sweep for anything the fixes introduced or earlier passes missed.
-7. **Gate** — continue iff any **Critical OR genuine new/unresolved High** remains; else write `review-final-report.md` and **stop**. Cap at ~3 passes.
+7. **Gate** — continue iff any **Critical OR genuine new/unresolved High** remains; else summarize the outcome and **stop**. Cap at ~3 passes. If the fixes changed user-visible behavior in a way prose can't settle, offer to film the re-verification via your set's verification-filming workflow — offer once, don't film unasked.
 
 ## Non-obvious policy (why this loop, not a naive one)
 
@@ -32,6 +32,7 @@ Substantial branches, features, audits, or pre-merge hardening — where one rev
 - **G3 — Verify findings before acting.** Agents emit confident false positives. Reproduce/trace each before fixing; a disproven finding produces **no** change.
 - **G4 — Know what the loop misses → hand to the human.** Product/UX judgment ("should this even appear?") and live visual behavior are not reliably caught by code review. Surface them as decisions; don't loop on them.
 - **G5 — Serialize commits.** Parallel agents can't race the index. One commit per fix; disjoint files; the orchestrator commits.
+- **G7 — The loop's output is a conversation, not a folder.** Pass lists and the final summary live in chat with stable IDs the human can answer ("about F2…"). Write them to disk only when asked or when a non-participant reads them — files written for the person you're talking to get deleted, and the writing slows the loop. A recorded film, when one is warranted, replaces the written report entirely.
 - **G6 — Subagent-report caveats are binding.** Before applying an edit a subagent analyzed, re-read that report's warnings about the exact code being touched; a flagged caveat blocks the edit until addressed. Summaries get skimmed — the caveat is usually the most valuable line in them.
 
 ## Capabilities by phase

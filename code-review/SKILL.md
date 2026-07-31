@@ -151,6 +151,16 @@ Project-specific red flags live in the consuming project's conventions documenta
 
 ## Deliver findings
 
+Findings belong **in the conversation** (or the host's findings tool), with stable IDs the
+author can answer by number. Write them to a file only when asked or when a non-participant
+reads them — a review report written for the person you're talking to gets deleted, and
+producing it slows the review.
+
+If the change is user-visible and prose can't settle whether it behaves correctly, offer once
+to film the verification — your set's verification-filming workflow, if it has one; a film
+replaces a written report and its screenshots. Don't offer on backend, schema, or
+refactor-only diffs.
+
 ### The report bar — only findings that will actually get fixed
 
 The report is a short list of findings the author will act on, not a transcript of everything you noticed. A finding earns its place only when all three hold:
@@ -159,7 +169,7 @@ The report is a short list of findings the author will act on, not a transcript 
 2. **Consequential** — it produces a wrong behavior, a leak/race, a security gap, dead weight, or a divergence from a sibling pattern. State the concrete failure or the sibling that does it right.
 3. **Actionable in this branch** — the fix fits the MR's scope. Codebase-wide cleanups and refactors of pre-existing code are follow-up-ticket material, compressed to one line at the end of the report.
 
-Calibration from a mined corpus of ~90 real review findings across 14 sessions — what actually gets fixed vs. ignored:
+Calibration from this project's review history (~90 catalogued findings across 14 sessions) — what actually gets fixed vs. ignored:
 
 | Reliably fixed — report | Never acted on — drop |
 |---|---|
