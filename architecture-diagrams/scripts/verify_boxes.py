@@ -3,7 +3,7 @@
 
 Catches what a HAND-DRAWN diagram silently ships: a box missing a border, a
 broken side wall, a misaligned corner — and a diagram too wide for a
-merge-request review pane (MAX_WIDTH, 120 chars). The generator (diagram.py)
+code-review pane (MAX_WIDTH, 120 chars). The generator (diagram.py)
 produces correct boxes by construction — this is the safety net for hand-drawn
 shapes (hub-and-spoke) and hand-edited docs.
 
@@ -17,7 +17,7 @@ generator output with SKIP_EDGES does not false-positive.
 """
 import sys
 
-MAX_WIDTH = 120       # an MR review pane clips wider diagrams behind a scrollbar
+MAX_WIDTH = 120       # a code-review pane clips wider diagrams behind a scrollbar
 
 TL, TR, BL, BR = "┌", "┐", "└", "┘"
 CORNERS = set(TL + TR + BL + BR)
@@ -80,7 +80,7 @@ def lint(text, label):
 
     width = max((len(r.rstrip()) for r in text.split("\n")), default=0)
     if width > MAX_WIDTH:
-        problems.append(f"  diagram is {width} chars wide — exceeds MAX_WIDTH={MAX_WIDTH} (an MR review pane); regenerate with ORIENTATION=\"SEQ\" or shorten labels")
+        problems.append(f"  diagram is {width} chars wide — exceeds MAX_WIDTH={MAX_WIDTH} (a code-review pane); shorten the box lines")
 
     print(f"[{label}] {len(boxes)} box(es) — {'OK' if not problems else 'PROBLEMS'}")
     for p in problems:

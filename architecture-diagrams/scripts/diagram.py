@@ -1,12 +1,24 @@
 #!/usr/bin/env python3
 """Aligned ASCII C4-style box-and-arrow diagram generator (columnar layout).
 
-Two orientations, one config format:
+Four orientations, one config format. Pick by the reader's FIRST question —
+what are we building ("FOOTPRINT"), who calls whom in what order ("SEQ"), or
+how do the pieces sit ("LR"/"TB"):
 
+  ORIENTATION = "FOOTPRINT" — the change inventory: one box per OWNING system,
+                       one line per thing the change adds or touches (route,
+                       column, table, trigger, function, setting), each marked
+                       (NEW) / reused / not-ours. Boxes stack flush at a uniform
+                       width; at most ONE connecting arrow per adjacent pair
+                       (EDGES, `between`/`dir`), naming the hop rather than the
+                       messages — the per-message story is what SEQ is for.
+                       SKIP_EDGES is unused. This is what a lead wants first
+                       from a design doc: what gets built, and who owns it.
   ORIENTATION = "LR" — boundaries side by side, edge labels inline in the gaps
-                       between them. Reads best at 2–3 boundaries with short
-                       labels; width grows with every column AND every label,
-                       so it blows past a review pane fast.
+                       between them. Reads best at 2–3 boundaries. Gaps are
+                       sized to their labels while the whole diagram fits
+                       TARGET_WIDTH, then share the leftover width and wrap
+                       their labels instead of widening.
   ORIENTATION = "TB" — boundaries step down a diagonal (each box STAGGER chars
                        right of the previous), edge labels get full lines to
                        the right of the boxes, and the boundary name is the
@@ -22,7 +34,7 @@ Two orientations, one config format:
                        boundaries); SKIP_EDGES is unused. Keep COLUMNS
                        "lines" short or empty — they widen the header boxes.
 
-Both render the same columnar "swimlane" model — this is NOT a general
+All four render the same columnar "swimlane" model — this is NOT a general
 graph-layout engine. If your diagram is hub-and-spoke (a C4 Context), deeply
 layered, or has many crossing edges, reach for Mermaid-C4 / PlantUML-C4
 instead (see ../SKILL.md → "Choosing a layout").
@@ -36,9 +48,13 @@ counting spaces. Edit ORIENTATION / COLUMNS / EDGES / SKIP_EDGES below, then:
                                        # (the ``` block containing the first
                                        #  boundary label)
 
-A diagram must fit a merge-request review pane without sideways scrolling:
-the script warns on stderr when the render exceeds TARGET_WIDTH (120 chars).
-Fix by switching to "TB" or shortening labels — never by shipping the scroll.
+A diagram must fit a code-review pane without sideways scrolling.
+"LR" enforces this itself: gaps are sized naturally while the whole diagram
+fits TARGET_WIDTH (120), and once it doesn't, the gaps share the leftover
+width and their labels wrap onto lines above the arrow — so a wordy label
+costs height, not a scrollbar. The script still warns on stderr if even that
+can't fit (the boxes alone are too wide); shorten box lines, never ship the
+scroll.
 
 Conventions encoded (C4 — see c4model.com):
   • Each COLUMNS entry is one SYSTEM BOUNDARY (owning team / system), drawn as
@@ -61,10 +77,12 @@ import sys
 
 PAD = 1            # inner horizontal padding inside boxes
 MIN_GAP = 6        # LR: gap width between boxes when there is no edge label
-ORIENTATION = "LR" # "LR" side-by-side | "TB" stacked | "SEQ" RFC-style ladder (best for flows)
+ORIENTATION = "LR" # "FOOTPRINT" what-we're-building inventory | "SEQ" RFC-style
+                   # ladder (who calls whom, in what order) | "LR" side-by-side
+                   # | "TB" stacked (how the pieces sit)
 STAGGER = 8        # TB: each box shifts this many chars right of the previous (0 = plain stack)
 LABEL_WRAP = 20    # SEQ: word-wrap an adjacent-pair arrow label to this width
-TARGET_WIDTH = 120 # warn when the render is wider (an MR pane clips ~120 chars)
+TARGET_WIDTH = 120 # warn when the render is wider (a review pane clips ~120 chars)
 
 # One dict per column = one boundary box. `lines` are the container rows.
 # (Generic example — replace with your own systems.)
@@ -97,9 +115,88 @@ SKIP_EDGES = [
     {"from": 0, "to": 2, "label": "authenticates with [OAuth]"},
 ]
 
+FOOTPRINT = ORIENTATION == "FOOTPRINT"
+
+
+def wrap(text, width):
+    """Greedy word wrap. A word longer than `width` overflows its own line
+    rather than being split — breaking `[protocol]` tags mid-token reads worse
+    than one long line."""
+    lines, cur = [], ""
+    for w in text.split():
+        cand = f"{cur} {w}" if cur else w
+        if len(cand) <= width or not cur:
+            cur = cand
+        else:
+            lines.append(cur)
+            cur = w
+    if cur:
+        lines.append(cur)
+    return lines or [""]
+
+
+def plan_gaps(widths):
+    """Gap widths for LR.
+
+    A gap only has to be as wide as its longest label when that label sits
+    inline on the arrow — which is why width used to grow without limit and
+    diagrams scrolled sideways. So: size the gaps naturally whenever the whole
+    diagram already fits the budget (identical output to before), and only when
+    it doesn't, share the leftover width among the gaps and let the labels wrap
+    onto lines above their arrow. Width becomes a budget instead of a
+    consequence of how wordy the labels are."""
+    n = len(COLUMNS)
+    natural = []
+    for p in range(n - 1):
+        labels = [e["label"] for e in EDGES if e["between"] == p]
+        natural.append(max([len(l) + 5 for l in labels] + [MIN_GAP]))
+    boxes = sum(w + 2 * PAD + 2 for w in widths)
+    if boxes + sum(natural) <= TARGET_WIDTH:
+        return natural
+    avail, share = TARGET_WIDTH - boxes, max(1, sum(natural))
+    # never widen a gap past its natural size — a short label must not be
+    # stretched just because a sibling gap is cramped
+    return [min(natural[p], max(MIN_GAP, avail * natural[p] // share))
+            for p in range(n - 1)]
+
+
+def build_footprint():
+    """FOOTPRINT: uniform-width boxes stacked flush, with at most one connecting
+    arrow per adjacent pair — its label sitting inline beside the shaft, which is
+    the LR sentence style turned vertical. Width is capped by the widest box, so
+    a wordy label costs height, never a sideways scroll. Lines are units of work,
+    not containers; a pair with no edge simply has no arrow (the last box is
+    usually a dependency panel nothing points at)."""
+    n = len(COLUMNS)
+    w = max(max([len(l) for l in c["lines"]] + [len(c["boundary"])])
+            for c in COLUMNS)
+    inner = w + 2 * PAD
+    mid = inner // 2
+    col = 1 + mid                       # the shaft's column, past the "┌"
+    out = []
+    for i, c in enumerate(COLUMNS):
+        down = next((e for e in EDGES if e["between"] == i), None)
+        up = next((e for e in EDGES if e["between"] == i - 1), None)
+        top, bot = ["─"] * inner, ["─"] * inner
+        if up and up["dir"] == "L":
+            top[mid] = "┬"
+        if down and down["dir"] == "R":
+            bot[mid] = "┬"
+        out.append("┌" + "".join(top) + "┐")
+        for l in [c["boundary"]] + c["lines"]:
+            out.append("│" + " " * PAD + l.ljust(w) + " " * PAD + "│")
+        out.append("└" + "".join(bot) + "┘")
+        if down:
+            label = wrap(down["label"], max(1, inner - mid - 3))
+            shaft = [" " * col + "│ " + l for l in label]
+            out += ([" " * col + "▲"] + shaft) if down["dir"] == "L" \
+                else (shaft + [" " * col + "▼"])
+    return out
+
 
 def build():
-    """LR: boundaries side by side, edge labels inline in the gaps."""
+    """LR: boundaries side by side, edge labels in the gaps — inline on the
+    arrow when they fit, wrapped onto lines above it when they don't."""
     n = len(COLUMNS)
     rows = max((len(c["lines"]) for c in COLUMNS), default=0)
     for c in COLUMNS:
@@ -111,15 +208,32 @@ def build():
     # column elsewhere (corruption) — so widen the box to hold it (ow(w) = w + 4).
     widths = [max(w, len(c["boundary"]) - 2 * PAD - 2) for w, c in zip(widths, COLUMNS)]
 
-    gaps = []
-    for p in range(n - 1):
-        labels = [e["label"] for e in EDGES if e["between"] == p]
-        gaps.append(max([len(l) + 5 for l in labels] + [MIN_GAP]))
+    gaps = plan_gaps(widths)
 
     def arrow(label, d, w):
-        k = w - len(label) - 4  # filler dashes; guaranteed >= 1 by the +5 above
-        return ("─ " + label + " " + "─" * k + "▶") if d == "R" \
-            else ("◀" + "─" * k + " " + label + " " + "─")
+        k = w - len(label) - 4  # filler dashes
+        if d == "R":
+            return "─ " + label + " " + "─" * k + "▶", 2
+        return "◀" + "─" * k + " " + label + " " + "─", k + 2
+
+    # Wrap each label to its gap. The last line stays inline on the arrow, so a
+    # label that already fits renders exactly as it always did; earlier lines
+    # stack above it, left-aligned to where the inline label starts.
+    wrapped = [wrap(e["label"], max(1, gaps[e["between"]] - 5)) for e in EDGES]
+
+    extra = {}
+    for e, w in zip(EDGES, wrapped):
+        extra[e["row"]] = max(extra.get(e["row"], 0), len(w) - 1)
+    remap, off = {}, 0
+    for r in range(rows):
+        remap[r] = r + off
+        off += extra.get(r, 0)
+    if off:
+        for c in COLUMNS:
+            padded = [""] * (rows + off)
+            for r in range(rows):
+                padded[remap[r]] = c["lines"][r]
+            c["lines"] = padded
 
     def box_rows(lines, w):
         inner = w + 2 * PAD
@@ -127,8 +241,20 @@ def build():
         return ["┌" + "─" * inner + "┐"] + body + ["└" + "─" * inner + "┘"]
 
     br = [box_rows(COLUMNS[i]["lines"], widths[i]) for i in range(n)]
-    edge_at = {(e["between"], e["row"]): arrow(e["label"], e["dir"], gaps[e["between"]])
-               for e in EDGES}
+    edge_at = {}
+    for e, lines in zip(EDGES, wrapped):
+        p, g, r = e["between"], gaps[e["between"]], remap[e["row"]]
+        # the first line stays inline on the arrow, so the box content and its
+        # arrow keep sharing a row exactly as they do when nothing wraps; the
+        # rest flow below. An outbound label grows rightward from where the
+        # inline line starts, a return label ends where the inline one ends, so
+        # either way the label reads as one block.
+        seg, at = arrow(lines[0], e["dir"], g)
+        edge_at[(p, r)] = seg
+        end = at + len(lines[0])
+        for i, l in enumerate(lines[1:]):
+            pos = at if e["dir"] == "R" else max(0, end - len(l))
+            edge_at[(p, r + 1 + i)] = (" " * pos + l).ljust(g)[:g]
 
     out = []
     for r in range(len(br[0])):
@@ -191,6 +317,8 @@ def build_tb():
     n = len(COLUMNS)
     iws = [max([len(l) for l in c["lines"]] + [len(c["boundary"])]) + 2 * PAD
            for c in COLUMNS]
+    if FOOTPRINT:
+        iws = [max(iws)] * n
     lefts = [i * STAGGER for i in range(n)]
     rights = [lefts[i] + iws[i] + 1 for i in range(n)]
 
@@ -381,15 +509,17 @@ def patch_markdown(path, diagram):
 
 
 if __name__ == "__main__":
-    d = {"TB": build_tb, "SEQ": build_seq}.get(ORIENTATION, build)()
+    d = {"TB": build_tb, "SEQ": build_seq,
+         "FOOTPRINT": build_footprint}.get(ORIENTATION, build)()
     print("\n".join(d))
     width = max((len(l) for l in d), default=0)
     if width > TARGET_WIDTH:
         sys.stderr.write(
             f"\n[WARN] {width} chars wide — exceeds TARGET_WIDTH={TARGET_WIDTH} "
-            f"(an MR review pane). "
-            + ('Set ORIENTATION = "SEQ" or shorten labels.\n' if ORIENTATION != "SEQ"
-               else 'Shorten labels or trim header boxes.\n'))
+            f"(a code-review pane). "
+            + ('Shorten the inventory lines.\n' if FOOTPRINT
+               else 'Shorten labels or trim header boxes.\n' if ORIENTATION == "SEQ"
+               else 'Set ORIENTATION = "SEQ" or shorten labels.\n'))
     if len(sys.argv) > 1:
         patch_markdown(sys.argv[1], d)
         sys.stderr.write(f"\n[patched {sys.argv[1]}]\n")
