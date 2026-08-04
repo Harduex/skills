@@ -1,5 +1,30 @@
 # Changelog
 
+## v1.2.1
+
+- **`architecture-diagrams` picks the diagram by the reader's first question**, not by
+  the topology it happens to be holding. The old tiebreaker made `SEQ` unconditional —
+  every backend design has some request/response story — so a ladder won even where the
+  document's own flow section already narrated the sequence in richer prose. The workflow
+  now reads the target document's headings first: a design doc's opening diagram is the
+  change footprint, and a doc that narrates the call order in prose does not get that
+  order redrawn as a ladder.
+- **New `FOOTPRINT` layout** answering "what are we actually building" — one box per
+  owning system, one line per unit of work (route, table, column, trigger, function,
+  setting) with counts and `(NEW)`/reused marks, a box for work the change depends on but
+  does not own, and at most one connecting arrow per adjacent pair naming the hop rather
+  than the messages.
+- **`LR` no longer outgrows the review pane.** Gap width was previously whatever the
+  longest label needed on one line, so width had no ceiling. Gaps are now sized naturally
+  while the whole diagram fits 120 chars — anything that already fit renders byte-for-byte
+  as before — and past that they share the leftover width while labels wrap onto the lines
+  below their arrow. Long labels cost height, never a scrollbar.
+- **Every arrow carries a preposition aimed at the partner** in all four layouts; the `SEQ`
+  carve-out that dropped it on return arrows is gone.
+- **New `scripts/regen_showcase.py`** so the gallery cannot drift from the generator: each
+  example declares where its config comes from, and `--check` fails if any rendered block
+  no longer matches what the generator produces.
+
 ## v1.2.0
 
 - **New skill `general-coding-standards`** (delivery-lifecycle): language-agnostic coding
