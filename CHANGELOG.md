@@ -1,5 +1,23 @@
 # Changelog
 
+## v1.5.0
+
+- **`spec-overview` roots scan-label, then assert.** Comparing the skill's output against
+  what the reader actually wanted showed pure-assertion roots scan worse than
+  `**Sync** — the phone pulls the scene's entire comment set from GET /…/comments`: the
+  bold word is what the eye finds on a re-scan, and the claim after the dash stays
+  disagreeable. A label with no claim is still empty.
+- **Refusals fold into the part they protect** instead of opening as a dedicated block —
+  "no cursor, no tombstone table" under sync, "no change to any existing write function"
+  under build cost. The block read as a second TL;DR and stripped each negative of the
+  context that makes it checkable.
+- **The interface surface is enumerated as its own part** — one line per route/command
+  with the real verb and path; it is what another team implements against.
+- Compactness rules: one line per child (the spec holds the argument), decision ids cited
+  once at the line carrying the decision, open items question-first with the id trailing
+  (`— PM call (TBD-E)`), and the title carries path/revision only when the overview
+  travels beyond the conversation that named the document.
+
 ## v1.4.0
 
 - **`spec-overview` is a briefing, not a review instrument.** It was written around the
