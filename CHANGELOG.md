@@ -1,5 +1,22 @@
 # Changelog
 
+## v1.4.0
+
+- **`spec-overview` is a briefing, not a review instrument.** It was written around the
+  reviewer — "the reader already knows the domain and is scanning for the claim that is
+  wrong" — which narrowed it to one of its uses. It produces a one-screen overview carrying
+  the decisions; catching up, briefing a teammate, handing work to another team, and
+  spotting a wrong claim are all things you can then do with it, and the artifact is
+  identical either way.
+- The falsifiability rule survives with a new justification: it was "a reviewer must be able
+  to disagree", it is now "a line nobody could disagree with is conveying nothing". Same
+  test, and it holds whether or not anyone is reviewing.
+- **Three format improvements** from running the skill against a real design and comparing
+  passes: the title carries provenance (name, path, revision), the deliberate negatives get
+  their own opening section rather than being scattered, and root bullets assert instead of
+  labelling so a reader can agree or disagree without descending. Open items are enumerated
+  by id, including recently closed ones.
+
 ## v1.3.1
 
 - **`spec-overview` titles the overview with a heading rather than a bold line.** Every
