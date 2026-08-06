@@ -20,6 +20,7 @@ Vague bullets survive review by saying nothing. They are the main failure mode.
 
 Root bullets are the spec's **logical parts, not its section order**. Derive them from what the system actually has — typical shapes: the core mechanism · auth/access · the API or interface surface · safety and failure handling · the domain-specific heart · build cost · handoff to another team · what is still open.
 
+- **Title the overview with a heading, not a bold line.** Every root bullet is already bold, so a bold title reads as a stray bullet that lost its marker.
 - **8 root bullets or so**, each with 2–5 children. One screen.
 - **Nest 2 levels, 3 only when a child needs its own qualifier.** Deeper reads as the doc.
 - **Always end with what is undecided.** Corrections concentrate there.
@@ -68,7 +69,7 @@ Treat each as a finding about the **spec**, not the summary. A reader who says "
 Shown on an imaginary webhook-delivery service, to make the shape concrete without the domain mattering:
 
 ```md
-**Webhook Delivery**
+## Webhook Delivery
 
 - **Delivery** — each event is queued per subscription, not per event
   - Ordering is guaranteed within a subscription only; nothing orders across them
