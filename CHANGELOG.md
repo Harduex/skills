@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.3.1
+
+- **`spec-overview` titles the overview with a heading rather than a bold line.** Every
+  root bullet in the format is already bold, so a bold title sat above them looking like a
+  bullet that had lost its marker instead of a title. The worked example now opens with a
+  heading, and the structure rules say why.
+
 ## v1.3.0
 
 - **New `spec-overview` skill** (delivery-lifecycle) — condenses a spec, design doc, RFC,
