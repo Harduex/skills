@@ -1,5 +1,22 @@
 # Changelog
 
+## v1.3.0
+
+- **New `spec-overview` skill** (delivery-lifecycle) — condenses a spec, design doc, RFC,
+  or plan into a one-screen bullet overview built for **correction rather than
+  comprehension**. The reader already knows the domain and is scanning for the claim that
+  is wrong, so the central rule is that every bullet must be falsifiable: if a domain
+  reader cannot disagree with a line, it is cut. Vague bullets survive review by saying
+  nothing, which is the failure mode the skill exists to prevent.
+- Each line is written twice over — plain meaning first so a non-expert grasps the intent,
+  then the exact identifier so an expert can check it against the code. Route paths, field
+  names, roles, and decision ids are the correction handles. Root bullets follow the
+  system's logical parts rather than the document's section order, nesting stays at two
+  levels, undecided items come last because that is where corrections concentrate, and the
+  document's deliberate negatives lead because negative claims are the easiest to falsify.
+- The skill also records the round trip: a challenge to the overview is usually a defect in
+  the spec, so it is fixed there and the overview regenerated.
+
 ## v1.2.1
 
 - **`architecture-diagrams` picks the diagram by the reader's first question**, not by
