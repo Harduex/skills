@@ -22,12 +22,13 @@ Vague bullets feel like coverage while saying nothing. That is the failure mode 
 
 Root bullets are the spec's **logical parts, not its section order**. Derive them from what the system actually has — typical shapes: the core mechanism · data model · auth and access · the interface surface · safety and failure handling · the domain-specific heart · build cost · handoff · what is still open.
 
-- **Title it with a heading, and carry provenance** — the document's name plus its path and revision, so the reader knows exactly what they are looking at. A bold line is not a title here; every root bullet is already bold, so a bold title reads as a bullet that lost its marker.
-- **Open with the deliberate negatives** where the design has them — "no new tables", "no change to existing behaviour", "no new service". A design is defined as much by what it refuses, those claims are the densest information in the document, and they are the fastest thing for a reader to challenge.
-- **Root bullets assert, they do not label.** `Sync is a full fetch — every pull returns the complete set (D42)` beats `**Sync** — how syncing works`. The reader should be able to agree or disagree without descending.
+- **Title it with a heading** — the ticket or feature plus what it is (`PAY-312 — invoice PDF export`). Add the document's path and revision only when the overview travels beyond the conversation that named it — written to a file, or handed to another team. A bold line is not a title here; every root bullet is already bold, so a bold title reads as a bullet that lost its marker.
+- **Root bullets scan-label, then assert.** `**Sync** — the phone pulls the scene's entire comment set from GET /…/comments` — the bold word is what the eye finds on a re-scan, and the clause after the dash is the claim a reader can disagree with. A label with no claim (`**Sync** — how syncing works`) is still empty.
+- **Fold each refusal into the part it protects.** "No cursor, no tombstone table" belongs under sync; "no change to any existing write function" under build cost. A design is defined as much by what it refuses — but a dedicated refusals block reads as a second TL;DR and strips each negative of the context that makes it checkable.
+- **Enumerate the interface surface** — when the design has one (routes, commands, events), list it as its own part, one line per entry with the real verb and path. It is what another team implements against, and the fastest place to spot an omission.
 - **8 root bullets or so**, each with 2–5 children. One screen.
 - **Nest 2 levels, 3 only when a child needs its own qualifier.** Deeper reads as the document.
-- **End with what is undecided, enumerated by id** — `TBD-4`, `Q2`, an issue key. Ids are how a reader replies "that one's settled now". Include recently closed ones with their resolution.
+- **End with what is undecided** — one line each: the question in plain words, then who decides, id trailing in parens (`— PM call (TBD-E)`). Ids are how a reader replies "that one's settled now". Include recently closed ones with their resolution.
 
 ## Writing style: plain meaning first, exact name second
 
@@ -49,6 +50,8 @@ GOOD (both)
 Rules that follow:
 
 - **Anchor to the real identifier** — route paths, field names, roles, decision ids, function names. Without them the reader cannot connect the line to anything.
+- **One line per child.** A child that wraps into a paragraph is carrying the document's prose — keep the claim, cut the defence; the spec holds the argument. `Duplicates: client_idempotency_key, unique per scene and author` is the whole line.
+- **Cite a decision id where a reader would reference it back** — on the line that carries the decision, not on every line the decision touches.
 - **Add a "so that" clause only where the claim would otherwise read as trust-me.** One clause, never a paragraph.
 - **Keep the domain's own nouns, and do not narrow them.** Calling uploaded *files* "images" quietly excludes the PDFs the feature also accepts, and the reader ends up correcting your word instead of reading the design.
 - **Numbers carry provenance.** "measured 40 ms p50, 900 ms p99 on staging" informs; "generally fast" does not.
@@ -60,7 +63,7 @@ Rules that follow:
 2. **List the logical parts** — what the system *has*, not what the sections are called.
 3. **Per part, pick the 2–5 load-bearing claims** — what someone would have to un-decide to change the design. Skip anything derivable from a claim already listed.
 4. **Write each as plain meaning + exact anchor.**
-5. **Self-check:** every bullet specific · no bullet needing context the reader lacks · negatives near the top · open items last with ids · one screen.
+5. **Self-check:** every bullet specific · no bullet needing context the reader lacks · every refusal folded into its part · the interface surface enumerated · open items last with ids · one screen.
 
 ## When someone pushes back on a line
 
@@ -71,29 +74,29 @@ Treat it as a finding about the **spec**, not the overview. "That's not what edi
 An imaginary webhook-delivery service, to make the shape concrete without the domain mattering:
 
 ```md
-## Webhook Delivery (platform/docs/webhooks.md, RFC 2025-03-11)
+## Webhook Delivery — per-subscription queues with capped retries
 
-- **What it does not do** — the load-bearing refusals
-  - No new queue technology, no new service, no per-event ordering guarantees
-  - No manual replay endpoint — operators re-drive from the table (D7)
-
-- **Delivery is per subscription, not per event** — each subscription has its own queue
-  - Ordering holds within a subscription only; nothing orders across them
+- **Delivery** — each subscription has its own queue; nothing orders across them
   - Any `2xx` marks it delivered; everything else retries
+  - Retries stop at 5 attempts, exponential backoff 10s→1h
+  - Exhausted deliveries land in `dead_letter_events`, kept 30 days; no manual replay endpoint — operators re-drive from the table (D7)
 
-- **Retries stop at 5 attempts**, exponential backoff from 10s to 1h
-  - Exhausted deliveries land in `dead_letter_events`, kept 30 days
-
-- **Every request is signed; nothing is encrypted at the payload level**
+- **Signing** — every request signed; nothing encrypted at the payload level
   - `X-Signature` is HMAC-SHA256 over the raw body with the subscription secret
-  - Secrets rotate without downtime — two are valid during a 24-hour overlap
+  - Secrets rotate without downtime — two valid during a 24-hour overlap
 
-- **Build cost: one table, one worker** — reuses the existing job runner
+- **Endpoints** — two reads, one write
+  - `GET  /subscriptions/:id/deliveries` — delivery log, paginated
+  - `GET  /subscriptions/:id/dead-letters` — what exhausted its retries
+  - `POST /subscriptions` — register; `PUT` rotates the secret
+
+- **Build cost** — one table, one worker; reuses the existing job runner
+  - No new queue technology, no new service
 
 - **Open**
-  - TBD-2 — 30-day retention assumed, never confirmed with legal
-  - TBD-5 — should a `410` from a subscriber auto-disable it, or just alert?
-  - TBD-1 closed — signing is mandatory, not opt-in
+  - Is 30-day dead-letter retention acceptable? Assumed, never confirmed — legal call (TBD-2)
+  - Should a `410` from a subscriber auto-disable it, or just alert? (TBD-5)
+  - Closed: signing is mandatory, not opt-in (TBD-1)
 ```
 
 Ship it in chat by default. Write it to a file only when asked, or when it is going somewhere the conversation cannot reach.
