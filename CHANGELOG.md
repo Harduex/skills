@@ -1,5 +1,25 @@
 # Changelog
 
+## v1.5.1
+
+- **`write-design-spec` derives its sections from the reader instead of imposing a fixed
+  list.** The skill assumed every document it touched was deciding something, so a document
+  describing a shipped system to another team inherited *Rejected alternatives*, *Failure
+  modes* and *Out of scope* — sections that argue with a reader who is not contesting
+  anything. Two questions now settle the shape: can the reader still change the design, and
+  will they operate the system or only understand it. *Out of scope* ("what we chose not to
+  build") reframes to *Known limitations* ("what it does not do") when the reader was not
+  party to the choice, and *Analogous feature & parity* is named as a builder's scoping
+  instrument that never belongs in a document written for a later reader. The full structure
+  stays the default for specs and ADRs.
+- **Claim-first prose rule.** Lead every paragraph and bullet with its point, explanation
+  after — a paragraph that opens with setup makes the reader carry context before they know
+  what it is for.
+- Reconciled `write-design-spec` drift from its maui-skills counterpart: the Architecture
+  section now carries the change-footprint guidance (an inventory of what is being built,
+  grouped by owning system, not a sequence ladder), matching what `architecture-diagrams`
+  already prescribes for a design doc's first diagram.
+
 ## v1.5.0
 
 - **`spec-overview` roots scan-label, then assert.** Comparing the skill's output against
