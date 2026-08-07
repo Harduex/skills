@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.6.0
+
+- **New skill: `investigate-before-asking`** (thinking bundle). Resolves integration
+  unknowns about external or unfamiliar systems from researchable artifacts — local
+  checkouts, org code hosting, issue trackers, git history, live databases — and crosses
+  team boundaries only with the non-inferable residue. Encodes an iron rule proven in the
+  extraction session (source locally before remotely; verify the unknown's own premise
+  first), an evidence ladder (wire contract > code with live callers > data sample >
+  comment > inference) with the dead-code and prod-may-differ traps, a verbatim dispatch
+  brief for read-only investigators, a rationalization table, and an output contract of
+  per-unknown verdicts plus a minimal owner-addressed ask-list. Projects supply their own
+  source map via an optional `ATLAS.md` beside the skill; all cross-skill references are
+  capability-based so the skill ports across harnesses.
+
 ## v1.5.1
 
 - **`write-design-spec` derives its sections from the reader instead of imposing a fixed
