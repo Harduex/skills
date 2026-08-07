@@ -1,6 +1,6 @@
 ---
 name: write-design-spec
-description: Authors concise, reviewable design specs (written before implementation) and as-built architecture decision records (ADRs, written after a feature ships) for features and systems. Enforces a fixed structure (TL;DR, ASCII architecture, contract, decisions table, failure-modes table, out of scope) and an assertive, contract-first style. Use when writing or rewriting a design doc, reviewing a spec for shape and clarity, or — once a branch/feature is finished and ready to ship, or when the user explicitly asks — converting it into an ADR ("convert branch to ADR"). The spec is the pre-implementation artifact; the ADR is the post-ship record — do not create an ADR mid-task or speculatively.
+description: Authors concise, reviewable design specs (written before implementation) and as-built architecture decision records (ADRs, written after a feature ships) for features and systems. Enforces an assertive, contract-first style throughout, plus a structure (TL;DR, ASCII architecture, contract, decisions table, failure-modes table, out of scope) whose sections are derived from what the reader can change and whether they operate the system. Use when writing or rewriting a design doc, reviewing a spec for shape and clarity, documenting how a shipped system behaves for another team or an integrator, or — once a branch/feature is finished and ready to ship, or when the user explicitly asks — converting it into an ADR ("convert branch to ADR"). The spec is the pre-implementation artifact; the ADR is the post-ship record — do not create an ADR mid-task or speculatively.
 ---
 
 # Writing Design Specs
@@ -9,13 +9,24 @@ A design spec describes the *shape* of a solution — contracts, decisions, trad
 
 A spec is the long-lived source of truth for "what we built and why". It is **not** a pre-implementation artifact that gets abandoned the moment code ships. After ship, update the date line to `(as-built: YYYY-MM-DD)`, add a `**Status:** Authoritative.` line, and reconcile any divergence between the spec and the code — the code wins, the spec gets corrected. In a repo with no separate decision log, this *is* the ADR. In a repo that keeps one (e.g. `docs/adrs/`), promote the settled spec into an ADR there with this same structure — see [Converting a shipped branch into an ADR](#converting-a-shipped-branch-into-an-adr).
 
+## Deriving the structure
+
+The [Style rules](#style-rules) apply to every document this skill touches. **The sections do not.** Each one answers a specific question, and a section whose question the reader is not asking is noise at best and an argument at worst. Derive the shape from two facts about the reader before writing:
+
+1. **Can they still change the design?** *Key decisions*, *Rejected alternatives* and *Out of scope* are instruments for a decision that can still go the other way. A reader who cannot move it does not need it defended — and *Out of scope* ("what we chose not to build") becomes **Known limitations** ("what it does not do"): the same facts, reframed to the position the reader actually occupies.
+2. **Will they operate it, or only understand it?** *The contract*, *Resolution / flow* and *Failure modes* earn their place when the reader integrates with the system or is on the hook when it breaks. When the document only has to explain, they collapse into prose.
+
+*Analogous feature & parity* is a scoping instrument for whoever builds the thing, never for whoever reads about it afterwards.
+
+Every section survives for a spec and nearly all of them for an ADR, so those keep the full structure below — that is the default, and dropping one there needs a reason. Where a section does drop out, do not leave an empty heading and do not rename it to fill the slot: let the remaining headings name their own content.
+
 ## Required structure
 
 Use these sections, in this order. Skip a section only if it would genuinely be empty.
 
 1. **Title + frontmatter lines** — `**Date:** YYYY-MM-DD` (add `(as-built: YYYY-MM-DD)` once shipped), `**Scope:** <one sentence stating what is in scope and who it is for>`, and once shipped a `**Status:** Authoritative. <one-line pointer to the implementation path or branch>`. No table of contents, version history, author block, or badges.
 2. **TL;DR** — one paragraph, 5–10 sentences. Must contain, in any order: what the thing is, the core mechanism, the key tradeoff, the access/security model in one line, and what is *not* in scope. If you cannot compress to one paragraph, the design is not ready.
-3. **Architecture** — one ASCII box-and-arrow diagram in a fenced block (monospace renders everywhere — PRs, terminals, plain editors). If a dedicated diagramming skill is available in your set, build the diagram with it rather than hand-aligning ASCII. Underneath it, one short sentence that defines the design **by negation**: e.g. *"One endpoint. No preflight, no token, no server-side manifest, no queue."*
+3. **Architecture** — one ASCII diagram in a fenced block (monospace renders everywhere — PRs, terminals, plain editors) that answers **"what are we actually building?"**: every route, table, column, trigger, function, and setting the change adds or touches, grouped by owning system, each marked `(NEW)` or reused, plus a box for work the design depends on but does not own. Counts belong in it (`4 routes`, `+4 columns`, `×2 functions`) — the scope has to be legible at a glance. **Not a sequence ladder:** §5 narrates the call order in prose and carries more than a ladder can, so a ladder here spends the doc's first picture re-answering a question §5 already owns. If a dedicated diagramming skill is available in your set, build the diagram with it rather than hand-aligning ASCII. Underneath it, one short sentence that defines the design **by negation**: e.g. *"One endpoint. No preflight, no token, no server-side manifest, no queue."*
 4. **The contract** — exact request shape, exact response headers/body, exact error codes (`400 empty_selection`, `404 nothing_to_download`). Use real codebase identifiers (table names, column names, role names, types, endpoints). Not "the API returns an error" — name the code and the wire format.
 5. **Resolution / flow** — numbered list. Each step states what happens *and* which security or correctness invariant it enforces (auth gate, type filter, headers-not-yet-written guard, etc.).
 6. **Key decisions** — markdown table with columns `# | Decision | Why`. Each *Why* cell is self-contained: it includes the tradeoff with numbers when possible (e.g. *"DEFLATE buys ~1% size at 5–10× CPU. STORED skips that."*) and would convince a skeptical reviewer on its own, without context from elsewhere in the doc.
@@ -27,6 +38,7 @@ Use these sections, in this order. Skip a section only if it would genuinely be 
 ## Style rules
 
 - **Assertive prose.** Write what *is*, not what *should be*. "The frontend submits via a hidden form" — not "the frontend could/should submit". Strike *may*, *might*, *we should consider*, *in the future perhaps*.
+- **Lead every paragraph and bullet with its claim.** The point first, the explanation after — *"The keys are camelCase, not SVG kebab-case."* then why. A paragraph that opens with setup makes the reader carry context before they know what it is for.
 - **State the threat model.** Any spec touching a boundary answers three questions: what does the backend trust, what does it independently verify, what does a hand-crafted/forged request hit? Make this explicit, not implicit.
 - **Numbers in tradeoffs.** When a decision rests on cost or performance, put the number in the *Why* cell. "Tens of KB per request", "~1% size at 5–10× CPU", "30-minute gateway timeout".
 - **Use codebase identifiers.** Real names from the actual code: `global_admin_role`, not `userRole`; `nodeUuids`, not `ids`; `payment-service`, not "the backend service".
@@ -62,15 +74,16 @@ An ADR is the **as-built** counterpart of the spec — the spec is written *befo
 1. **Match the log's format.** Read the most recent `docs/adrs/ADR-NNNN-*.md` and mirror its frontmatter (`**Date:** … (as-built: YYYY-MM-DD)`, `**Status:**`, `**Scope:**`, a linked `**Implementation:**` block) and section order. The new file is `ADR-<next-number>-<slug>.md` (the first in a freshly created log is `ADR-0001`).
 2. **Gather the as-built facts** from the shipped branch — exact migration/file paths, contract signatures, role grants, indexes, test paths — and link them. Don't copy a pre-build spec's contract verbatim; verify it against what merged.
 3. **Add a `Plan → as-built deltas` table.** Every place the shipped code diverged from the pre-build spec/plan is a row (`Plan | As-built | Why`). This is the highest-value part of an as-built ADR and the thing a plan-only doc cannot capture.
-4. **Draw the diagram with the diagramming skill** if one is in your set; mark `(NEW)` on what the branch adds.
+4. **Draw the diagram with the diagramming skill** if one is in your set — the same what-are-we-building inventory as §3, with `(NEW)` now meaning what the branch shipped.
 5. **Keep rollout out.** Feature flags, percentages, and milestone dates are rollout, not architecture — omit them.
 6. **Remove the superseded planning docs.** Once the ADR absorbs them, `git rm` the pre-build design spec / test plan / implementation plan **in the same commit that adds the ADR**, with the commit message noting they are preserved in git history — and repoint any ADR links off the deleted files. Confirm deletion + commit with the user first. When a finished branch carries planning artifacts but does not warrant an ADR (bug fix, small feature), propose a plain `Drop <feature> planning artifacts` commit instead — the artifacts still leave the tree at branch close.
 
 ## Review checklist
 
+- [ ] Every section earns its place against the reader's two questions; nothing dropped leaves an empty heading behind
 - [ ] Date + Scope lines at the top, nothing else above the TL;DR
 - [ ] TL;DR is one paragraph and reads as a complete summary on its own
-- [ ] ASCII architecture diagram followed by a define-by-negation sentence
+- [ ] ASCII architecture diagram answers "what are we building" (inventory of what the change adds, by owning system), not "who calls whom" — followed by a define-by-negation sentence
 - [ ] Exact request / response / error contracts using real codebase names
 - [ ] Threat model stated: what is trusted, what is independently verified, what a forged request hits
 - [ ] `# | Decision | Why` table where each *Why* is self-contained and includes numbers where relevant
