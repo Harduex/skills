@@ -65,6 +65,10 @@ It is a **state description, not a log**: what is true now, what was actually me
 
 ### `NNN-<task>.md` — one file per task (written ahead, deleted on completion)
 
+**The number is the execution order, and the pointer always agrees with it.** Slices run `001`, `002`, `003`; the note's current-task pointer names the lowest unfinished one. Never let the two disagree, and never paper over a disagreement with a note saying the numbers mean something else — a reader who has to be told the ordering is fake has lost the cheapest signal in the plan.
+
+**Inserting work means renumbering, not appending.** When a task has to run before existing ones — an unblocker, a discovered prerequisite — renumber rather than adding it at the end and repointing. Renumbering is mechanical but has four parts, and missing any one leaves a broken plan: rename the files (two-phase, since old and new numbers overlap), update each slice's own `git rm` target, update cross-references between slices, and update the numbers quoted in the note and contract. Bare numbers in prose ("advances to 007") are the ones that survive a careless pass and point at the wrong task afterwards — grep for them. Then verify: every slice retires itself, every forward reference moves forward, and no slice references itself.
+
 Each slice is an executable brief that stands alone: an agent with zero prior context reads the note, then this file, and can work. Give each one a status, the contract rows it must turn green, the capabilities to invoke, its goal, its **allowed scope** (the files it may touch), the invariants to preserve, a test-first checklist, acceptance criteria, and required verification. If a slice needs three paragraphs of caveats to be executable, it is several tasks — split it before dispatch. Size them so one slice is one reviewable capability: a reviewer could approve it and reject the next.
 
 **The completion commit is atomic.** When every acceptance item is verified:
@@ -261,6 +265,7 @@ Keep the run's working state where it is bound; durable lessons graduate *out* o
 | Two ledgers | loop state and the repo's own note disagree; the next session resumes from whichever it read | **L10** — bind before scaffolding, first match wins in the precedence order |
 | Split completion | the work commits, the note advances in a second commit; a stop between them leaves the pointer lying | one atomic completion commit — implementation, tests, note, retired slice |
 | Premature retirement | a slice is deleted while its acceptance items are unproven, so the instructions are gone and "done" is unverifiable | retire only after the gates are measured green; unverified work keeps its slice and its pointer |
+| Ordering that lies | the pointer names a task the numbering contradicts, and the note explains the mismatch away instead of fixing it | the number is the order; insert by renumbering, and re-verify retire targets and cross-references afterwards |
 | Loop graveyard | finished runs stay in the tree, so several notes claim to be current and the instruction file's pointer is ambiguous or stale | close each run out — graduate, hand over, `git rm -r`, fix the pointer (*Closing out a run*) |
 | Silent hand-off loss | a run is closed while a human-verified item is still open, and the only record of it went with the deleted note | step 2 of close-out: open items graduate to the successor note, an issue, or the instruction file first |
 | Silent loss of failure memory | bound to a substrate that records only durable decisions, so retries and recurring gaps leave no trace past a compaction | keep the ephemeral, ignored journal even in adopted mode — L5/L8 run on it |
