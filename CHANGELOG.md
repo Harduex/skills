@@ -1,5 +1,30 @@
 # Changelog
 
+## v1.7.0
+
+- **`autonomous-build-loop` scaffolds a continuation note and disposable task slices by
+  default.** Its own state was a `plan.md` task table plus a committed journal, so the pattern
+  it could only *borrow* from a host repo — one durable note naming a single current task,
+  per-task files that leave the tree when finished, and the paper trail kept by git history —
+  was unavailable whenever the loop stood up its own state. `init.sh` now stamps
+  `CHECKPOINT.md` (status, current task, orientation, last verification, locked decisions,
+  blockers, next action), `contract.md`, the first `NNN-*.md` slice, and a journal under
+  `.loop/<slug>/` hidden by a self-ignoring `.gitignore` — failures and retries survive a
+  compaction without entering history. A completed slice is deleted in the same commit that
+  advances the note: one atomic commit, never a separate state commit, because a stop between
+  the two leaves the pointer lying about what is done. Unverified work keeps its slice and its
+  pointer; a judgment gate parks the note at `waiting-human` with the evidence needed.
+- **One reader for both shapes.** `status.sh` reports the note's status fields, the current
+  slice and whether its file still exists, the remaining queue, tree cleanliness, the history
+  of retired slices, and the journal tail — native and adopted state now go through the same
+  code path, since they are the same shape. Runs scaffolded in the `plan.md` shape are still
+  read in that shape, so an in-flight loop keeps resuming with nothing to migrate.
+- **Release hygiene.** `bump_version.py` writes only `bundles.json`; the per-bundle manifests
+  come from `generate_bundles.py`. v1.6.1 was committed with `--check` run in place of the real
+  generate, so its four `plugin.json` files still declared 1.6.0 and a marketplace client keyed
+  on the manifest version saw no new release. Fixed, and the unpushed v1.6.1 tag was dropped in
+  favour of this release.
+
 ## v1.6.1
 
 - **`autonomous-build-loop` binds to a repo's own continuation convention instead of
