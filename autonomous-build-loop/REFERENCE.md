@@ -81,6 +81,20 @@ One commit carries implementation, tests, the advanced note, and the retired sli
 
 **Recovery.** Pointer names an existing slice → continue it. Pointer names a missing slice with a clean tree → the completion commit landed but the pointer didn't advance, or the pointer was hand-edited: read `git log -- docs/loop/<slug>/CHECKPOINT.md`, restore the intended pointer, then work. Uncommitted changes with the pointer still on a slice → the last session stopped mid-task; reconcile against that slice rather than advancing.
 
+### Closing out a run
+
+The paper-trail convention applies to the whole run, not only to its slices: when the contract is green (or the run is abandoned), the state directory leaves the tree the same way a finished slice does. Skipping this is how a repo ends up with three `docs/loop/*/CHECKPOINT.md` files and no honest answer to "which one is current".
+
+In order — steps 1 and 2 before any deletion:
+
+1. **Graduate what outlives the feature.** Locked decisions that future work must not re-litigate go to the repo's instruction file or memory; measured evidence goes wherever the project keeps records (a validation doc, an ADR); a reusable workflow or a stale skill goes through the harness-evolution routing below. The note is disposable; what it learned is not.
+2. **Hand over anything still open.** Machine-green does not mean finished: outstanding human-verified items — a pending host/DAW gate, an unresolved owner decision, a deferred check — must land somewhere a person will see them (the successor run's note, an issue, the instruction file). Deleting the note is not allowed to be how they disappear.
+3. **Retire the directory.** `git rm -r docs/loop/<slug>/` in one close-out commit. History keeps every slice, every note revision, and the reasoning; the working tree stops carrying finished work.
+4. **Fix the pointer.** Repoint the instruction file at the successor run's note, or remove the line when no run is active. A pointer to a deleted note is worse than none — it tells the next session to read a file that isn't there.
+5. **Drop the ephemeral journal.** `.loop/<slug>/` is untracked; delete it. It dies with the branch by design.
+
+A run that is paused rather than finished keeps everything: the note records why it is parked, and nothing is retired.
+
 ### `.loop/<slug>/journal.md` — ephemeral history (git-ignored)
 
 ```md
@@ -247,5 +261,7 @@ Keep the run's working state where it is bound; durable lessons graduate *out* o
 | Two ledgers | loop state and the repo's own note disagree; the next session resumes from whichever it read | **L10** — bind before scaffolding, first match wins in the precedence order |
 | Split completion | the work commits, the note advances in a second commit; a stop between them leaves the pointer lying | one atomic completion commit — implementation, tests, note, retired slice |
 | Premature retirement | a slice is deleted while its acceptance items are unproven, so the instructions are gone and "done" is unverifiable | retire only after the gates are measured green; unverified work keeps its slice and its pointer |
+| Loop graveyard | finished runs stay in the tree, so several notes claim to be current and the instruction file's pointer is ambiguous or stale | close each run out — graduate, hand over, `git rm -r`, fix the pointer (*Closing out a run*) |
+| Silent hand-off loss | a run is closed while a human-verified item is still open, and the only record of it went with the deleted note | step 2 of close-out: open items graduate to the successor note, an issue, or the instruction file first |
 | Silent loss of failure memory | bound to a substrate that records only durable decisions, so retries and recurring gaps leave no trace past a compaction | keep the ephemeral, ignored journal even in adopted mode — L5/L8 run on it |
 | Gate that can never be green | a contract row needs an uninstalled tool or a missing environment prefix; the loop reads an environmental red as a code failure | environment-blocked items go to the human-verified list; a needed prefix lives in the row |

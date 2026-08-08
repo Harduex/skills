@@ -153,12 +153,24 @@ if [ -z "$slug" ]; then
   fi
   echo "loops under $base/:"
   found=0
+  notes=0
   for d in "$base"/*/; do
     [ -d "$d" ] || continue
-    echo "  - $(basename "$d")"
+    if [ -f "$d/CHECKPOINT.md" ]; then
+      echo "  - $(basename "$d")   (note: ${d%/}/CHECKPOINT.md)"
+      notes=$((notes + 1))
+    else
+      echo "  - $(basename "$d")"
+    fi
     found=1
   done
   [ "$found" -eq 1 ] || echo "  (none)"
+  if [ "$notes" -gt 1 ]; then
+    echo
+    echo "WARNING: $notes continuation notes exist — a repo should advertise exactly one (L10)."
+    echo "         Close finished runs out instead of leaving them in the tree:"
+    echo "         graduate their decisions and open items, git rm -r the directory, fix the pointer."
+  fi
   exit 0
 fi
 
