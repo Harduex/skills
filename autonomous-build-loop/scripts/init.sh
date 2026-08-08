@@ -3,14 +3,17 @@
 # Run from your repository root. Creates docs/loop/<slug>/ with the three
 # state files the loop reads at the start of every cycle and writes at the end.
 #
-# Usage: scripts/init.sh <slug> ["Feature title"]
+# Usage: scripts/init.sh [--force] <slug> ["Feature title"]
 set -euo pipefail
+
+force=0
+if [ "${1:-}" = "--force" ]; then force=1; shift; fi
 
 slug="${1:-}"
 title="${2:-$slug}"
 
 if [ -z "$slug" ]; then
-  echo "usage: $0 <slug> [\"Feature title\"]" >&2
+  echo "usage: $0 [--force] <slug> [\"Feature title\"]" >&2
   exit 2
 fi
 if ! printf '%s' "$slug" | grep -qE '^[a-z0-9][a-z0-9-]*$'; then
@@ -23,6 +26,29 @@ if [ -e "$dir" ]; then
   echo "error: $dir already exists — refusing to overwrite live loop state." >&2
   echo "       inspect it with scripts/status.sh $slug, or remove it deliberately first." >&2
   exit 1
+fi
+
+# Candidate names for a repo-owned continuation note, in probe order. Anything
+# under docs/loop/ is this skill's own state, not a substrate — see L10.
+# The same list lives in status.sh; change both together.
+note_candidates() {
+  find . -maxdepth 3 \
+    \( -name CHECKPOINT.md -o -name STATE.md -o -name HANDOFF.md \
+       -o -name CONTINUE.md -o -name PROGRESS.md \) \
+    -not -path './.git/*' -not -path './docs/loop/*' -not -path './node_modules/*' \
+    2>/dev/null | sed 's|^\./||' | sort
+}
+
+if [ "$force" -eq 0 ]; then
+  existing="$(note_candidates || true)"
+  if [ -n "$existing" ]; then
+    echo "error: this repo already owns a continuation note — scaffolding a second" >&2
+    echo "       source of truth for state is the L10 failure mode. Found:" >&2
+    printf '%s\n' "$existing" | sed 's/^/         /' >&2
+    echo "       bind to it instead (scripts/status.sh --adopt), or pass --force if" >&2
+    echo "       this repo genuinely wants both." >&2
+    exit 1
+  fi
 fi
 
 stamp="$(date -u +%Y-%m-%dT%H:%MZ)"

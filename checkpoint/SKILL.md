@@ -5,6 +5,8 @@ description: Produces a self-contained handoff prompt capturing the current sess
 
 Write a single self-contained checkpoint prompt that lets a fresh agent — with NONE of this conversation's context — resume exactly where we are. Output it as one fenced code block addressed to the next agent, and nothing else.
 
+**Destination.** That fenced block is the default. When the caller asks instead for a *file-backed* continuation note — a durable note in the repo that the next session reads first — write the same content into that file in place: keep its existing headings and their order, replace stale content rather than appending to it, and drop the fenced wrapper. The content rules below are identical either way; only the delivery changes.
+
 Capture only what the next session can't re-derive for itself:
 
 - **Goal** — what we're achieving and why (the bigger picture).
