@@ -47,13 +47,19 @@ note_fields() {
   grep -E '^[A-Za-z][A-Za-z0-9_ -]*:[[:space:]]*[^[:space:]]' "$n" | head -8 || true
 }
 
-# The path of the current unit of work. Looked for on the line that names it and
-# the two lines after, since a note may put the pointer under its heading.
+# The path of the current unit of work. Every line naming it is a candidate, each
+# examined together with the two lines after it (a note may put the pointer under a
+# heading). The first candidate window that actually holds a path wins — prose that
+# merely says "current" is skipped rather than swallowing the search.
 note_pointer() {
-  awk 'tolower($0) ~ /current/ && !found { win = NR; found = 1 }
-       found && NR >= win && NR <= win + 2 { buf = buf " " $0 }
-       END { if (match(buf, /`[^`]+`/)) { print substr(buf, RSTART+1, RLENGTH-2); exit }
-             if (match(buf, /[A-Za-z0-9_.\/-]+\.md/)) print substr(buf, RSTART, RLENGTH) }' "$1"
+  awk '{ line[NR] = $0 } END {
+          for (i = 1; i <= NR; i++) {
+            if (tolower(line[i]) !~ /current/) continue
+            buf = line[i] " " line[i+1] " " line[i+2]
+            if (match(buf, /`[^`]+\.[A-Za-z0-9]+`/)) { print substr(buf, RSTART+1, RLENGTH-2); exit }
+            if (match(buf, /[A-Za-z0-9_.\/-]+\.md/)) { print substr(buf, RSTART, RLENGTH); exit }
+          }
+        }' "$1"
 }
 
 # Render a continuation note plus its work slices. The loop's own state and an
