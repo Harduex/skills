@@ -1,5 +1,33 @@
 # Changelog
 
+## v1.7.1
+
+- **Finished runs are closed out, not left in the tree.** The paper-trail convention was defined
+  for slices only: a completed slice left in its completion commit, but the run itself had no
+  close-out, so finished `docs/loop/<slug>/` directories accumulated and each kept a
+  `CHECKPOINT.md` — several notes claiming to be current, which is the exact L10 hazard the skill
+  exists to prevent. Closing out is now ordered and explicit: graduate the durable decisions,
+  **hand over any still-open human-verified item** (machine-green is not finished — a pending host
+  gate must not vanish with the note), `git rm -r` the directory in one commit, repoint or remove
+  the instruction-file line, and delete the ignored journal. A paused run keeps everything.
+  `status.sh` with no argument now names each run's note and warns when more than one exists.
+- **A scaffolded loop must be made discoverable, and the skill now says so.** Setup covered
+  creating the state but never telling the repo where it is, so a perfectly scaffolded native run
+  could stay invisible: a fresh session reads the instruction file, finds no mention of the note,
+  and the resume guarantee depends on luck. Native mode now requires one line in the repo's
+  agent instruction file naming the note as a first read — exactly one target, repointed rather
+  than appended when a finished run is replaced, and untouched in adopted mode, where the repo
+  already points where it wants. `init.sh` prints the instruction file it found and the line to
+  add, or says none exists.
+- **The adopt/native reader no longer loses a note's pointer to its own prose.** It took the
+  first line containing "current" and searched only that line plus two more; the note template's
+  guidance comment says "keep it current", so a freshly generated `CHECKPOINT.md` reported
+  `slice: (none named)` while the pointer sat three lines further down — failing on the exact
+  shape `init.sh` writes. Every line naming the current item is now a candidate, examined with
+  its two following lines, and the first window that actually holds a path wins; a backticked
+  token must look like a filename before it counts, so prose in backticks is not mistaken for a
+  pointer.
+
 ## v1.7.0
 
 - **`autonomous-build-loop` scaffolds a continuation note and disposable task slices by
