@@ -1,5 +1,37 @@
 # Changelog
 
+## v1.6.1
+
+- **`autonomous-build-loop` binds to a repo's own continuation convention instead of
+  assuming it owns its state.** The loop scaffolded `docs/loop/<slug>/` unconditionally, so a
+  repo already running a checkpoint-and-task-slice convention ended up with two ledgers — its
+  instruction file pointing a new session at one and the loop trusting the other. Setup now
+  opens by resolving four state roles (orientation, ledger, history, contract) against
+  whichever files hold them, native or adopted, in a precedence order rather than by
+  inference: a live loop directory wins outright, and a repo whose "read this first" pointer
+  targets the loop's own state is still native. New **L10** states the invariant — one source
+  of truth, the substrate's commit and cleanup discipline outranking this skill's defaults —
+  plus its exception: a substrate that records only durable decisions records no failed
+  attempts, so the loop keeps an ephemeral ignored journal, because L5 and L8 read that rather
+  than the audit trail. The cycle also separates a **judgment gate** (cheap, reversible, not
+  the agent's call) from a blocked task and from the irreversible boundary, and drives
+  session-sized slices as several cycles over the slice's own checklist instead of minting
+  units of work to track itself.
+- **Scripts.** `status.sh --adopt [note] [slice-dir]` reads a repo-owned note — status fields,
+  current slice and whether its file is still present, uncommitted-change count, recent slice
+  history — and prints which note it probed rather than guessing silently. `check.sh --gates
+  <path>` runs a gate table the repo owns, keeping the contract on disk (L4) instead of retyped
+  into an argument list each session, and accepts any `<LETTERS><digits>` row ID. `init.sh`
+  refuses to scaffold beside a detected convention unless given `--force`.
+- **Checker robustness fix.** Each declared check now runs in a subshell with `-u` disabled. A
+  contract row that dereferenced an unset variable previously aborted the whole checker
+  mid-report — no verdict for that row, no summary line, and an exit code indistinguishable
+  from an ordinary failed check.
+- **`checkpoint` gained a destination rule.** It mandated a single fenced block "and nothing
+  else", which contradicted every caller that needs the same content written into a durable
+  file. The paste-in block stays the default; a file-backed request now writes in place,
+  preserving the target's existing headings and replacing stale content rather than appending.
+
 ## v1.6.0
 
 - **New skill: `investigate-before-asking`** (thinking bundle). Resolves integration
