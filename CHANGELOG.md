@@ -1,5 +1,20 @@
 # Changelog
 
+## v1.7.4
+
+- **write-a-skill now teaches the current Agent Skills standards.** The skill knew two
+  frontmatter fields and nothing about testing, so it could not answer what the spec now
+  defines: six portable fields with hard name constraints (lowercase/hyphens, must match the
+  directory name), ~15 Claude Code extensions (invocation control, subagent execution, tool
+  grants, path scoping), and the hard upload error claude.ai / the Skills API raise on any
+  non-spec field. SKILL.md now carries the name/description constraints, the
+  never-summarize-the-workflow description rule, and a baseline-first test-and-retest
+  authoring process; a new REFERENCE.md holds the field tables, portability rules, string
+  substitutions and dynamic context injection, the no-prompt bundled-script pattern,
+  progressive disclosure patterns, testing methodology, and anti-patterns. A subagent
+  application test passed all three scenarios and its gap report drove four clarifications,
+  including sandbox-only baselines for side-effectful workflows.
+
 ## v1.7.3
 
 - **functional-programming now carries a full, citable rule set.** The skill stated the
