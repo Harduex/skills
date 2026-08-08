@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.7.2
+
+- **Slice numbering is stated to be the execution order.** The skill said tasks are "ordered so
+  dependencies flow forward" but never that the filename number *is* that order, that the note's
+  pointer must agree with it, or how to insert a task that must run before existing ones — enough
+  silence to justify appending an unblocker at the end and explaining the mismatch away in the
+  note. Inserting now means renumbering, with its four parts named (files, each slice's own `git rm`
+  target, cross-references between slices, numbers quoted in the note and contract) plus the
+  verification that catches a partial pass: every slice retires itself, every forward reference
+  moves forward, no slice references itself. Bare numbers in prose are flagged as the ones that
+  survive renumbering and then point at the wrong task.
+
 ## v1.7.1
 
 - **Finished runs are closed out, not left in the tree.** The paper-trail convention was defined
