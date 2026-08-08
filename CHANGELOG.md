@@ -19,6 +19,14 @@
   of retired slices, and the journal tail — native and adopted state now go through the same
   code path, since they are the same shape. Runs scaffolded in the `plan.md` shape are still
   read in that shape, so an in-flight loop keeps resuming with nothing to migrate.
+- **Adopt mode tolerates foreign note shapes, and is loud when it cannot.** The reader only
+  understood this skill's own notation, so pointing it at a note using YAML frontmatter or
+  `## Heading` sections produced a plausible, entirely empty report — which reads as "nothing in
+  progress" rather than "I could not parse this". It now accepts four field notations, finds the
+  pointer on the naming line or the two after, reports unnumbered work files instead of a bare
+  `0`, and prints `shape: UNRECOGNISED` with an instruction to read the note directly. Also
+  fixes an mawk portability bug: `#{2,3}` never matched, because mawk has no interval
+  expressions.
 - **Release hygiene.** `bump_version.py` writes only `bundles.json`; the per-bundle manifests
   come from `generate_bundles.py`. v1.6.1 was committed with `--check` run in place of the real
   generate, so its four `plugin.json` files still declared 1.6.0 and a marketplace client keyed

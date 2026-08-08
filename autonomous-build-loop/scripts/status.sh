@@ -25,18 +25,48 @@ note_candidates() {
     2>/dev/null | sed 's|^\./||' | sort
 }
 
+# Key/value status fields, in whichever notation the note uses. A foreign note is
+# not obliged to use this skill's; try the common ones before giving up.
+note_fields() {
+  local n="$1" out
+  # YAML frontmatter
+  out="$(awk 'NR==1 && /^---[[:space:]]*$/ {f=1; next}
+              f && /^---[[:space:]]*$/ {exit}
+              f && /^[A-Za-z][A-Za-z0-9_ -]*:/ {print}' "$n")"
+  [ -n "$out" ] && { printf '%s\n' "$out" | head -8; return; }
+  # **Key:** value
+  out="$(grep -E '^\*\*[^*]+:\*\*' "$n" || true)"
+  [ -n "$out" ] && { printf '%s\n' "$out" | head -8; return; }
+  # ## Key  followed by its first non-empty line.
+  # `##+` rather than `#{2,3}`: mawk has no interval expressions.
+  out="$(awk '/^##+ /{k=$0; sub(/^#+[[:space:]]*/,"",k);
+                         while ((getline l) > 0 && l ~ /^[[:space:]]*$/) {}
+                         if (l !~ /^#/ && l !~ /^[[:space:]]*$/) printf "%s: %s\n", k, l}' "$n")"
+  [ -n "$out" ] && { printf '%s\n' "$out" | head -8; return; }
+  # Key: value
+  grep -E '^[A-Za-z][A-Za-z0-9_ -]*:[[:space:]]*[^[:space:]]' "$n" | head -8 || true
+}
+
+# The path of the current unit of work. Looked for on the line that names it and
+# the two lines after, since a note may put the pointer under its heading.
+note_pointer() {
+  awk 'tolower($0) ~ /current/ && !found { win = NR; found = 1 }
+       found && NR >= win && NR <= win + 2 { buf = buf " " $0 }
+       END { if (match(buf, /`[^`]+`/)) { print substr(buf, RSTART+1, RLENGTH-2); exit }
+             if (match(buf, /[A-Za-z0-9_.\/-]+\.md/)) print substr(buf, RSTART, RLENGTH) }' "$1"
+}
+
 # Render a continuation note plus its work slices. The loop's own state and an
 # adopted substrate are the same shape, so both go through here.
 #   $1 note path · $2 slice directory · $3 journal path (optional)
 show_note() {
-  local note="$1" slice_dir="$2" journal="${3:-}" fields slice remaining dirty hist
+  local note="$1" slice_dir="$2" journal="${3:-}" fields slice remaining other dirty hist
 
   echo "-- status fields --"
-  fields="$(grep -E '^\*\*[^*]+:\*\*' "$note" | head -8 || true)"
-  if [ -n "$fields" ]; then printf '%s\n' "$fields" | sed 's/^/  /'; else echo "  (none)"; fi
+  fields="$(note_fields "$note" || true)"
+  if [ -n "$fields" ]; then printf '%s\n' "$fields" | sed 's/^/  /'; else echo "  (none found)"; fi
 
-  # The current unit of work: first backticked path on the line that names it.
-  slice="$(grep -iE '^\*\*current' "$note" | grep -oE '`[^`]+`' | head -1 | tr -d '`' || true)"
+  slice="$(note_pointer "$note" || true)"
   if [ -n "$slice" ]; then
     if [ -e "$slice" ]; then
       echo "slice: $slice (present)"
@@ -49,7 +79,22 @@ show_note() {
   fi
 
   remaining="$(find "$slice_dir" -maxdepth 1 -name '[0-9][0-9][0-9]-*.md' 2>/dev/null | wc -l | tr -d ' ')"
-  echo "queue: $remaining slice file(s) left in $slice_dir"
+  if [ "$remaining" -gt 0 ]; then
+    echo "queue: $remaining numbered slice file(s) left in $slice_dir"
+  else
+    # A foreign convention need not number its slices; count what is there and say so.
+    other="$(find "$slice_dir" -maxdepth 1 -name '*.md' \
+               ! -name "$(basename "$note")" ! -name 'contract.md' ! -name 'README.md' \
+               2>/dev/null | wc -l | tr -d ' ')"
+    echo "queue: 0 numbered slices · $other other .md file(s) in $slice_dir"
+  fi
+
+  # Never let an unrecognised shape read as "nothing in progress" (L2/L6 in spirit:
+  # report what was measured, and say plainly when nothing could be).
+  if [ -z "$fields" ] && [ -z "$slice" ]; then
+    echo "shape: UNRECOGNISED — no status fields and no current-item pointer were found."
+    echo "       Read $note directly; this is NOT evidence that no work is in progress."
+  fi
 
   if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
     dirty="$(git status --porcelain | wc -l | tr -d ' ')"
