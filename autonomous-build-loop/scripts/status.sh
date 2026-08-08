@@ -4,7 +4,7 @@
 #
 # Usage:
 #   scripts/status.sh                             # list all loops under docs/loop/
-#   scripts/status.sh <slug>                      # progress + next task + latest journal entry
+#   scripts/status.sh <slug>                      # this loop's note, current slice, journal tail
 #   scripts/status.sh --adopt [note] [slice-dir]  # read a continuation note the repo owns
 #
 # Reads state from disk only — it never runs your project's checks and never
@@ -25,22 +25,11 @@ note_candidates() {
     2>/dev/null | sed 's|^\./||' | sort
 }
 
-if [ "${1:-}" = "--adopt" ]; then
-  shift
-  note="${1:-}"
-  slice_dir="${2:-}"
-
-  if [ -z "$note" ]; then
-    note="$(note_candidates | head -1 || true)"
-    if [ -z "$note" ]; then
-      echo "error: no continuation note found — pass its path: $0 --adopt <note> [slice-dir]" >&2
-      exit 1
-    fi
-    echo "note:  $note   (probed — pass a path to override)"
-  else
-    [ -f "$note" ] || { echo "error: $note not found" >&2; exit 1; }
-    echo "note:  $note"
-  fi
+# Render a continuation note plus its work slices. The loop's own state and an
+# adopted substrate are the same shape, so both go through here.
+#   $1 note path · $2 slice directory · $3 journal path (optional)
+show_note() {
+  local note="$1" slice_dir="$2" journal="${3:-}" fields slice remaining dirty hist
 
   echo "-- status fields --"
   fields="$(grep -E '^\*\*[^*]+:\*\*' "$note" | head -8 || true)"
@@ -58,7 +47,9 @@ if [ "${1:-}" = "--adopt" ]; then
   else
     echo "slice: (none named)"
   fi
-  [ -n "$slice_dir" ] || slice_dir="$(dirname "$note")"
+
+  remaining="$(find "$slice_dir" -maxdepth 1 -name '[0-9][0-9][0-9]-*.md' 2>/dev/null | wc -l | tr -d ' ')"
+  echo "queue: $remaining slice file(s) left in $slice_dir"
 
   if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
     dirty="$(git status --porcelain | wc -l | tr -d ' ')"
@@ -68,10 +59,37 @@ if [ "${1:-}" = "--adopt" ]; then
       echo "tree:  clean"
     fi
     echo
-    echo "-- recent history under $slice_dir --"
+    echo "-- recent history under $slice_dir (retired slices live here) --"
     hist="$(git log --oneline -5 -- "$slice_dir" 2>/dev/null || true)"
     if [ -n "$hist" ]; then printf '%s\n' "$hist" | sed 's/^/  /'; else echo "  (none)"; fi
   fi
+
+  if [ -n "$journal" ] && [ -f "$journal" ]; then
+    echo
+    echo "-- latest journal entry ($journal) --"
+    awk '/^## /{last=NR} {L[NR]=$0} END{if(last==""){print "(no entries)"} else {for(i=last;i<=NR;i++) print L[i]}}' "$journal"
+  fi
+}
+
+if [ "${1:-}" = "--adopt" ]; then
+  shift
+  note="${1:-}"
+  slice_dir="${2:-}"
+
+  if [ -z "$note" ]; then
+    note="$(note_candidates | head -1 || true)"
+    if [ -z "$note" ]; then
+      echo "error: no continuation note found — pass its path: $0 --adopt <note> [slice-dir]" >&2
+      exit 1
+    fi
+    echo "note:  $note   (probed — pass a path to override)"
+  else
+    [ -f "$note" ] || { echo "error: $note not found" >&2; exit 1; }
+    echo "note:  $note"
+  fi
+  [ -n "$slice_dir" ] || slice_dir="$(dirname "$note")"
+
+  show_note "$note" "$slice_dir"
   exit 0
 fi
 
@@ -99,10 +117,18 @@ if [ ! -d "$dir" ]; then
   exit 1
 fi
 
+echo "== loop: $slug =="
+
+if [ -f "$dir/CHECKPOINT.md" ]; then
+  show_note "$dir/CHECKPOINT.md" "$dir" ".loop/$slug/journal.md"
+  exit 0
+fi
+
+# Runs scaffolded before the note-and-slices shape: a plan.md task table with a
+# committed journal. Read as-is so an in-flight loop keeps resuming.
 plan="$dir/plan.md"
 journal="$dir/journal.md"
-
-echo "== loop: $slug =="
+echo "(plan.md shape)"
 
 if [ -f "$plan" ]; then
   task_rows="$(grep -E '^\|[[:space:]]*[0-9]+[[:space:]]*\|' "$plan" || true)"

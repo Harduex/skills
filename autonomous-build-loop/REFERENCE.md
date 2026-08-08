@@ -4,7 +4,9 @@ Depth for the loop in [SKILL.md](SKILL.md). Everything here is capability-based 
 
 ## State files — the durable memory
 
-Three files under `docs/loop/<slug>/`. They are the loop's memory; the transcript is not. Read them at the start of every cycle; write them at the end of every cycle.
+Under `docs/loop/<slug>/`: one continuation note, one contract, and one file per task. Plus a git-ignored journal under `.loop/<slug>/`. They are the loop's memory; the transcript is not. Read them at the start of every cycle; write them at the end of every cycle.
+
+The shape has one governing idea: **finished work leaves the tree.** A task's file is deleted in the very commit that completes it, so the directory only ever holds current and future work, while git history keeps every instruction that was ever executed — recoverable with `git show <commit>^:docs/loop/<slug>/<file>`. The note stays short because it is not an archive, and a fresh session's first read is never a graveyard of completed tasks.
 
 ### `contract.md` — what "done" means (rarely changes once set)
 
@@ -26,55 +28,86 @@ Human-verified acceptance (NOT loopable — hand to the human): <e.g. "empty-sta
 
 Rule (L1): if a done-item can't be reduced to a command + exit code, it does not belong in the contract — it goes in the human-verified list. A contract of vague goals can never halt.
 
-### `plan.md` — the living task list (changes every cycle)
+### `CHECKPOINT.md` — the continuation note (rewritten every cycle)
+
+The one file a new session reads first. It names exactly one current task and carries only what cannot be re-derived.
 
 ```md
-# Plan — <feature>   (slug: <slug>)
+# Checkpoint — <feature>   (slug: <slug>)
 
-## Orientation  — a fresh agent reads this FIRST; keep it current
+**Status:** in-progress            <!-- ready | in-progress | waiting-human | done -->
+**Current task:** `docs/loop/<slug>/002-widgets-endpoint.md`
+
+## Orientation
 - Goal: <one paragraph — what and why>
 - Branch: <branch-name>
 - Key paths: `<path>` — <role>; `<path>` — <role>
-- Build / run / test: `<cmd>` · `<cmd>` · `<cmd>`
+- Build / run / test: `<cmd>` · `<cmd>`
 - Contract: `docs/loop/<slug>/contract.md`
-- Resume: start at the first non-`done` task below; read the `journal.md` tail for recent context.
 
-## Tasks
-| # | Task — self-contained, written for an agent with zero prior context | Status | Commit | Notes |
-|---|----------------------------------------------------------------------|--------|--------|-------|
-| 1 | Add `Widget` model + migration in `db/schema.ts` mirroring `Gadget`  | done   | abc1234 | |
-| 2 | Add `POST /widgets` handler in `api/widgets.ts` mirroring `gadgets`  | doing  |        | |
-| 3 | Wire validation via the existing `zBody()` helper                    | todo   |        | after 2 |
-| 4 | Backfill defaults for existing rows                                  | blocked|        | needs decision D2 |
+## Last completed
+- Task 001 — Widget model + migration.
+
+## Last verification
+- Task 001: `pnpm test` → PASS (42 tests); `pnpm tsc --noEmit` → PASS; migration applied and rolled back cleanly.
+
+## Locked decisions
+- [D2] New widgets default to `status="draft"` — mirrors gadgets. Settled; do not re-open.
+
+## Known blockers
+- none
+
+## Next action
+Read task 002, invoke the capabilities it names, and implement only that task.
 ```
 
-Each task must stand alone (the "hand it to a junior with no context" bar). If a task needs three paragraphs of caveats to be executable, it's really several tasks — split it before dispatch.
+It is a **state description, not a log**: what is true now, what was actually measured, what must not be re-decided, what to do next. Narrative history belongs to git; failure detail belongs to the journal. A checkpoint can never contain its own commit SHA — it is written before that commit exists — so use `git log -1` when the exact hash is needed.
 
-### `journal.md` — append-only history (grows every cycle)
+### `NNN-<task>.md` — one file per task (written ahead, deleted on completion)
+
+Each slice is an executable brief that stands alone: an agent with zero prior context reads the note, then this file, and can work. Give each one a status, the contract rows it must turn green, the capabilities to invoke, its goal, its **allowed scope** (the files it may touch), the invariants to preserve, a test-first checklist, acceptance criteria, and required verification. If a slice needs three paragraphs of caveats to be executable, it is several tasks — split it before dispatch. Size them so one slice is one reviewable capability: a reviewer could approve it and reject the next.
+
+**The completion commit is atomic.** When every acceptance item is verified:
+
+```bash
+git add <implementation and tests> docs/loop/<slug>/CHECKPOINT.md
+git rm docs/loop/<slug>/002-widgets-endpoint.md
+git commit -m "feat(002): <the capability, imperative>"
+```
+
+One commit carries implementation, tests, the advanced note, and the retired slice. Never a second "checkpoint commit" — the state update *is* part of completing the work, and a separate commit lets the two drift. If the task is not fully verified, the slice stays and the pointer does not move.
+
+**Human gate.** When a task needs a decision or evidence only a person can supply, set `Status: waiting-human`, write the exact decision or evidence needed, commit the prototype/evidence **keeping** the slice, and leave the pointer alone. The person records their answer in the note; the task's eventual completion commit records the durable decision, retires the slice, and advances the pointer.
+
+**Recovery.** Pointer names an existing slice → continue it. Pointer names a missing slice with a clean tree → the completion commit landed but the pointer didn't advance, or the pointer was hand-edited: read `git log -- docs/loop/<slug>/CHECKPOINT.md`, restore the intended pointer, then work. Uncommitted changes with the pointer still on a slice → the last session stopped mid-task; reconcile against that slice rather than advancing.
+
+### `.loop/<slug>/journal.md` — ephemeral history (git-ignored)
 
 ```md
-# Journal — <feature>   (append-only; newest at bottom)
+# Journal — <feature>   (ephemeral, git-ignored; newest at bottom)
 
 ## 2026-07-14T15:02Z · task 2 · POST /widgets handler
 - Did: added handler in api/widgets.ts; mirrored gadgets.ts structure and error handling.
 - Check: `pnpm test tests/e2e/widgets.create.spec.ts` → PASS. `pnpm tsc --noEmit` → PASS.
-- Decision [D2]: default `status="draft"` for new widgets — matches gadgets; confirm before backfill (task 4).
+- Attempt 1 failed: validation ran after the handler body; zBody() must wrap the route, not the payload.
 - Drift: gadgets uses `zBody()`, not manual parsing as the plan assumed → task 3 simplified.
 - Next: implement task 3 (validation via zBody()).
 ```
 
-The journal is the audit trail and the Reflexion memory: failures are logged with their cause so a later cycle doesn't repeat them, and every entry records the *measured* check result (L6), never an unverified claim.
+This is the Reflexion memory: failures with their cause so a later cycle doesn't repeat them, and the *measured* check result every cycle (L6), never an unverified claim. It is deliberately **not** committed — `init.sh` writes `.loop/.gitignore` containing `*`, so the directory is invisible to git without editing the repo's own ignore file. Durable outcomes graduate to the note; the rest dies with the branch. Keeping failed attempts out of history is the point: the audit trail records what was done, the journal records what was tried.
 
 ## State substrates — native and adopted (L10)
 
-The three files above are one *encoding* of four state roles. A repo that already runs its own continuation convention encodes the same roles differently — bind to it rather than standing up a second ledger beside it.
+The files above are one *encoding* of four state roles. A repo that already runs its own continuation convention encodes the same roles under its own names — bind to it rather than standing up a second ledger beside it. The shapes match closely because the native shape *is* this pattern; adopted mode mostly means different filenames and someone else's commit rules.
 
-| Role | Native encoding | Typical adopted encoding |
+| Role | Native | Typical adopted |
 |---|---|---|
-| Orientation — what a fresh session reads first | `plan.md` header | the repo's durable continuation note |
-| Ledger — the units of work and their status | `plan.md` task rows | per-unit work-slice files + a pointer to the one that is current |
-| History — what was tried and measured | `journal.md`, committed | version history of retired slices + the note's verification section |
+| Orientation — what a fresh session reads first | `CHECKPOINT.md` header | the repo's durable continuation note |
+| Ledger — the units of work and their status | `NNN-*.md` slices + the note's pointer | per-unit work slices + a pointer to the current one |
+| History — what was tried and measured | git history of retired slices + the note's verification section; failures in the ignored journal | version history of retired slices + the note's verification section |
 | Contract — what "done" means, as commands | `contract.md` | the current slice's acceptance items over repo-wide gate commands |
+
+**Older native runs.** Loops scaffolded before this shape use a `plan.md` task table with a committed `journal.md`. `status.sh <slug>` still reads them, so an in-flight loop keeps resuming untouched — the two encodings coexist and no migration is required to finish a run.
 
 **Resolve the mode in this order — first match wins.** Precedence, not a guess: a repo can declare a convention *whose target is the loop's own state*, and that is still native.
 
@@ -96,9 +129,9 @@ The three files above are one *encoding* of four state roles. A repo that alread
 
 ## Resume protocol (the cross-session guarantee)
 
-**Starting a session, or right after a compaction:** run `$SKILL/scripts/status.sh <slug>` for an instant read of task progress, the next task, and the latest journal entry, then read `plan.md` orientation → scan task statuses → read the last one or two `journal.md` entries → resume at the first non-`done` task. Do **not** let a session-start summary override the files (L4, and "trust live state, not snapshots"). Bound to a substrate, the same sequence runs against it — `$SKILL/scripts/status.sh --adopt <note> [slice-dir]` prints the note's status fields, the current slice, and the recent slice history — plus the reconcile check above before anything else.
+**Starting a session, or right after a compaction:** run `$SKILL/scripts/status.sh <slug>` for an instant read of the note's status, the current slice, how many slices remain, whether the tree is clean, and the journal tail — then read the note, read the slice it names, and reconcile any uncommitted changes against that slice before touching anything. Do **not** let a session-start summary override the files (L4, and "trust live state, not snapshots"). Bound to a substrate, the same sequence runs against it via `$SKILL/scripts/status.sh --adopt <note> [slice-dir]`.
 
-**Before an expected compaction or at session end:** refresh the `plan.md` orientation header and append a `journal.md` entry ending in a concrete `Next:`. Invoke your set's checkpoint/handoff capability to produce that header — it already knows how to write a no-context-needed resume block; ask it for the file-backed form so it lands in the file instead of the transcript, and when bound to a substrate, in that note's existing sections rather than a shape of your own.
+**Before an expected compaction or at session end:** refresh the note (status, last verification, next action) and append a journal entry ending in a concrete `Next:`. Invoke your set's checkpoint/handoff capability to produce that header — it already knows how to write a no-context-needed resume block; ask it for the file-backed form so it lands in the file instead of the transcript, and when bound to a substrate, in that note's existing sections rather than a shape of your own.
 
 ## Checker dispatch (L2 — fresh context)
 
@@ -179,15 +212,16 @@ Keep the run's working state where it is bound; durable lessons graduate *out* o
 
 - **Stop boundary** — default: run to *merge-ready*, human checkpoint at every irreversible action. To allow unattended **draft** PRs, add "open draft PR" to the reversible set; keep merge, deploy, and comment-posting behind the checkpoint regardless.
 - **Substrate** — default: subagent checker (above); single-context fallback documented above.
-- **State location** — default: committed `docs/loop/<slug>/` (auditable, survives machines) in native mode, the repo's own files when bound to a substrate. Gitignore it if you don't want loop state in history — you then forfeit cross-machine resume.
+- **State location** — default: committed `docs/loop/<slug>/` (auditable, survives machines) in native mode, the repo's own files when bound to a substrate; the failure journal is always ignored under `.loop/`. Gitignore the whole thing if you don't want loop state in history — you then forfeit cross-machine resume and the completed-task trail.
+- **Retiring slices** — default: a completed slice is deleted in its completion commit, leaving it in history only. To keep completed slices in the tree instead, mark them `done` in place; you then own the graveyard and a fresh session pays to read past it.
 - **Pass cap** — default ≤3 attempts per task before escalation; raise only with a reason.
 
 ## Scripts
 
 **These three scripts ship *inside this skill* — they are the containment boundary.** The tooling stays in the skill; only the *state* (`docs/loop/<slug>/`) is written into the repo. Invoke each by its path under this skill's base directory — `$SKILL/scripts/…`, where `$SKILL` is the directory the harness prints when the skill loads — with your working directory at the repo root, so `docs/loop/` resolves against the project. **Never copy them into the project** (that scatters the harness across the repo and forks a second copy that silently drifts from the skill). `init.sh`/`status.sh` touch only `docs/loop/`; `check.sh` additionally runs the checks you declared in the contract.
 
-- **`$SKILL/scripts/init.sh <slug> ["Title"]`** — canonical generator for the three state files. Validates the slug (kebab-case), creates `docs/loop/<slug>/`, and refuses to overwrite an existing loop (state is precious — deleting it is a deliberate act, not a re-init). It also refuses when the repo appears to own a continuation convention already, naming what it found: scaffolding beside a substrate is the L10 failure, and `--force` is the deliberate override for the rare repo that wants both. Stamps a `loop initialized` entry into `journal.md` so the log starts from cycle zero. These templates are the source of truth for the schemas shown above; if you change the shape, change it here.
-- **`$SKILL/scripts/status.sh [slug]`** — read-only. With no argument, lists every loop under `docs/loop/`. With a slug, prints task counts by status, the next non-`done` task, and the latest journal entry. `--adopt [note] [slice-dir]` reads a substrate instead: the note's status fields, the slice it names as current, whether that slice's file is present, uncommitted-change count, and the recent slice history from `git log`. With no path it probes the common note names and prints which one it chose — it guesses out loud rather than silently. It never runs your project's checks and never edits anything; it exists to make "read state from disk first" (L4) a one-command habit at session start.
+- **`$SKILL/scripts/init.sh [--force] <slug> ["Title"]`** — canonical generator for the state files: the continuation note, the contract, the first task slice, and the git-ignored journal (plus the `.loop/.gitignore` that hides it). Validates the slug (kebab-case), creates `docs/loop/<slug>/`, and refuses to overwrite an existing loop (state is precious — deleting it is a deliberate act, not a re-init). It also refuses when the repo appears to own a continuation convention already, naming what it found: scaffolding beside a substrate is the L10 failure, and `--force` is the deliberate override for the rare repo that wants both. Stamps a `loop initialized` entry into the journal so the log starts from cycle zero. These templates are the source of truth for the schemas shown above; if you change the shape, change it here.
+- **`$SKILL/scripts/status.sh [slug]`** — read-only. With no argument, lists every loop under `docs/loop/`. With a slug, prints the note's status fields, the current slice and whether its file is still present, how many slices remain, whether the tree is clean, the recent history of retired slices, and the journal tail. A run in the older `plan.md` shape is read in that shape instead, so it keeps resuming. `--adopt [note] [slice-dir]` reads a substrate instead: the note's status fields, the slice it names as current, whether that slice's file is present, uncommitted-change count, and the recent slice history from `git log`. With no path it probes the common note names and prints which one it chose — it guesses out loud rather than silently. It never runs your project's checks and never edits anything; it exists to make "read state from disk first" (L4) a one-command habit at session start.
 - **`$SKILL/scripts/check.sh <slug> | --gates <path>`** — the deterministic checker. Runs the commands declared in `contract.md` (or in the substrate-owned gate table given to `--gates`) and reports pass/fail per item, skipping any row still set to `<command>`; exits 0 only when every runnable check passes. Rows are `| <ID> | description | \`command\` |`; the command is the last backticked span on the row. Running the real commands is what makes self-grading impossible (L2) and keeps the contract the single source of truth (L1/L6). Point `--gates` at a file that exists to declare gates — never at a work-slice document whose prose contains backticked commands (`git rm …`), because every command it finds, it runs.
 
 ## Failure-mode catalog
@@ -207,5 +241,7 @@ Keep the run's working state where it is bound; durable lessons graduate *out* o
 | Harness churn | loop rewrites skills / instruction files on a one-off or on speculation | **L8** — a real recurring signal in the journal + a human-gated proposal; one occurrence is a journal note |
 | Fix of nothing / self-inflicted symptom | a fix is "verified" by its after-state only — but the bug never existed, or the change itself caused the symptom | **L9** — reproduce the failure on the unchanged baseline first; verify as an A/B (before vs after), and trust a human's baseline/reference A/B over static-diff reasoning |
 | Two ledgers | loop state and the repo's own note disagree; the next session resumes from whichever it read | **L10** — bind before scaffolding, first match wins in the precedence order |
+| Split completion | the work commits, the note advances in a second commit; a stop between them leaves the pointer lying | one atomic completion commit — implementation, tests, note, retired slice |
+| Premature retirement | a slice is deleted while its acceptance items are unproven, so the instructions are gone and "done" is unverifiable | retire only after the gates are measured green; unverified work keeps its slice and its pointer |
 | Silent loss of failure memory | bound to a substrate that records only durable decisions, so retries and recurring gaps leave no trace past a compaction | keep the ephemeral, ignored journal even in adopted mode — L5/L8 run on it |
 | Gate that can never be green | a contract row needs an uninstalled tool or a missing environment prefix; the loop reads an environmental red as a code failure | environment-blocked items go to the human-verified list; a needed prefix lives in the row |
