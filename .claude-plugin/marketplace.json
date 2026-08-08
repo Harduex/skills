@@ -30,7 +30,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/Harduex/agentic-notebook.git",
-        "sha": "c62b1ecf074607c9aa1e1e63704d1abebcb50d61"
+        "sha": "7901665ea4940c94fff55bc6debf4d77f5741edd"
       },
       "strict": false,
       "description": "Source-grounded, NotebookLM-style research notebook over any local folder of documents — grounded Q&A with verifiable citations, plus study guides, briefing docs, mind maps, podcast scripts, and a context-frugal small-model mini variant."
