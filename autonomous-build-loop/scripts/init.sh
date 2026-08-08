@@ -180,4 +180,16 @@ echo "next:"
 echo "  1. fill contract.md    — every done-item a command with an exit code"
 echo "  2. fill CHECKPOINT.md  — orientation a zero-context session can resume from"
 echo "  3. write the task slices — one file per session-sized task, 001 first"
-echo "  4. commit the loop state, then start cycle 1"
+
+# A state file nobody is told to open resumes nothing: the repo's instruction file
+# has to name the note as a first read. One target only — never advertise two.
+instructions="$(find . -maxdepth 2 \( -name AGENTS.md -o -name CLAUDE.md -o -name GEMINI.md \) \
+  -not -path './.git/*' -not -path './node_modules/*' 2>/dev/null | sed 's|^\./||' | sort | head -3)"
+echo "  4. point the repo's instruction file at the note (required, else the loop is invisible):"
+if [ -n "$instructions" ]; then
+  printf '%s\n' "$instructions" | sed 's/^/       found: /'
+else
+  echo "       found: none — create a minimal one whose job is this pointer"
+fi
+echo "       add or repoint one line:  Read \`$dir/CHECKPOINT.md\` first; it names the one current task."
+echo "  5. commit the loop state, then start cycle 1"
