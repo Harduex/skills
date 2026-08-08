@@ -1,5 +1,21 @@
 # Changelog
 
+## v1.7.3
+
+- **functional-programming now carries a full, citable rule set.** The skill stated the
+  Data > Calculations > Actions triad and functional core / mutable shell, but was silent on
+  everything in between: where a function belongs, what to do with near-identical functions and
+  hand-written loops, how data crosses trust boundaries, and how async code goes wrong.
+  REFERENCE.md now defines 51 rules in seven bands with stable IDs for review citations —
+  C classify, A improve actions, I immutability disciplines, D stratified design, F refactorings &
+  functional tools, T timelines, R architecture — each band with one worked TypeScript example,
+  plus an expanded anti-patterns table. SKILL.md gains the "actions spread" rationale, names
+  core/shell as the onion architecture, and routes into the bands; its description now also
+  triggers on layers, abstraction barriers, duplicated functions, and race conditions. Subagent
+  application tests shaped the final rules: T9 added (threshold effects edge-trigger on the
+  before/after transition), the queue example hardened so a failed job cannot strand queued ones,
+  and C3 tightened so a deterministic in-place mutator no longer qualifies as a calculation.
+
 ## v1.7.2
 
 - **Slice numbering is stated to be the execution order.** The skill said tasks are "ordered so
