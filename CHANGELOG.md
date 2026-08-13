@@ -1,5 +1,18 @@
 # Changelog
 
+## v1.7.5
+
+- **code-review resolves GitLab Duo's bare note-id citations.** Duo points at its own earlier
+  comments as `#887738`, and GitLab auto-links merge-request and issue refs but not note ids —
+  so the citation renders as dead text and a human sent to look at one finds nothing on the
+  page. The reference now says to resolve the id through the notes API and hand over the
+  `#note_<id>` anchor URL, which does open the comment.
+- **The report bar no longer claims its calibration is local.** The findings table cited "this
+  project's review history", which resolves to whatever repo the reader is in — asserting a
+  14-session review history they never had. A model reading the table as locally measured
+  would hand its absolutes ("zero were ever fixed") back as facts about the reader's own team,
+  so the attribution now names it for what it is: one team's sample.
+
 ## v1.7.4
 
 - **write-a-skill now teaches the current Agent Skills standards.** The skill knew two
