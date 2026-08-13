@@ -169,7 +169,7 @@ The report is a short list of findings the author will act on, not a transcript 
 2. **Consequential** — it produces a wrong behavior, a leak/race, a security gap, dead weight, or a divergence from a sibling pattern. State the concrete failure or the sibling that does it right.
 3. **Actionable in this branch** — the fix fits the MR's scope. Codebase-wide cleanups and refactors of pre-existing code are follow-up-ticket material, compressed to one line at the end of the report.
 
-Calibration from this project's review history (~90 catalogued findings across 14 sessions) — what actually gets fixed vs. ignored:
+Calibration from one team's review history (~90 catalogued findings across 14 sessions) — what actually gets fixed vs. ignored:
 
 | Reliably fixed — report | Never acted on — drop |
 |---|---|
