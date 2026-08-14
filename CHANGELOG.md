@@ -1,5 +1,18 @@
 # Changelog
 
+## v1.8.0
+
+- **New skill: `write-handoff-doc`** (delivery-lifecycle bundle). Converts an internal
+  artifact — a design spec, a shipped branch or feature, an API contract — into a
+  self-contained external handoff document another team can act on with zero internal
+  context. Encodes the proven format (dateline with a conscious status, one-paragraph
+  "short version", task-ordered sections, rule/cost and their-reaction tables,
+  define-by-negation, their-side open items), the audience filter (storage is not
+  contract; no decision IDs, tickets, or internal paths; verify every claim and link,
+  hedge what isn't pinned), and the publish lifecycle (repo file is the source of
+  truth; published copies sync back as deltas with medium artifacts stripped).
+  Cold-tested on a real spec; the tester's eight reported gaps are folded in.
+
 ## v1.7.5
 
 - **code-review resolves GitLab Duo's bare note-id citations.** Duo points at its own earlier
