@@ -40,7 +40,8 @@
         "formal-verification",
         "functional-programming",
         "general-coding-standards",
-        "site-refiner"
+        "site-refiner",
+        "write-handoff-doc"
       ]
     },
     {
