@@ -1,7 +1,8 @@
-# Structure: Statements, Functions, Modules
+# Code: Statements, Functions, Modules
 
 Procedures in controlled language are short, imperative, one instruction per
-sentence, condition first. Functions are procedures; modules are chapters.
+sentence, condition first. Functions are procedures. Likewise, modules are
+chapters.
 
 ## Statements & functions
 
@@ -27,6 +28,10 @@ sentence, condition first. Functions are procedures; modules are chapters.
 | M4 | Sibling modules mirror each other's structure and section order. |
 | M5 | Dependencies are explicit, declared at the top, and acyclic. |
 | M6 | Reuse the codebase's existing vocabulary of operations. Before inlining a computation, conversion, or check that has a standard name, read the shared utility modules' export lists and use the name that is already there. Enumerate the exports; do not guess at a name you would have to know already. |
+
+M3, M4, and M5 have prose counterparts — D8, D8, and D6 in [WRITING.md](WRITING.md)
+— because the source rules behind them govern both a file's layout and a
+document's. Applying one does not discharge the other.
 
 ## Worked example
 

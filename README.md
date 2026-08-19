@@ -37,7 +37,7 @@ evolution loop (save lessons, extract new skills, re-tune the repo).
 | Bundle | What it's for |
 |---|---|
 | **harness-evolution** | The core self-improvement loop: extract skills from sessions, save learned lessons, analyze agent sessions, and evolve the repo. Includes the router and output-style setup. |
-| **delivery-lifecycle** | Gated idea-to-shipped pipeline: plan, design, spec, test cases, autonomous build loop, review, verification, checkpoint — plus formal verification, functional-programming guidance, ASD-STE100-derived coding standards, and site refinement. |
+| **delivery-lifecycle** | Gated idea-to-shipped pipeline: plan, design, spec, test cases, autonomous build loop, review, verification, checkpoint — plus formal verification, functional-programming guidance, ASD-STE100-derived standards for code and documents, and site refinement. |
 | **git-ops** | Git hygiene and delivery ops: linear history, fixup distribution, PR comment handling, shipped-state audits, secret-leak audits. |
 | **thinking** | Reasoning and research toolkit: deep research, adversarial questioning, zero-assumption analysis, teaching, quick-wins triage. |
 

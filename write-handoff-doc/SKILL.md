@@ -44,7 +44,7 @@ Rendering rules:
 
 ## Prose
 
-**Before writing any prose, invoke your set's controlled-language / coding-standards capability** (in this catalog: `general-coding-standards`) and write under its prose band — sentence caps, no Latin abbreviations, unambiguous pronouns. Capability mentions don't self-fire: actually invoke the skill; don't assume its rules from this summary. If no such skill is installed, the three rules just named are the minimum. The short-version paragraph is the stated exception to paragraph caps. On top of that band, the rules this genre keeps re-learning:
+**Before writing any prose, invoke your set's controlled-language / writing-standards capability** (in this catalog: `general-standards`) and follow its own routing for documents. Capability mentions don't self-fire: actually invoke the capability rather than working from a summary of it. That capability owns these rules and decides which of its references a document author needs; this skill neither restates them nor names its files. The short-version paragraph is the stated exception to paragraph caps. On top of that standard, the rules this genre keeps re-learning:
 
 - **Define a term inline at first use the moment it could be misread** ("across threads — between different root comments — any order"). If the author pauses on a sentence, an external reviewer will too: fix the sentence, don't plan to explain it in review.
 - **Pair every data rule with its UI action and the field that triggers it** — what to do with the data + what to show the user + which response field says which. A data rule alone ("keep your cache") reads as contradicting the UX until the pairing is explicit.
@@ -59,7 +59,7 @@ Rendering rules:
 
 ## Checklist
 
-- [ ] Coding-standards capability invoked before writing; its prose band applied
+- [ ] Writing-standards capability invoked before writing, and its document rules applied
 - [ ] Every technical claim verified against live code/data; every link fetched and resolving
 - [ ] No internal storage, roles, decision IDs, tickets, or team history anywhere
 - [ ] The short version alone is decision-sufficient

@@ -1,21 +1,23 @@
 # Review Mode: Auditing Against the Standard
 
 Scope: this checklist audits **standards compliance** — naming, structure,
-prose, error quality. It complements a correctness review (bugs, security,
-data integrity); it never replaces one. Run your set's code-review capability
-for correctness; run this for the standard.
+prose, message quality — in a code diff or in a document. It complements a
+correctness review (bugs, security, data integrity). However, it never
+replaces one. Run your set's code-review capability for correctness.
+Separately, run this for the standard.
 
 ## Workflow
 
-1. Load the band checklists below; have [NAMING.md](NAMING.md) vocabulary
-   tables at hand.
-2. Sweep the diff band by band: N → S → M → W → P → C. Coverage comes from the
-   bands, not from reviewer taste.
+1. Load the band checklists below. Also have [VOCABULARY.md](VOCABULARY.md)
+   vocabulary tables at hand.
+2. Sweep band by band. A code diff sweeps N → S → M → W → P → C. A document
+   sweeps N → W → P → D → C, where the N band means terminology rather than
+   identifiers. Coverage comes from the bands, not from reviewer taste.
 3. A candidate finding must name the rule ID it violates, or it is dropped.
    Taste is not a finding.
 4. One confirmed instance → sweep the whole diff for the same class and report
    it as one finding listing every site.
-5. Rank findings by severity; output in the format below.
+5. Rank findings by severity. Then output in the format below.
 
 ## Finding format
 
@@ -35,13 +37,16 @@ There is no NITPICK tier: anything that would earn it either maps to a rule
 ## Band checklists
 
 **N — Names**
-- Does any new name alias an existing concept? (N3)
-- Any banned vague word from the NAMING.md table? (N1)
-- Any noun-named function, verb-named type, non-predicate boolean? (N4)
-- Any compound name over 3 words? (N6)
-- Any name the ticket introduced that contradicts the codebase term? (N3)
-- Any unexplained abbreviation, joke, or regionalism? (N7)
-- Spelling locale consistent? (N9)
+- **Both** — Does any new name alias an existing concept? (N3)
+- **Code** — Any banned vague word from the VOCABULARY.md table? (N1)
+- **Code** — Any noun-named function, verb-named type, non-predicate boolean? (N4)
+- **Code** — Any compound name over 3 words? (N6)
+- **Code** — Any name the ticket introduced that contradicts the codebase term? (N3)
+- **Both** — Any unexplained abbreviation, joke, or regionalism? (N7)
+- **Both** — Spelling locale consistent? (N9)
+- **Document** — Any term used without checking the glossary, codebase, platform, or domain first? (N1)
+- **Document** — Any term with two meanings, or one concept split across two terms? (N2)
+- **Document** — Any identifier paraphrased instead of quoted verbatim? (P5)
 
 **S — Statements & functions**
 - Function over 25 lines / 4 params / nesting 2 without justification? (S1)
@@ -69,11 +74,23 @@ There is no NITPICK tier: anything that would earn it either maps to a rule
 
 **P — Prose**
 - Instructions not numbered/imperative/condition-first? (P2)
-- Sentences over the 20/25-word caps; paragraphs over 6 sentences? (P1, P3)
+- Sentences over the 20/25-word caps? (P1)
+- Paragraphs over 6 sentences? (P3)
 - Dangling "it"/"this" with two possible referents? (P4)
 - Identifiers paraphrased instead of quoted? (P5)
 - Latin abbreviations? (P6) Non-inclusive terms? (P7)
 - Commit subject not one imperative sentence? (P8)
+- Any banned prose word from the VOCABULARY.md swap table? (P9)
+
+**D — Documents**
+- Genre unstated or mixed inside one section? (D1)
+- Any sentence over its cap when counted by the method? (D2, P1)
+- Any semicolon in running prose (table cells excepted)? (D3)
+- Parentheses used for something outside the seven purposes, with no stated reason? (D4)
+- A possessive kept where the sentence's correctness is in doubt, or stacked possessives? (D5)
+- Related sentences joined with no connecting word, or adjacent paragraphs with none? (D6)
+- A noun that needs an article or demonstrative and has none? (D7)
+- Detail before orientation — a dump the reader cannot place? (D8)
 
 **C — Consistency**
 - Same problem solved differently than the closest sibling, no reason stated? (C1)
@@ -95,5 +112,20 @@ There is no NITPICK tier: anything that would earn it either maps to a rule
 | instruction sentence > 20 words | P1 |
 | descriptive sentence > 25 words | P1 |
 | paragraph > 6 sentences | P3 |
+| parenthetical insert | counts as 1 word (D2) |
+| identifier, number, unit, abbreviation, quotation, title, proper noun | counts as 1 word each (D2) |
+| hyphenated cluster | counts as 1 word (D2) |
+| any semicolon in running prose | D3 — always a finding (table cells are out of scope) |
 
 Exceeded + no written justification = ISSUE. Exceeded + stated reason = passes.
+
+## Rewrite mode
+
+A rewrite is an audit carried through to corrected text. It never runs first.
+
+1. Run the audit sweep and produce the findings.
+2. Rewrite each flagged sentence. Show before and after, and name the rule.
+3. Change form, never content. Quotations, proper nouns, identifiers, numbers,
+   and the author's factual claims survive the rewrite untouched.
+4. A sentence with no finding against it is not rewritten. Preference is not a
+   finding — that is what the rule-ID bar is for.
