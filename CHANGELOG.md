@@ -1,5 +1,21 @@
 # Changelog
 
+## v1.8.1
+
+- **`general-coding-standards`: new rule M6 — reuse the codebase's existing vocabulary
+  of operations.** The reuse habit fires on nouns (a component, a hook, a registry) and
+  lets multi-token expressions through: inline arithmetic reads as code being written,
+  not as a dependency being added. Searching by name cannot close the gap, because the
+  helper's name is what the author does not know yet — so the rule says to enumerate the
+  shared utility modules' exports and read the list. Hooked into author mode, the M-band
+  review sweep, and the self-check. Sibling mirroring (M4) is named as a carrier rather
+  than a guard: a sibling older than the helper hands over the pre-helper idiom.
+- **`distribute-fixups`: corrected the verification baseline.** The skill recorded HEAD
+  before the fixup commits, then demanded an empty diff against it — impossible for
+  uncommitted changes, since that commit predates the very changes being distributed. A
+  check that can never pass teaches the reader to wave it through. The baseline is now
+  the tip of the fixup stack, whose tree is the end state the rebase must reproduce.
+
 ## v1.8.0
 
 - **New skill: `write-handoff-doc`** (delivery-lifecycle bundle). Converts an internal
