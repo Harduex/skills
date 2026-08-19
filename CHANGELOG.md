@@ -1,5 +1,19 @@
 # Changelog
 
+## v2.0.0
+
+- **`general-coding-standards` is renamed `general-standards`** and widened
+  from code to everything a project authors. Update any reference to the old
+  folder name.
+- **New D band (D1–D8)** for documents: genre selection, the sentence
+  word-counting method, punctuation, possessives, cohesion, and gradual
+  disclosure. The catalog is 49 rules; the 41 existing IDs are unchanged.
+- **Files route by artifact:** `VOCABULARY.md` (was `NAMING.md`), `CODE.md`
+  (was `STRUCTURE.md`), and `MESSAGES.md` + `WRITING.md` (was `PROSE.md`).
+- **New modes:** document audit and rewrite, in `REVIEW.md`.
+- `STE-MAPPING.md` now resolves all 62 source rows to a rule; none map to N/A.
+- `write-handoff-doc` points at the new name.
+
 ## v1.8.1
 
 - **`general-coding-standards`: new rule M6 — reuse the codebase's existing vocabulary
