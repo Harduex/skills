@@ -37,11 +37,16 @@ safety-grade error messages. 40 rules, six bands, stable IDs.
 
 1. Naming something new? Search the glossary, then the codebase, then the
    platform's vocabulary for the existing term (N1, N3).
-2. Writing a function? Guards and validation first (S4); one action per
+2. About to inline a computation, conversion, or check? Read the shared
+   utility modules' export lists first and reuse the operation that is
+   already named there (M6). An expression does not announce itself as a
+   dependency, so nothing else will prompt this — and a sibling file older
+   than the helper will hand you the pre-helper idiom (M4).
+3. Writing a function? Guards and validation first (S4); one action per
    statement (S2); happy path as direct commands (S3).
-3. Writing an error or log? Pick severity by W1; open with the condition or
+4. Writing an error or log? Pick severity by W1; open with the condition or
    command (W2); close with the consequence (W3).
-4. Writing prose? One idea per sentence — 20 words max in instructions, 25 in
+5. Writing prose? One idea per sentence — 20 words max in instructions, 25 in
    descriptions (P1); no pronoun without one unambiguous referent (P4).
 
 ## Review mode
@@ -64,6 +69,7 @@ governs how names, units, and prose read.
 ## Self-check before done
 
 - Every new name from an approved source? (N1)
+- Every inlined computation checked against the shared utilities' exports? (M6)
 - Any unit past its trigger — 25 lines, 4 params, nesting 2, 400-line file —
   without a written justification? (S1, M2)
 - Every error: severity accurate, condition first, consequence stated? (W1–W3)

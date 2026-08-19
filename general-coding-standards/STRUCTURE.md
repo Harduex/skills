@@ -26,6 +26,7 @@ sentence, condition first. Functions are procedures; modules are chapters.
 | M3 | Order top-down: public surface first, helpers below — a file reads like a newspaper. |
 | M4 | Sibling modules mirror each other's structure and section order. |
 | M5 | Dependencies are explicit, declared at the top, and acyclic. |
+| M6 | Reuse the codebase's existing vocabulary of operations. Before inlining a computation, conversion, or check that has a standard name, read the shared utility modules' export lists and use the name that is already there. Enumerate the exports; do not guess at a name you would have to know already. |
 
 ## Worked example
 

@@ -59,6 +59,7 @@ There is no NITPICK tier: anything that would earn it either maps to a rule
 - Helpers above the public surface? (M3)
 - Structure diverges from the closest sibling without a reason? (M4)
 - Hidden or cyclic dependencies? (M5)
+- An operation spelled out inline that the shared utilities already name? (M6)
 
 **W — Errors & logs**
 - Any level mismatching W1 semantics (error that isn't a failure, failure logged as info)? (W1)

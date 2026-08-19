@@ -36,10 +36,10 @@ If the commits to redistribute are **buried in the middle** of the branch (not a
 ```bash
 git log --oneline <base>..HEAD              # see commits to distribute into
 git status                                  # see uncommitted changes
-git rev-parse HEAD                          # SAVE THIS — used for verification in step 5
 ```
 
-Record the pre-rebase HEAD sha. You will diff against it at the end.
+The verification baseline is captured at the end of step 3, not here — the
+current HEAD does not yet contain the changes you are about to distribute.
 
 ### 2. Attribute each change to an originating commit
 
@@ -65,7 +65,11 @@ git commit --fixup=<sha>
 
 If a single file has hunks belonging to **different** originating commits, split them with `git add -p` (only acceptable interactive use here — there is no non-interactive equivalent that selects hunks). If `-p` is not allowed in your environment, stash, restore one hunk at a time via patch, and commit between each.
 
-Repeat until the working tree is clean.
+Repeat until the working tree is clean. Then record the tip of the fixup stack — **its tree is the exact end state the rebase must reproduce**:
+
+```bash
+git rev-parse HEAD                          # SAVE THIS as <expected-tree>
+```
 
 ### 4. Autosquash non-interactively
 
@@ -81,14 +85,16 @@ On conflict: resolve in favor of the **consistent end state** the branch is supp
 
 ### 5. Verify tree integrity
 
-The whole point of distribute-fixups is that **only history changed, not the working tree**. Confirm:
+The whole point of distribute-fixups is that **only history changed, not the content**. Confirm against `<expected-tree>` from step 3:
 
 ```bash
-git diff <pre-rebase-sha> HEAD              # MUST be empty
+git diff <expected-tree> HEAD               # MUST be empty
 git log --oneline <base>..HEAD              # should show no fixup! commits remain
 ```
 
-If `git diff` is non-empty, something was lost or doubled during the rebase. Investigate before pushing — do NOT force-push a tree that differs from the pre-rebase state without understanding why.
+Compare against the fixup-stack tip, **never against the sha you started from**: that commit predates the changes being distributed, so its diff to the new HEAD is exactly your fixes and can never be empty. Treating it as the check either raises a false alarm or, worse, teaches you to wave the check through.
+
+If `git diff` is non-empty, something was lost or doubled during the rebase. Investigate before pushing — do NOT force-push a tree that differs from `<expected-tree>` without understanding why.
 
 ## Force-push
 
@@ -102,7 +108,7 @@ Never force-push to `main`. Warn the user if they ask for it on a shared branch.
 
 ## Red flags
 
-- `git diff <pre-rebase-sha> HEAD` is non-empty → STOP. History is wrong.
+- `git diff <expected-tree> HEAD` is non-empty → STOP. Content was lost or doubled.
 - `fixup!` commits remain after rebase → autosquash didn't run; check the rebase actually used `--autosquash` and the fixup target shas are in range.
 - Repeated conflicts on the same hunk across multiple fixups → the fixups are out of order or one of them belongs to a different originating commit. Reorder via the targets, not by editing the rebase todo.
 
