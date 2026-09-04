@@ -1,5 +1,15 @@
 # Changelog
 
+## v2.0.1
+
+- **`set-output-style`: new directive 8 — two-layer findings reports.** A report of
+  several findings, or a message that asks the reader to decide, carries a technical
+  layer (file references, exact names, evidence) and a plain layer (one everyday
+  sentence per item), interleaved or with the plain layer as the closing section.
+  Every question the reader must answer restates its item in plain words next to it,
+  never as a bare code to look up. Prompted by a report whose items opened with file
+  paths and internal names and whose questions used only IDs.
+
 ## v2.0.0
 
 - **`general-coding-standards` is renamed `general-standards`** and widened
