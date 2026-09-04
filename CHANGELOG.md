@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.0.2
+
+- **`set-output-style`: directive 8 gains the decision-question rule.** A question that
+  asks the reader to decide opens with the user-facing scenario and offers its options as
+  outcomes the reader can picture, never as mechanisms.
+
 ## v2.0.1
 
 - **`set-output-style`: new directive 8 — two-layer findings reports.** A report of
