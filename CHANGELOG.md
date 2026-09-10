@@ -1,5 +1,15 @@
 # Changelog
 
+## v2.1.2
+
+- **`write-a-ticket`: density follows the reader.** A story or bug report opened by a
+  designer, tester or product owner carries no file paths, function names, schema keys,
+  migration names or timestamps; a pointer line replaces them. A sub-task under an epic,
+  or a defect that is its own only record, keeps the detail. Tables are reserved for
+  evidence in such a defect — in a story the same content is bullets. Drafts are shown
+  rendered rather than fenced, and a body far past its shape is carrying detail the spec
+  already owns.
+
 ## v2.1.1
 
 - **`write-a-ticket`: an open question is agreed, never merely left.** Unresolved points
