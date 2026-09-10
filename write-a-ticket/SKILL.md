@@ -36,7 +36,8 @@ A user story is `As a <person>, I want <outcome>, so that <reason>`. It describe
 - **An open question is agreed, never merely left.** Surface every unresolved point while drafting and get a decision on it. A `TBD` survives into the filed ticket only because someone chose to leave it open, and then it is named as one line inside the criteria it affects. A leftover "decisions to make" section means the drafting stopped early: resolve the question, or make the decision the ticket's whole purpose and say so in the title.
 - **Sections earn their place.** "Out of scope" is worth writing when it stops someone building the wrong thing, and worth deleting when it lists what nobody would have done anyway. Same for notes, context and background.
 - **Acceptance criteria are observable.** A reader must be able to say whether each one happened. "Works correctly" is not a criterion; "opening it as someone with only a link shows no list" is.
-- **Plain words in the parts people read to decide.** Names of functions, files and migrations are for the parts people read to build. A reader deciding priority should not need the codebase.
+- **Match density to the reader, not to what you know.** A story or bug report that a designer, tester or product owner opens carries no file paths, function names, schema keys, migration names or timestamps — however well you know them. Strip them and leave a single pointer line in their place ("Spec: …", "Reference implementation: …"). A sub-task under an epic, or a defect that is its own only record, is opened by the implementer and keeps the detail. When unsure, ask who opens this ticket first.
+- **Prose and bullets by default; a table only for evidence.** A table earns its place in a defect that is its own record — a matrix of affected surfaces, a request-and-result repro log. In a story it turns a decision into a spreadsheet; write the same content as bullets.
 
 ## Link by capability, not by name
 
@@ -50,7 +51,7 @@ Discover them from the available skill descriptions and invoke them by their rea
 
 ## Before filing
 
-**Show the full draft text and get an explicit go-ahead, every time** — including when an earlier draft of the same ticket was already approved, and including when only a field is changing. Filing is outward-facing and awkward to undo.
+Show the draft as **rendered markdown, never wrapped in a code fence** — the reader is judging the ticket, not copying it, and raw headings and tables are unreadable. **Show the full draft text and get an explicit go-ahead, every time** — including when an earlier draft of the same ticket was already approved, and including when only a field is changing. Filing is outward-facing and awkward to undo.
 
 Mirror the nearest existing ticket in the same epic or project instead of rebuilding the shape. Tracker mechanics — issue types, required custom fields, boards, sprints, team fields — belong in the project's own agent instructions, not here; read them there and follow them.
 
@@ -61,4 +62,5 @@ Mirror the nearest existing ticket in the same epic or project instead of rebuil
 - Do not expand a small ticket to fill the shape. A one-line bug gets a sentence.
 - Do not paste a spec section into a ticket. Link it.
 - Do not invent acceptance criteria to reach a tidy number.
+- Do not run past what the shape needs. A bug report lands near 15 lines, a story between 25 and 50. When a draft runs much longer, the excess is almost always implementation detail the spec or the merge request already owns.
 - Do not file anything without the go-ahead, however obvious the ticket seems.
