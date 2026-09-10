@@ -1,5 +1,14 @@
 # Changelog
 
+## v2.1.0
+
+- **New skill `write-a-ticket`, in the `delivery-lifecycle` bundle.** Writing a ticket
+  someone else can act on: minimalist but full, where the guiding test is what other
+  artifact already owns the detail — a spec owns the contract, a merge request owns the
+  implementation, and a defect that is its own only record keeps its evidence. Offers five
+  shapes to pick from instead of one template, so bug reports are not flattened into
+  feature prose. Links to tracker, forge and domain workflows by capability, never by name.
+
 ## v2.0.2
 
 - **`set-output-style`: directive 8 gains the decision-question rule.** A question that
