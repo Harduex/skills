@@ -1,5 +1,12 @@
 # Changelog
 
+## v2.1.1
+
+- **`write-a-ticket`: an open question is agreed, never merely left.** Unresolved points
+  are surfaced while drafting and decided; a `TBD` reaches the filed ticket only because
+  someone chose to leave it, named on the criterion it affects. The rules section takes
+  the house name, `Style rules`.
+
 ## v2.1.0
 
 - **New skill `write-a-ticket`, in the `delivery-lifecycle` bundle.** Writing a ticket
