@@ -65,6 +65,7 @@ There is no NITPICK tier: anything that would earn it either maps to a rule
 - Structure diverges from the closest sibling without a reason? (M4)
 - Hidden or cyclic dependencies? (M5)
 - An operation spelled out inline that the shared utilities already name? (M6)
+- A refactor, rename, or new abstraction the request did not ask for? (M7)
 
 **W — Errors & logs**
 - Any level mismatching W1 semantics (error that isn't a failure, failure logged as info)? (W1)

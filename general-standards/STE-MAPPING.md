@@ -3,21 +3,22 @@
 This skill translates **ASD-STE100 Simplified Technical English, Issue 9,
 January 2025** (Aerospace, Security and Defence Industries Association of
 Europe) — 53 writing rules in 9 sections, 8 general recommendations (GR), and a
-controlled dictionary — into the 50 rules of this skill.
+controlled dictionary — into the 51 rules of this skill.
 
 Every source item below is mapped to a skill rule. Each row **paraphrases**
 the source rule's full meaning in this file's own words: the specification is
 copyrighted and is not reproduced here. Section and page numbers locate the
 original for readers who hold a licensed copy. Several source rules merge
 into one skill rule, and some source rules map to more than one rule. That is
-why the 53 + 8 + 1 source items produce 48 of this skill's rules. Two more
+why the 53 + 8 + 1 source items produce 48 of this skill's rules. Three more
 are described below: house rules with no counterpart in the specification.
 
-The mapping runs from source to skill rule, not the reverse. Two skill rules
+The mapping runs from source to skill rule, not the reverse. Three skill rules
 were added directly from the skill's own maintenance history, not from the
-specification: M6 (reuse the codebase's existing vocabulary of operations)
-and P9 (swap a banned prose word for its approved replacement). Neither has
-a counterpart in this specification.
+specification: M6 (reuse the codebase's existing vocabulary of operations),
+M7 (the smallest change that satisfies the request), and P9 (swap a banned
+prose word for its approved replacement). None has a counterpart in this
+specification.
 
 ## Part 1 — Writing rules
 

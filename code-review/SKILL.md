@@ -145,6 +145,12 @@ Report tool results but focus your review on what tools *cannot* catch.
 - **Readability**: Would a new team member understand this code without the commit message?
 - **Consistency**: Does it follow the conventions the surrounding code already establishes — import paths/aliases, naming, file organization, and the rules the project's lint/format config enforces? Don't manually flag what the formatter or linter already catches; do flag patterns that are consistent across the codebase but not enforced by tooling.
 
+### 6. Falsify every finding before reporting
+
+Collect the candidate findings, then dispatch **one separate verification subagent whose only job is to disprove them**. For each finding it runs the exact command that would falsify the claim — a grep for the symbol, `git log`/`git blame` on the line, reading the full function or the SQL body, a `psql` query, the tracker API — and reports the raw output. It never fixes code and never adds findings. Drop every finding the verifier cannot reproduce. Each surviving finding carries the command that proves it as an `Evidence:` line under the description.
+
+Stale facts, misread siblings, and wrong identifiers (a cloud id, a table name, a helper's real behavior) are the defect class this step exists for: a reviewer that asserts from memory is confidently wrong roughly a third of the time, and the author pays for every bogus finding in trust.
+
 ### Project-specific red flags
 
 Project-specific red flags live in the consuming project's conventions documentation (`CLAUDE.md`, `AGENTS.md`, `CONTRIBUTING.md`, or equivalent), not in this skill. Read that documentation before reviewing — typical contents include pinned dependency versions, banned framework patterns, architectural boundaries between services, asset/data conventions, and any "we tried this and it failed" lore. Apply those red flags during the review alongside the general dimensions above.
@@ -192,6 +198,7 @@ Structure every finding as:
 ```
 **[F1] [SEVERITY] file_path:line_number — Short title**
 Description of the issue and why it matters.
+Evidence: the command from Step 6 that proves it, with the relevant output line.
 Suggested fix (if you have one).
 ```
 

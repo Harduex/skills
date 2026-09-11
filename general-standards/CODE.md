@@ -28,6 +28,7 @@ chapters.
 | M4 | Sibling modules mirror each other's structure and section order. |
 | M5 | Dependencies are explicit, declared at the top, and acyclic. |
 | M6 | Reuse the codebase's existing vocabulary of operations. Before inlining a computation, conversion, or check that has a standard name, read the shared utility modules' export lists and use the name that is already there. Enumerate the exports; do not guess at a name you would have to know already. |
+| M7 | Implement the smallest change that satisfies the request. Do not refactor adjacent code, rename symbols, or add abstractions unprompted. When investigation widens beyond the stated task, stop and state the proposed scope in one sentence before continuing. |
 
 M3, M4, and M5 have prose counterparts — D8, D8, and D6 in [WRITING.md](WRITING.md)
 — because the source rules behind them govern both a file's layout and a
