@@ -1,5 +1,17 @@
 # Changelog
 
+## v2.1.3
+
+- **`general-standards`: M7, the smallest change that satisfies the request.** A third
+  house rule beside M6 and P9: no unprompted refactor of adjacent code, rename, or new
+  abstraction, and a widening investigation stops to state its proposed scope in one
+  sentence first. Registered in the provenance table, the M-band review checklist, and
+  the self-check; the skill now carries 51 rules.
+- **`code-review`: every finding is falsified before it is reported.** Step 6 dispatches
+  one verification subagent whose only job is to disprove each candidate finding with the
+  exact command that would refute it. Unreproducible findings are dropped; each survivor
+  carries an `Evidence:` line naming the proving command.
+
 ## v2.1.2
 
 - **`write-a-ticket`: density follows the reader.** A story or bug report opened by a
