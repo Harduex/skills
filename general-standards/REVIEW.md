@@ -41,6 +41,8 @@ There is no NITPICK tier: anything that would earn it either maps to a rule
 - **Code** — Any banned vague word from the VOCABULARY.md table? (N1)
 - **Code** — Any noun-named function, verb-named type, non-predicate boolean? (N4)
 - **Code** — Any compound name over 3 words? (N6)
+- **Code** — A unit whose behavior widened but whose name did not? (N2)
+- **Code** — A regex, duration, or other typed literal inline instead of a named constant carrying its kind or unit? (N10)
 - **Code** — Any name the ticket introduced that contradicts the codebase term? (N3)
 - **Both** — Any unexplained abbreviation, joke, or regionalism? (N7)
 - **Both** — Spelling locale consistent? (N9)
@@ -57,21 +59,32 @@ There is no NITPICK tier: anything that would earn it either maps to a rule
 - A class whose only job is running one action? (S7)
 - Compressed one-liners that trade clarity for brevity? (S8)
 - Three or more parallel branches inlined instead of vertical/data-driven? (S9)
+- The same compound condition written twice, or two adjacent guards on one condition? (S10)
 
 **M — Modules**
 - More than one topic in the file/class? (M1)
 - File > 400 lines or class > 7 public members, unjustified? (M2)
 - Helpers above the public surface? (M3)
 - Structure diverges from the closest sibling without a reason? (M4)
-- Hidden or cyclic dependencies? (M5)
+- Hidden or cyclic dependencies? An environment or config value read inline inside a handler? (M5)
 - An operation spelled out inline that the shared utilities already name? (M6)
 - A refactor, rename, or new abstraction the request did not ask for? (M7)
+- A condition, prop, or config line dropped or altered that the request did not name? (M7)
+- A helper with one consumer, or a one-line expression extracted? (M7)
+- A replacement helper whose semantics differ from the expression it replaced? (M6)
+- Dead or speculative code — an unused constant, effect, type, file, or check? (M8)
+- A consumer-specific rule placed in a shared module? (M9)
+- A hand edit inside a generated file? (M10)
 
-**W — Errors & logs**
+**W — Errors, logs & comments**
 - Any level mismatching W1 semantics (error that isn't a failure, failure logged as info)? (W1)
 - Any message that doesn't open with the concrete condition or command? (W2)
 - Any failure message that omits the consequence? (W3)
 - Any comment or info-log carrying an instruction the reader must obey? (W4)
+- Any comment that restates what the code shows? (W5)
+- Any comment narrating the change, or naming a planning id, test-case code, or session context? (W6)
+- Any comment the edit made false, a moved block that lost its comments, or commented-out code? (W7)
+- Any comment sentence joining two ideas with a semicolon? (P1)
 
 **P — Prose**
 - Instructions not numbered/imperative/condition-first? (P2)
@@ -95,6 +108,8 @@ There is no NITPICK tier: anything that would earn it either maps to a rule
 
 **C — Consistency**
 - Same problem solved differently than the closest sibling, no reason stated? (C1)
+- Sibling matched in behavior but not in structure, naming, placement, or tests? (C1)
+- One instance fixed while the branch introduced others of the same class? (C1)
 - A rename that word-swapped instead of renaming by meaning? (C2)
 - Idiom-dependent names — `spinUp`, `kickOff`, `windDown`? (C3)
 - New domain term used without a glossary entry? (C4)

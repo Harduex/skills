@@ -10,7 +10,7 @@ a concept has forked it (N3, P5).
 | ID | Rule |
 |---|---|
 | N1 | Every name comes from an approved source: the project glossary, the codebase's existing vocabulary, the platform's established terms, or the domain's terminology. Search for the existing name before inventing one. |
-| N2 | One name, one meaning. Never reuse a name for a second concept. |
+| N2 | One name, one meaning. Never reuse a name for a second concept. When a unit's behavior widens, rename it so the name stays truthful. |
 | N3 | One concept, one name, everywhere. Synonym drift (`user`/`customer`/`account` for one entity) is a defect. |
 | N4 | Name by role: functions are verb phrases, types and values are noun phrases, booleans are predicates (`is`/`has`/`can`). Never a noun-named function or a verb-named type. |
 | N5 | One approved form per word: imperative verb stems for actions (`createUser`, not `creatingUser`/`userCreation`); past participles only as state descriptors (`parsedConfig`, `isLocked`); gerunds only when the platform itself uses them. |
@@ -18,6 +18,7 @@ a concept has forked it (N3, P5).
 | N7 | Names are short, plain, and pronounceable. No slang, humor, regionalisms, or unexplained abbreviations. |
 | N8 | Prefer the platform/framework/industry's established term over a house synonym. |
 | N9 | One spelling locale — American English unless the project directs otherwise — in every identifier and doc. |
+| N10 | A typed literal is a module-scope constant whose name carries its kind or unit: a regex is `<NAME>_REGEX`, a duration is `<NAME>_MS`. The kind survives at the call site; a bare `/…/.test(x)` or `10 * 60 * 1000` does not. |
 
 Ticket and chat vocabulary does not override the codebase: when a ticket says
 "members" and the code says `Subscriber`, the code's term wins (N3). Propose a
@@ -31,7 +32,7 @@ vocabulary.
 
 | ID | Rule |
 |---|---|
-| C1 | Same problem, same solution: mirror the closest sibling. Divergence needs a stated reason. |
+| C1 | Same problem, same solution: mirror the closest sibling. Symmetry covers structure, naming, placement, and tests, not only behavior. Divergence needs a stated reason. One fixed instance means every instance the branch introduced. |
 | C2 | Fix a bad name by rethinking the meaning, not by word-swapping (`managerUtil` is not a fix for `manager`). |
 | C3 | No idiom-dependent names (`spinUp`, `kickOff`): use plain verbs unless the idiom is the platform's own established term (then N8 governs). |
 | C4 | Domain terms are first-class: record each in the glossary with one meaning. |

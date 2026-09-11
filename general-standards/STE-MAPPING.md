@@ -3,22 +3,25 @@
 This skill translates **ASD-STE100 Simplified Technical English, Issue 9,
 January 2025** (Aerospace, Security and Defence Industries Association of
 Europe) — 53 writing rules in 9 sections, 8 general recommendations (GR), and a
-controlled dictionary — into the 51 rules of this skill.
+controlled dictionary — into the 59 rules of this skill.
 
 Every source item below is mapped to a skill rule. Each row **paraphrases**
 the source rule's full meaning in this file's own words: the specification is
 copyrighted and is not reproduced here. Section and page numbers locate the
 original for readers who hold a licensed copy. Several source rules merge
 into one skill rule, and some source rules map to more than one rule. That is
-why the 53 + 8 + 1 source items produce 48 of this skill's rules. Three more
+why the 53 + 8 + 1 source items produce 48 of this skill's rules. Eleven more
 are described below: house rules with no counterpart in the specification.
 
-The mapping runs from source to skill rule, not the reverse. Three skill rules
+The mapping runs from source to skill rule, not the reverse. Eleven skill rules
 were added directly from the skill's own maintenance history, not from the
-specification: M6 (reuse the codebase's existing vocabulary of operations),
-M7 (the smallest change that satisfies the request), and P9 (swap a banned
-prose word for its approved replacement). None has a counterpart in this
-specification.
+specification: N10 (typed literals are named constants carrying their kind or
+unit), S10 (a repeated compound condition becomes a named predicate), M6 (reuse the codebase's existing vocabulary of operations), M7 (the
+smallest change that satisfies the request), M8 (no speculative or dead code),
+M9 (a consumer-specific change lives in the consumer), M10 (generated files are
+never hand-edited), W5 to W7 (comment content, provenance, and upkeep), and P9
+(swap a banned prose word for its approved replacement). None has a
+counterpart in this specification.
 
 ## Part 1 — Writing rules
 

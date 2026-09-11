@@ -9,7 +9,7 @@ Everything a project authors is technical writing — the code, the error
 messages, the README. These standards port the controlled-language system
 behind aerospace maintenance documentation (ASD-STE100) to all of it: a closed
 vocabulary, hard size limits, imperative structure, and safety-grade messages.
-51 rules, seven bands, stable IDs.
+59 rules, seven bands, stable IDs.
 
 **"General" names the layer, not the scope of the advice.** This is the base
 that every project sits on: a project's own coding-standards skill, its
@@ -60,6 +60,8 @@ any conflict.
    - Pick severity by W1.
    - Open with the condition or command (W2).
    - Close with the consequence (W3).
+5. Writing a comment? Make the code say it first (W5). Keep only the
+   rationale, about the code as it stands (W6).
 
 ## Author mode — documents
 
@@ -96,7 +98,10 @@ contrast, this layer governs how names, units, and prose read.
 - Every new name from an approved source? (N1)
 - Every inlined computation checked against the shared utilities' exports? (M6)
 - Every change the smallest that satisfies the request — no unprompted refactor,
-  rename, or abstraction? (M7)
+  rename, or abstraction, nothing dropped the task did not name? (M7)
+- Every comment non-inferable rationale about the current code, none narrating
+  the change? (W5, W6)
+- Nothing left that no code uses yet? (M8)
 - Any unit past its trigger — 25 lines, 4 params, nesting 2, 400-line file —
   without a written justification? (S1, M2)
 - Every message: severity accurate, condition first, consequence stated? (W1–W3)
