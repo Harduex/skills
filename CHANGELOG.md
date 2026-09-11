@@ -1,5 +1,24 @@
 # Changelog
 
+## v2.2.0
+
+- **`general-standards`: eight house rules mined from four months of review corrections.**
+  Comments get their own table: W5 a comment carries only rationale the reader cannot
+  infer, W6 it describes the code as it stands and names no planning id or session
+  context, W7 an edit keeps every comment true and commented-out code is deleted. N10
+  typed literals are named constants carrying their kind or unit (`<NAME>_REGEX`,
+  `<NAME>_MS`). S10 a repeated compound condition becomes a named predicate. M8 no
+  speculative or dead code. M9 a consumer-specific change lives in the consumer. M10
+  generated files are never hand-edited.
+- **`general-standards`: six rules sharpened.** N2 rename when behavior widens; C1
+  symmetry covers structure, naming, placement and tests, and one fixed instance means
+  every instance in the branch; M5 config is read once at module scope; M6 the reuse
+  search covers feature-local helpers and a replacement must match the replaced
+  expression exactly; M7 nothing the task did not name is dropped, a rename never
+  deletes-and-recreates, and a helper needs two consumers today; comment sentences
+  split at a joining semicolon. The skill now counts 59 rules, eleven of them house
+  rules listed in the provenance file.
+
 ## v2.1.3
 
 - **`general-standards`: M7, the smallest change that satisfies the request.** A third
