@@ -1,5 +1,22 @@
 # Changelog
 
+## v2.2.1
+
+- **`write-a-ticket`: the summary line gets a rule.** A summary says what will be
+  different once the ticket is done, in the project's own words, as a plain
+  instruction — not a question, a topic, or a restatement of the area it touches.
+  A title opening with "Decide…", "Investigate…" or "Handle…" reads as a sign the
+  work is not understood well enough to file.
+- **`write-a-ticket`: an open decision is resolved, not filed.** Resolve the question
+  with whoever can answer it while drafting; a ticket whose purpose is to hold a
+  decision is where that decision goes to be forgotten. Filing the choice itself is
+  the last resort, and then the title says so.
+- **`write-a-ticket`: verify the current-behaviour claim before filing.** The
+  current-behaviour section is a factual claim a reader plans around, so it is checked
+  against the source — code, schema, live system — never against a memory, an older
+  ticket, or the document that described it. Anything revived from a closed, deleted
+  or long-parked ticket is re-verified before it is refiled.
+
 ## v2.2.0
 
 - **`general-standards`: eight house rules mined from four months of review corrections.**
