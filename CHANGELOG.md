@@ -1,5 +1,31 @@
 # Changelog
 
+## v2.2.2
+
+- **`code-review`: judge the shape a change leaves behind.** A new maintainer's-seat
+  step asks two questions of the whole diff: is this the smallest change that delivers
+  the feature, and what does it cost the next person. It looks for a new mechanism
+  beside an existing one, files that changed only to pass something through, scope
+  creep that belongs in its own MR, change amplification, surface that is cheap to add
+  and expensive to withdraw, and how many files a maintainer must hold in their head.
+- **`code-review`: a future-cost finding is anchored in the past.** Before claiming the
+  next change of some kind will be painful, check `git log` for how often it has
+  actually happened; if it never has, the finding is designing for an imaginary
+  roadmap and is dropped.
+- **`code-review`: the brakes ship with the push.** Say what a guard, branch or retry
+  was for before asking for it to go, which restrains the reviewer as much as the
+  author, and separate complexity the problem forces on the code from complexity the
+  solution chose before asking for less of it.
+- **`code-review`: the review has a stop rule.** Approve when the change improves the
+  health of the codebase, not when it reaches the shape the reviewer would have
+  written; where several approaches are valid the author's preference wins.
+- **`code-review`: a new pattern beside an old one needs a disposition.** Deprecated,
+  tracked follow-up, or permanent — a small diff that silently forks the codebase's
+  idiom costs more than the larger one that would have converted the call sites.
+- **`code-review`: a new boolean or mode parameter plus a conditional on it** is
+  flagged in the reuse step as one abstraction being stretched over a second job,
+  while separating them is still cheap.
+
 ## v2.2.1
 
 - **`write-a-ticket`: the summary line gets a rule.** A summary says what will be
