@@ -29,7 +29,8 @@ The receiving side of code review: turn reviewer feedback on a merge/pull reques
 
 - Read the anchored file and every premise the comment relies on (compiler strictness flags, dependency arrays, sibling corpus, the SQL or config it refers to). Suggestion blocks span a line *range* — read the whole range, not just the anchor line.
 - **Read the comment's scope exactly.** A comment anchored on one block means that block — widening a narrow ask ("trim these lists" ≠ "trim the whole file") is how valid comments turn into regressions. When tempted to widen, ask first.
-- Classify with evidence: `valid` / `valid but latent` / `invalid (state why, with file:line proof)` / `already handled` / `question — answer only, no code change`.
+- Classify with evidence: `valid` / `valid but latent` / `invalid (state why, with file:line proof)` / `already handled` / `question — answer only, no code change` / `product decision — the comment changes user-visible behavior (what is shown, when, or where)`.
+- **A product decision is the user's call, not a fix** — even when the opening instruction authorized fixing. Report the user-facing outcomes side by side with a recommendation, and let the user choose. Implement exactly what was chosen, with no added condition, variant, or mechanism of your own. An obvious or inferable change (a stale comment, a bug) is not a product decision.
 
 ## Phase 4 — Report, then gate
 
