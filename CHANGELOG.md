@@ -1,5 +1,13 @@
 # Changelog
 
+## v2.2.4
+
+- **`code-review`: load the domain standards skills before judging.** Step 2 now has the
+  reviewer match the diff's domains (code style, architecture and state, data layer,
+  UI, tests, prose) against the skill set and invoke each skill that governs one,
+  linked by capability. It also reads any review reference a loaded skill routes to.
+  Standards skills describe themselves in authoring terms, so a review had skipped them.
+
 ## v2.2.3
 
 - **`address-comments`: a behavior-changing comment is a product decision.** A new
