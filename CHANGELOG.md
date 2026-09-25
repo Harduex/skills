@@ -1,5 +1,18 @@
 # Changelog
 
+## v3.0.0
+
+- **New `code-simplification` skill (delivery-lifecycle).** A senior-minimalist audit of a
+  diff, a path, or a whole repo. Six lenses find candidates: delete, reuse, deepen and
+  collapse, state and control, altitude, and AI over-build. A fresh-context skeptic tries
+  to disprove each one and assigns HIGH, MEDIUM, or LOW confidence. A report bar keeps
+  only verified wins that carry a number. The user picks IDs, and only those are applied,
+  one behavior- and performance-preserving commit each. `scripts/hotspots.sh` ranks files
+  by change frequency x size for repo-wide scans.
+- **Removed `improve-codebase-architecture` (breaking).** `code-simplification` replaces it.
+  Its deep-module patterns live on in `DEEPENING.md`. The parallel interface-design agents
+  became a lightweight design-it-twice step, and the GitHub issue output was dropped.
+
 ## v2.2.4
 
 - **`code-review`: load the domain standards skills before judging.** Step 2 now has the
