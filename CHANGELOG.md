@@ -1,5 +1,17 @@
 # Changelog
 
+## v2.2.3
+
+- **`address-comments`: a behavior-changing comment is a product decision.** A new
+  classification sits beside valid/invalid for a comment that changes what is shown,
+  when, or where. Such a comment is reported as user-facing outcomes with a
+  recommendation and left for the user to choose, even when fixing was pre-authorized.
+  The chosen outcome is implemented exactly, with no added condition, variant, or
+  mechanism of the agent's own.
+- **`AGENTS.md`: a completeness claim needs an exhaustive enumeration.** "No other
+  places" or "all callers updated" must rest on a full listing of the category, with the
+  method stated. A text search is a lead, not the proof.
+
 ## v2.2.2
 
 - **`code-review`: judge the shape a change leaves behind.** A new maintainer's-seat
