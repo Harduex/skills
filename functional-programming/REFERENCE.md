@@ -193,7 +193,7 @@ function useFilteredItems(items: Item[], searchTerm: string): Item[] {
 // Shell: thin action hook (effects and mutations only)
 function useItemSearch(projectId: string) {
   const [searchTerm, setSearchTerm] = useState('');
-  const { data } = useQuery(GET_ITEMS, { variables: { projectId } });
+  const [{ data }] = useQuery({ query: GET_ITEMS, variables: { projectId } });
   const filtered = useFilteredItems(data?.items ?? [], searchTerm);
   return { filtered, searchTerm, setSearchTerm };
 }

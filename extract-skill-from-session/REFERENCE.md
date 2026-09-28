@@ -33,7 +33,7 @@ your memory / AGENTS.md — don't hardcode them into a skill (that would be X4).
 | Mirror? | yes — keep a copy in both if the team also needs it | no |
 
 - **Verify genericity by grep** before mirroring: search the draft for project nouns (repo names, product names, host/domain, schema/tooling terms). Zero hits → safe to mirror; otherwise strip them or relocate the specifics into a project-only skill / AGENTS.md.
-- **One owner per name.** A globally-installed skill silently shadows a same-named project skill (personal > project precedence) — the project copy becomes unreachable. Never reuse a name across scopes.
+- **One owner per name.** A globally-installed skill silently shadows a same-named project skill (personal > project precedence) — the project copy becomes unreachable. Never reuse a name across scopes. Namespaced plugin skills (`plugin:skill`) are the exception: they load beside a same-named skill and do not shadow it.
 - **Activation.** A skill takes effect only after the source is published *and* reinstalled — the manager re-pulls the remote (`install`, not `sync`, which only reconciles which skills are present). Confirm by grepping the installed copy for a line you just added.
 
 ## Validate before shipping (no bundled tooling needed)

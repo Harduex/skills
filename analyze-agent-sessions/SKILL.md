@@ -38,7 +38,7 @@ The **branch name is usually the strongest discriminator** (e.g. every relevant 
 From the index, hand-pick the genuinely-relevant sessions and group them by phase/sub-feature (research, backend, UI, viewer, tests, MR reviews, regressions, wrap-up…). Assign each phase its specific session ids.
 
 ### 4. Fan out one subagent per phase
-**REQUIRED SUB-SKILL for the fan-out:** superpowers:dispatching-parallel-agents. Keep the orchestrator's context clean — subagents do the reading. Give every agent an identical contract: the `render_session.py` path, its session ids, "render-then-grep, never `cat` raw JSONL," "ignore unrelated tangents," and this fixed output schema (cap ~350 lines, "never invent; cite session id + timestamp"):
+For the fan-out, use your set's parallel-agent dispatch skill, if one exists. Keep the orchestrator's context clean — subagents do the reading. Give every agent an identical contract: the `render_session.py` path, its session ids, "render-then-grep, never `cat` raw JSONL," "ignore unrelated tangents," and this fixed output schema (cap ~350 lines, "never invent; cite session id + timestamp"):
 ```
 ## Sessions            (ids covered)
 ## What was accomplished

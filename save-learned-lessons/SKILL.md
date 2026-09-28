@@ -20,10 +20,13 @@ For each lesson, pick exactly one destination:
 
 | Lesson type | Destination |
 |---|---|
-| User preference, feedback, project/reference fact | Your memory system — one file per fact in its documented format, plus a pointer in the memory index |
+| Project or reference fact a teammate would also need | The shared harness first — the project skill for that domain, the project's `CLAUDE.md` / `AGENTS.md`, or the project docs |
+| User preference, feedback, or a fact specific to this machine or user | Your memory system — one file per fact in its documented format, plus a pointer in the memory index |
 | Preference that applies to *every* project | Global `~/.claude/CLAUDE.md` |
 | Convention specific to *this* project | The project's `CLAUDE.md` / `AGENTS.md` |
 | Reusable technique for a domain | The most relevant existing custom skill — update it. Create a new skill only if none fits. |
+
+Installed copies of managed skills (e.g. `.agents/skills/`) are overwritten on every install. Edit the skill in its source repo instead.
 
 When a lesson is really a whole repeatable *workflow* that warrants its own skill — not a single fact — use the extract-a-workflow-into-a-skill capability in your set rather than hand-rolling it here.
 

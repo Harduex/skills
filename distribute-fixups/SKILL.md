@@ -52,7 +52,7 @@ git log --oneline <base>..HEAD -- <file>    # all commits on this branch touchin
 
 Pick the commit whose intent the fix belongs to — usually the commit that introduced the code being patched, not just the last commit that touched the line.
 
-Planning artifacts have a fixed target: changes to docs under the planning directories (`docs/specs/`, `docs/plans/`, or the repo's equivalent) always fixup into the branch's root `…planning` commit — never into a code commit.
+Planning artifacts have a fixed target: changes to specs and plans always fixup into the branch's root `…planning` commit — never into a code commit. They live wherever the project's own convention or planning framework puts them (e.g. `docs/superpowers/{specs,plans}/` in a superpowers project). With no convention, default to `docs/plans/` for plans and `docs/specs/` for specs.
 
 ### 3. Stage and fixup-commit, one originating commit at a time
 
