@@ -1,5 +1,12 @@
 # Changelog
 
+## v3.0.1
+
+- **`set-output-style`: concrete examples over analogies.** Explanations now start from the
+  user's real situation and use an analogy only when no concrete example exists. Findings open
+  with one sentence the reader can picture, decision items read as situation, choice and
+  rejected alternative, and a new directive covers text the user will send to someone else.
+
 ## v3.0.0
 
 - **New `code-simplification` skill (delivery-lifecycle).** A senior-minimalist audit of a
