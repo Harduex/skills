@@ -1,5 +1,14 @@
 # Changelog
 
+## v3.0.2
+
+- **Stale guidance refreshed in six skills.** `distribute-fixups` follows the project's own
+  planning-artifact location (default `docs/plans/` and `docs/specs/`); `save-learned-lessons`
+  routes team-reusable facts to the shared harness first; `extract-skill-from-session` notes that
+  namespaced plugin skills don't shadow same-named skills; `code-review` drops a project-specific
+  `strictNullChecks` note; `analyze-agent-sessions` names the parallel-dispatch skill by
+  capability; `functional-programming` uses the urql `useQuery` shape in its hooks example.
+
 ## v3.0.1
 
 - **`set-output-style`: concrete examples over analogies.** Explanations now start from the
