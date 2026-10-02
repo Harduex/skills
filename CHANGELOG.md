@@ -1,5 +1,14 @@
 # Changelog
 
+## v3.0.3
+
+- **`code-review`: check every existing path for a new side effect.** When a change makes
+  something happen on every create, move, delete or billing event, the review now lists every
+  existing path that performs that operation, found by grepping the underlying write across the
+  codebase instead of reading only the diff. Its GitLab reference also covers posting findings as
+  draft notes that the human submits, and posting a finding about an unchanged file as a general
+  comment.
+
 ## v3.0.2
 
 - **Stale guidance refreshed in six skills.** `distribute-fixups` follows the project's own
