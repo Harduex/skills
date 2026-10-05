@@ -1,5 +1,13 @@
 # Changelog
 
+## v3.0.4
+
+- **`set-output-style`: story order and mechanism before code.** Multi-part explanations now
+  run as numbered sections: the core answer, how it works, a concrete scenario, the exception,
+  the proof. A mechanism is described in plain words before any code or SQL is quoted, sentences
+  stay complete instead of dash-joined fragments, and an explanation that settles a disagreement
+  ends by naming where the other position differs.
+
 ## v3.0.3
 
 - **`code-review`: check every existing path for a new side effect.** When a change makes
