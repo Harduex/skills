@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.0.5
+
+- Preserve postponed and undecided product ideas in structured roadmaps; default new roadmaps to docs/ROADMAP.md and wire relative harness links.
+
 ## v3.0.4
 
 - **`set-output-style`: story order and mechanism before code.** Multi-part explanations now
