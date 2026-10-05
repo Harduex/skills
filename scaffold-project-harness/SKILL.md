@@ -54,6 +54,10 @@ Naming rules in one line: convention skills are technology nouns (they trigger o
 
 `AGENTS.md` at repo root; `CLAUDE.md` contains only `@AGENTS.md`. Sections (skeleton in REFERENCE.md): orientation, non-negotiables checklist, domain→skill routing table, pinned dependencies, critical constraints/gotchas, agent-environment quirks, docs map. Constraints you can't derive from the code get a `TODO(owner)` marker, not an invention.
 
+#### Product roadmap wiring
+
+If the project adopts a roadmap convention, reuse an existing roadmap in retrofit mode and retain its IDs and decisions. When creating one, use `docs/ROADMAP.md` by default. Link it from the root harness and documentation index with paths relative to each linking file. Discover product-planning guidance for an outcome-based structure: themes, relative horizons, priority, decision status, dependencies and source links. Add a concise harness rule to capture explicitly postponed ideas and undecided proposals at scope decisions, update statuses after verified delivery, and keep detailed research in its existing documents. A roadmap entry is not implementation approval; do not invent dates or promote proposals to commitments.
+
 ### Phase 5 — Create the skills
 
 For each mapped domain, create `<skill>/SKILL.md` using the content checklists in REFERENCE.md. Hard rules:

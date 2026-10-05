@@ -98,6 +98,10 @@ At any point, when an assumption surfaces — **test it immediately.**
 - Be honest when a component turns out to be unnecessary — even if you just spent time designing it.
 
 
+### Preserve postponed decisions
+
+At each scope decision, update the existing project roadmap (default location: `docs/ROADMAP.md`) with ideas the user postpones and proposals left undecided. Preserve stable IDs, separate deferred/proposed from approved work, and link research rather than copying it. If the user requests a roadmap and none exists, create `docs/ROADMAP.md` by default, link it from the root harness and docs index, and give it themes, relative horizons, priority, decision status and dependencies; discover available product-planning guidance for its structure. A selected direction or roadmap entry alone does not authorize implementation. Do not invent dates or priorities; preserve the user's ordering.
+
 ### 7. Write spec
 
 

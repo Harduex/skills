@@ -1,6 +1,6 @@
 ---
 name: planning
-description: Defines product requirements, breaks down work into actionable tasks, and prioritizes based on business value. Writes user stories with acceptance criteria. Use when writing an implementation plan, breaking a feature into ordered tasks with acceptance criteria, planning a sprint or milestone, or when asked to "plan" work before coding.
+description: Defines product requirements, breaks down work into actionable tasks, and prioritizes based on business value. Writes user stories with acceptance criteria. Use when writing an implementation plan, breaking a feature into ordered tasks with acceptance criteria, planning a sprint or milestone, maintaining a product roadmap or postponed ideas, or when asked to "plan" work before coding.
 ---
 
 # Product Planning
@@ -16,6 +16,18 @@ Planning checklist:
 - [ ] Sequence by dependency chain, then priority
 - [ ] Flag risks and unknowns
 ```
+
+## Product roadmap
+
+When maintaining product direction or capturing postponed ideas, use the project's existing roadmap; if this convention is requested and absent, create `docs/ROADMAP.md` by default and link it from the root harness and documentation index (using paths relative to each linking file). A roadmap is an outcome and sequencing record, separate from an implementation task list:
+
+1. State product outcomes/themes and lasting constraints.
+2. Group work into relative horizons (for example Now / Next / Later); use dates only when agreed. Preserve the user's selected ordering; identify recommendations as recommendations.
+3. Give each initiative a stable ID, intended outcome, horizon/relative priority, decision status, dependencies or next decision, and a link to detailed research/specs.
+4. At a decision boundary, capture explicitly postponed ideas as deferred and discussed-but-undecided ideas as proposed. Deduplicate existing entries and retain their IDs; distinguish approval, selected direction, implementation and release status.
+5. Update statuses after actual decisions or verified delivery. Retain a compact delivered section or link to history. Keep detailed evidence in its existing documents.
+
+Roadmap placement is not implementation authorization. Do not turn a brainstorm into a commitment, invent delivery dates, or start deferred work. For a narrowly scoped approved task, preserve unrelated entries and record only relevant status changes.
 
 ## Task breakdown
 
