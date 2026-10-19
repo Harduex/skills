@@ -1,5 +1,12 @@
 # Changelog
 
+## v3.0.7
+
+- **`set-output-style`: drafts quote each question and list talking points.** Drafts the user
+  will send stay ready to send and read clearly on the first pass. A reply to someone's
+  questions quotes each question above its answer, a short talking-points list follows the
+  draft, and a plain-language translation of the other person's message appears only on request.
+
 ## v3.0.6
 
 - **`verify-before-done`, `filming-verification`: verification stays out of MR descriptions.**
