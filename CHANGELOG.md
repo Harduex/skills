@@ -1,5 +1,24 @@
 # Changelog
 
+## v3.0.8
+
+- **`analyze-agent-sessions`: the renderer keeps mid-turn messages and question answers.**
+  Messages typed while the agent works and answers to the agent's questions now print in full,
+  as `USER (queued)` and `USER (answer)`. Before, the first were skipped and the second were cut
+  to 240 characters, so a session analysis missed many of the user's corrections.
+- **`autonomous-build-loop`: a locked decision names the evidence that reopens it.** The example
+  continuation note no longer says "Settled; do not re-open", wording that agents copied into
+  checkpoints and that froze flawed plan code past every review.
+- **`verify-before-done`: production-like data, and test accounts before asking.**
+  Data-dependent behavior is also checked against production-like data shapes. A missing login,
+  second user or test runner is a lookup task first: the agent finds the project's test
+  accounts, fixtures and seeding tools before it asks the human.
+- **Working rules (`AGENTS.md`): what implementation kickoffs kept repeating.** Product and
+  behavior decisions belong to the human and are asked in one batch. A change's surfaces and
+  states are listed before building. The done-check is defined first, and a bug is reproduced
+  first. Delegated briefs quote the rules, not skill names. A plan's code is a draft. Commit
+  identity follows the repository.
+
 ## v3.0.7
 
 - **`set-output-style`: drafts quote each question and list talking points.** Drafts the user
