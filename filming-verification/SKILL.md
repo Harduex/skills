@@ -18,7 +18,7 @@ It replaces the written test report — never produce both.
 | Human explicitly asks to see it / for a video | Film |
 | Backend, schema, refactor, test-only, or the diff speaks for itself | Chat prose. Don't mention filming |
 | Verification for the person you're talking to | **Chat prose with stable IDs** (`TC-3`, `F2`) they can reply to |
-| A reader who is *not* in the conversation (MR body, ticket, PM handoff) | Written artifact is justified |
+| A reader who is *not* in the conversation (ticket, PM handoff) | Written artifact is justified |
 
 **Never film unprompted.** Offer once, in one sentence, and drop it if declined — a film
 costs a full run plus a transcode. **Never write a verification report to disk unless the
