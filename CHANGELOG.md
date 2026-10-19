@@ -1,5 +1,11 @@
 # Changelog
 
+## v3.0.6
+
+- **`verify-before-done`, `filming-verification`: verification stays out of MR descriptions.**
+  A merge request no longer counts as a reader who justifies a written verification report, so
+  test tables and evidence stay in the conversation, a ticket or a handoff unless the human asks.
+
 ## v3.0.5
 
 - Preserve postponed and undecided product ideas in structured roadmaps; default new roadmaps to docs/ROADMAP.md and wire relative harness links.
