@@ -16,6 +16,8 @@ Before saying done / fixed / implemented / passing, or committing a nontrivial c
    - UI → your project's browser-driving skill (navigate, click, observe the actual result)
    - API/backend → the real request (curl, spec, or console) against a running stack
    - CLI/script → run the real command on real input
+   - Behavior that depends on stored data → also check production-like data shapes (a read-only query on a shared environment), not only local fixtures
+   - A missing login, second user or test runner is a lookup task first: find the project's test accounts, fixtures and seeding tools before you ask the human
 3. **Show the evidence** — paste the test output, the observed behavior, the response body. A claim without its evidence is a hypothesis.
 
 ## Where the evidence goes
