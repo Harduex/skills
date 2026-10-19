@@ -52,7 +52,7 @@ The one file a new session reads first. It names exactly one current task and ca
 - Task 001: `pnpm test` → PASS (42 tests); `pnpm tsc --noEmit` → PASS; migration applied and rolled back cleanly.
 
 ## Locked decisions
-- [D2] New widgets default to `status="draft"` — mirrors gadgets. Settled; do not re-open.
+- [D2] New widgets default to `status="draft"` — mirrors gadgets. Re-open only if the code shows gadgets no longer default to draft.
 
 ## Known blockers
 - none
