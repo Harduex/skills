@@ -9,7 +9,7 @@ Mine past Claude Code transcripts to reconstruct what actually happened across m
 
 Bundled helpers (hand these to every subagent by path; never re-read raw JSONL):
 - `scripts/index_sessions.py <files…>` — chronological index: `ts | short-id | gitBranch | user-turns | first real message`.
-- `scripts/render_session.py <file>` — one transcript → grep-friendly text (full turns, tool calls as one-liners, results/thinking truncated).
+- `scripts/render_session.py <file>` — one transcript → grep-friendly text (full turns, tool calls as one-liners, results/thinking truncated). Mid-turn messages and answers to the agent's questions print in full as `USER (queued)` / `USER (answer)` — many corrections live only there, so grep them too.
 
 ## When to use
 

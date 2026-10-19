@@ -5,11 +5,18 @@ Usage:
     render_session.py <session.jsonl>
 
 USER turns and ASSISTANT prose are printed in full; tool calls collapse to a
-single line; tool results and thinking are truncated. Pipe THIS to grep/less —
-never `cat` the raw JSONL (transcripts are ~1MB+ and will overflow context).
+single line; tool results and thinking are truncated. Two kinds of human input
+that do not arrive as user turns are printed in full too: messages typed while
+the agent was working (`### USER (queued)`) and answers to the agent's
+questions (`### USER (answer)`) — many corrections live only there. Pipe THIS
+to grep/less — never `cat` the raw JSONL (transcripts are ~1MB+ and will
+overflow context).
 
-Schema notes: routes on top-level `type` ("user"/"assistant"); `message.content`
-may be a plain string OR a list of blocks (text/thinking/tool_use/tool_result).
+Schema notes: routes on top-level `type` ("user"/"assistant"/"attachment");
+`message.content` may be a plain string OR a list of blocks
+(text/thinking/tool_use/tool_result). A queued message is an `attachment` of
+type `queued_command` with a human `origin`; a question answer is the
+tool_result of an AskUserQuestion tool_use.
 Does NOT rely on `isSidechain` (uniformly false in some CC versions) — detect
 subagents via Agent/Task tool_use lines and the task-notification user turns
 they return.
@@ -52,6 +59,8 @@ def tool_oneliner(name, inp):
     return f"{name} {trunc(json.dumps(inp), 120)}"
 
 
+tool_names = {}
+
 for line in open(sys.argv[1], errors="replace"):
     try:
         o = json.loads(line)
@@ -61,7 +70,13 @@ for line in open(sys.argv[1], errors="replace"):
     ts = o.get("timestamp", "")[:16].replace("T", " ")
     content = o.get("message", {}).get("content")
 
-    if typ == "user":
+    if typ == "attachment":
+        att = o.get("attachment") or {}
+        origin = att.get("origin") or {}
+        if att.get("type") == "queued_command" and origin.get("kind") == "human":
+            print(f"\n### USER (queued) {ts}\n{str(att.get('prompt', '')).strip()}")
+
+    elif typ == "user":
         text = text_of(content)
         if text.strip() and not text.lstrip().startswith(META_USER_PREFIXES):
             print(f"\n### USER {ts}\n{text.strip()}")
@@ -71,7 +86,10 @@ for line in open(sys.argv[1], errors="replace"):
                     rc = b.get("content", "")
                     if isinstance(rc, list):
                         rc = "".join(x.get("text", "") for x in rc if isinstance(x, dict))
-                    print(f"  [result] {trunc(rc)}")
+                    if tool_names.get(b.get("tool_use_id")) == "AskUserQuestion":
+                        print(f"\n### USER (answer) {ts}\n{str(rc).strip()}")
+                    else:
+                        print(f"  [result] {trunc(rc)}")
 
     elif typ == "assistant":
         blocks = content if isinstance(content, list) else (
@@ -86,4 +104,5 @@ for line in open(sys.argv[1], errors="replace"):
             elif bt == "thinking":
                 print(f"  [thinking] {trunc(b.get('thinking', ''))}")
             elif bt == "tool_use":
+                tool_names[b.get("id")] = b.get("name")
                 print(f"  → {tool_oneliner(b.get('name'), b.get('input'))}")
