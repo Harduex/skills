@@ -1,5 +1,16 @@
 # Changelog
 
+## v3.1.0
+
+- **New skill `explaining-visually` (`thinking` bundle): a page when text won't carry the
+  answer.** Text stays the default. The agent writes one self-contained, offline HTML page only
+  when the user asks to see something, misses the same point twice, or the answer's core is
+  motion, a what-if, or a spatial layout. The chat reply stays short and gives the page's path.
+  The `thinking` bundle's description now lists visual explanations.
+- **Working rules (`AGENTS.md`): show it when text won't carry it.** The same rule as one line
+  that also works without the skill: a capable agent writes the page itself, and uses a
+  visual-explanation skill when its set has one.
+
 ## v3.0.9
 
 - **`set-output-style`: a question about an edge case shows the normal flow first.** Before it
