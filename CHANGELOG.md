@@ -1,5 +1,12 @@
 # Changelog
 
+## v3.0.9
+
+- **`set-output-style`: a question about an edge case shows the normal flow first.** Before it
+  asks about an edge case, an answer shows the flow the edge case breaks in two or three plain
+  steps. A choice between two written rules shows what each rule does to the same concrete
+  example, instead of quoting their wording.
+
 ## v3.0.8
 
 - **`analyze-agent-sessions`: the renderer keeps mid-turn messages and question answers.**
