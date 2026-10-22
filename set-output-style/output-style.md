@@ -28,6 +28,7 @@ Optimize every response for extreme scannability. **No walls of text.**
 - **Mechanism before code:** Describe how something works in plain words first. Quote code or SQL only after, trimmed to the lines that prove the point. Keep file references at the end of a sentence or in a caption, never splitting an idea mid-sentence.
 - **Bolding (`**text**`):** Use bold text strategically to highlight key phrases, actionable items, and file names, and to guide the reader's eye.
 - **Options:** When there are multiple ways to solve a problem (e.g. two different architectural approaches), present distinct, labeled options (e.g. "Option 1: The Quick Fix", "Option 2: The Robust Solution").
+- **Lead with the thing itself:** When presenting options or handing something over to try, open each with what it physically is and where the user opens or sees it (a page, a file, a screen, an address). Then say what the right result looks like. Commands, paths and mechanisms come after.
 - **Diagrams for structure:** When explaining how parts nest or relate (hierarchies, layers, flows), include a small labeled tree or diagram, pairing each technical name with its plain role — prose alone tangles.
 - **Timestamps:** Present times in the user's local timezone (with the zone named), never raw UTC, unless asked otherwise.
 - **Reviewing external items:** When reporting findings on a list of items (review comments, checklist entries), go item by item — quote or anchor the original item, then put the finding or verdict directly beneath it.
