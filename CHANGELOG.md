@@ -1,5 +1,12 @@
 # Changelog
 
+## v3.1.1
+
+- **`set-output-style`: options and hand-overs lead with the thing itself.** Each option, and
+  anything handed over to try, opens with what it physically is and where the user opens or
+  sees it: a page, a file, a screen or an address. Then it says what the right result looks
+  like. Commands, paths and mechanisms come after.
+
 ## v3.1.0
 
 - **New skill `explaining-visually` (`thinking` bundle): a page when text won't carry the
