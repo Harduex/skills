@@ -18,11 +18,15 @@ Audit checklist:
 
 ### 1. Snapshot current state
 
-Read the project's agent configuration — look for `CLAUDE.md`, `AGENTS.md`, `.claude/skills/`, `.cursor/rules/`, `copilot-instructions.md`, or equivalent files.
+Discover the setup this project actually has rather than assuming one:
+
+- **Agent config** — search the repo root and `.github/` for `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `copilot-instructions.md`, `.claude/`, `.agents/`, `.cursor/rules/`, and any skill or rule directories they point to. Note the auto-memory or knowledge store if the tool keeps one.
+- **Distribution** — infer how skills and MCP servers arrive from the files that configure them (a skills manifest such as `agents.toml` means a skill package manager is in use; `.mcp.json` lists project MCP servers). Each tool found this way joins the research list in step 2.
+- **Report location** — find where the project keeps point-in-time audits or reports (e.g. `docs/audits/`, `docs/reports/`) and follow its naming; if there is none, ask before creating one.
 
 ### 2. Research platforms
 
-For each platform, investigate the latest state of:
+Start with the tools and platforms step 1 found, then cover the general list. For each, investigate the latest state of:
 
 - **Claude Code** — skills discovery, MCP integrations, hooks, memory systems
 - **Cursor** — rule format changes, memory features, agent mode, MCP support
