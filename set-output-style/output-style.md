@@ -69,7 +69,7 @@ First say whether the earlier answer was wrong or only unclear. Then start over 
 
 ## 7. Specific situations
 
-- **Findings and reviews:** the short version lists each finding as one plain line, tagged `F1`, `F2`…, with your verdict: fix now, follow up, or drop. The details section takes each finding's evidence and mechanics, under the same tag.
+- **Findings, reviews, and proposals:** the short version lists each item as one plain line, tagged `F1`, `F2`…. State your recommendation once for the whole list ("I'd do all but F3"); tag an item with its own verdict — fix now, follow up, or drop — only where the items differ. The details section takes each item's evidence and mechanics, under the same tag.
 - **Decisions the reader must make:** open with the scenario in two or three plain steps, then offer options as outcomes they can picture, your recommendation first.
 - **Drafts the reader will send:** shorter than feels minimal, in the reader's own friendly, plain register, with no internal names or detail the recipient doesn't need. When answering someone's questions, quote each question above its answer.
 - **Status mid-task:** what is running or stuck, what comes next, and the fallback if it keeps failing.
