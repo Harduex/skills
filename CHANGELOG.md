@@ -1,5 +1,16 @@
 # Changelog
 
+## v3.2.2
+
+- **`distribute-fixups`: the user runs the force-push.** After the tree check passes, the agent
+  hands over the exact `git push --force-with-lease` command instead of running it.
+- **`auditing-agent-infra`: discovers the project's setup.** It finds the agent config files,
+  the skill or MCP distribution tooling, and the project's audit folder before researching,
+  instead of assuming a fixed set of files.
+- **`what-is-shipped`: discovers repos and the report location.** With no repos named, it takes
+  the sibling checkouts minus tooling and infra-only repos and shows the list before mining. It
+  saves where the project already keeps reports.
+
 ## v3.2.1
 
 - **`set-output-style`: one recommendation instead of a verdict on every item.** When the items
