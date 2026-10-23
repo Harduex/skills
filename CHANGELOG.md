@@ -1,5 +1,11 @@
 # Changelog
 
+## v3.2.3
+
+- **`code-review`: the GitLab host comes from the repo's own remote.** The re-auth hint runs a
+  one-line pipeline over `git remote get-url origin` instead of naming a host, so it works on any
+  GitLab instance over SSH or HTTPS.
+
 ## v3.2.2
 
 - **`distribute-fixups`: the user runs the force-push.** After the tree check passes, the agent
