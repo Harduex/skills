@@ -150,8 +150,8 @@ Counterexample:    <the minimal concrete input that breaks it, if any>
 Scope & caveats:   <what was modeled, what was simplified, what was NOT checked>
 ```
 
-Then ALWAYS close with a **plain-language summary** — a few sentences a non-specialist could act
-on, even when the structured report above is precise. Cover, in lay terms:
+ALWAYS open the chat reply with a **plain-language summary** — a few sentences a non-specialist
+could act on, even when the structured report below it is precise. Cover, in lay terms:
 
 - the bottom line (is it safe / what broke), with no solver jargon (`unsat`/`sat` → "proven / a
   hole was found");
@@ -161,7 +161,7 @@ on, even when the structured report above is precise. Cover, in lay terms:
   for "everything is correct").
 
 The structured block is the evidence; the plain-language summary is what the user reads first and
-remembers. Lead the chat reply with the structured report, end with this summary.
+remembers. Lead the chat reply with this summary, then give the structured report as its evidence.
 
 Never upgrade "tests passed" or "linter is clean" into the word "verified". Scope honesty is the
 difference between a useful tool and a false sense of security.
