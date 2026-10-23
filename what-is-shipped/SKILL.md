@@ -10,9 +10,9 @@ Turn merged git history into a per-developer feature report for a quarter or dat
 ## Quick start
 
 1. Resolve the period to a date range.
-2. List the repos in scope and detect each one's default branch.
+2. Discover the repos in scope and detect each one's default branch.
 3. Dispatch a mining subagent per repo (tiny repos can share one) — keeps the main context clean.
-4. Synthesize into one per-developer feature list and save under `docs/reports/`.
+4. Synthesize into one per-developer feature list and save it where the project keeps reports.
 
 ## 1. Resolve the period
 
@@ -31,10 +31,10 @@ echo "Period: $SINCE .. $UNTIL"
 
 ## 2. Repos & branches
 
-Repos in scope = whatever the user names; default to the current repo. Don't hardcode the branch — repos differ (`main` vs `master` vs trunk). Detect each repo's default branch and sanity-check volume before fanning out; skip repos with no commits in the window:
+Repos in scope = whatever the user names. Otherwise discover them: the current repo plus its sibling checkouts in the same parent directory, which is how a product split across services usually sits on disk (don't filter by remote group — a product's services often live in different groups). Leave out tooling repos (skill catalogs, dotfiles) and infra-only config repos unless the user asks for them, and state the final list before mining so the user can adjust it. Don't hardcode the branch — repos differ (`main` vs `master` vs trunk). Detect each repo's default branch and sanity-check volume before fanning out; skip repos with no commits in the window:
 
 ```bash
-REPOS=(/path/to/repo-a /path/to/repo-b)        # fill in, or just the current repo
+REPOS=(/path/to/repo-a /path/to/repo-b)        # the discovered or named repos
 for d in "${REPOS[@]}"; do
   b=$(git -C "$d" rev-parse --abbrev-ref origin/HEAD 2>/dev/null || echo origin/main)
   echo "== $(basename "$d") ($b) =="
@@ -72,7 +72,7 @@ Merge all repos into one report grouped by developer (order by combined commit c
 - Lead each developer with **Features**; fold fixes/chores into one brief *Also:* line. Put developers with no features last as "Test / fix-only contributors".
 - End with a **Summary**: feature count, developer count, and the period's headline themes.
 
-Save to `docs/reports/<TODAY>-<label>.md` (or the repo's existing report convention). Open the file with a metadata table — reporting period, repos + their source branches, method, generated date — and a caveats note (quarter not finished → clamped to today; in-flight branch work excluded).
+Save where the project already keeps point-in-time reports or audits (e.g. `docs/audits/`, `docs/reports/` in the main product repo), following its naming; if there is none, use `docs/reports/<TODAY>-<label>.md`. Open the file with a metadata table — reporting period, repos + their source branches, method, generated date — and a caveats note (quarter not finished → clamped to today; in-flight branch work excluded).
 
 ## Limitations
 
