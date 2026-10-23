@@ -98,13 +98,13 @@ If `git diff` is non-empty, something was lost or doubled during the rebase. Inv
 
 ## Force-push
 
-Only force-push after step 5 passes. Use `--force-with-lease`, never `--force`:
+Only after step 5 passes, hand the user the exact command and let them run it — a force-push rewrites published history, so it is never yours to run:
 
 ```bash
 git push --force-with-lease
 ```
 
-Never force-push to `main`. Warn the user if they ask for it on a shared branch.
+Use `--force-with-lease`, never `--force`. Never force-push to `main`; warn the user if they ask for it on a shared branch.
 
 ## Red flags
 
