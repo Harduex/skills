@@ -1,5 +1,16 @@
 # Changelog
 
+## v3.1.2
+
+- **`set-output-style`: lookalikes, inferred effects, verdicts, checks, counts and status lines.**
+  When an answer involves similar things, it first maps what the user sees and where each one
+  appears, then gives each a plain role before naming it, and it says outright whether the one
+  the user has in mind is affected. An effect read from code says so instead of reading as
+  observed. A findings report ends with a one-line verdict per item. A check handed over says
+  where it can run and what a failure would mean for a user. A count of changed files comes
+  with the size of each change, and a status about a stuck step names what comes next and the
+  fallback.
+
 ## v3.1.1
 
 - **`set-output-style`: options and hand-overs lead with the thing itself.** Each option, and
