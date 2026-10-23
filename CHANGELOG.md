@@ -1,5 +1,18 @@
 # Changelog
 
+## v3.2.0
+
+- **`set-output-style`: two-layer replies, replay-tested.** Every explaining or reporting reply
+  now opens with a short version the reader can stop after: the answer, what it looks like in
+  the product, why, and the reusable pattern, in plain words with no identifiers. Exact names,
+  references and evidence go in an optional details section. The style explains what the code
+  can't show instead of narrating it, and simplifies the words but never the claim. It replaces
+  the accumulated per-miss rules, and at about 1,080 words it is shorter than the 1,540-word
+  previous version. In a blind replay of seven real missed answers it beat the previous style
+  and a "Be brief." baseline every time.
+- **AGENTS.md: style misses are logged and revised in tested batches** rather than patched one
+  at a time.
+
 ## v3.1.2
 
 - **`set-output-style`: lookalikes, inferred effects, verdicts, checks, counts and status lines.**
