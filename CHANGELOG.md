@@ -1,5 +1,15 @@
 # Changelog
 
+## v3.2.1
+
+- **`set-output-style`: one recommendation instead of a verdict on every item.** When the items
+  in a list share one verdict, the reply states the recommendation once. An item gets its own
+  verdict only where the items differ.
+- **`formal-verification`, `researching`: the plain answer leads.** formal-verification now opens
+  the chat reply with its plain-language summary. researching's example output shows the plain
+  answer first and the file references below it.
+- **AGENTS.md: skills own content, the output style owns order.**
+
 ## v3.2.0
 
 - **`set-output-style`: two-layer replies, replay-tested.** Every explaining or reporting reply
