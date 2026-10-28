@@ -1,5 +1,14 @@
 # Changelog
 
+## v3.3.0
+
+- **`general-standards`: five naming rules from code review.** N11 narrows a generic name to the
+  subset it covers. N12 names the kind of value, not a neighboring thing. N13 names the owner
+  when another owner is in scope. N14 stops a name from claiming more than the value holds. C6
+  makes a rename move the whole family, including the twin across an API boundary. N6 now
+  accepts a longer name when the extra words state a kind, subset, or owner. The skill has 64
+  rules.
+
 ## v3.2.3
 
 - **`code-review`: the GitLab host comes from the repo's own remote.** The re-auth hint runs a
