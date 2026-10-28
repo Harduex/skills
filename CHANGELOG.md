@@ -1,5 +1,19 @@
 # Changelog
 
+## v3.4.0
+
+- **`set-output-style`: no details section by default, replay-tested against the reader's
+  corrections.** A reply ends after its plain short version unless the reader asks for more or
+  asked for a report. The short version may carry the names, file or exact text a decision is
+  about. It bolds the answer, each verdict and anything to act on, ties each recommended change
+  to what goes wrong without it, and shows a single proposed change first. Drafts quote every
+  question, including the ones left to someone else. At about 970 words the style is shorter
+  than the 1,100-word previous version. A blind judge checked replays of 13 real answers against
+  the logged corrections: the new style won all 6 recent cases and beat the previous style on
+  4 of the 7 older ones, and replies with no style never came out ahead.
+- **AGENTS.md: the output style decides what reaches the reader,** and a style revision is
+  replayed against the old style and no style, judged on the logged corrections.
+
 ## v3.3.0
 
 - **`general-standards`: five naming rules from code review.** N11 narrows a generic name to the
