@@ -14,11 +14,15 @@ a concept has forked it (N3, P5).
 | N3 | One concept, one name, everywhere. Synonym drift (`user`/`customer`/`account` for one entity) is a defect. |
 | N4 | Name by role: functions are verb phrases, types and values are noun phrases, booleans are predicates (`is`/`has`/`can`). Never a noun-named function or a verb-named type. |
 | N5 | One approved form per word: imperative verb stems for actions (`createUser`, not `creatingUser`/`userCreation`); past participles only as state descriptors (`parsedConfig`, `isLocked`); gerunds only when the platform itself uses them. |
-| N6 | Compound names have at most 3 words. A concept that needs more gets a shorter term defined in the glossary. |
+| N6 | Compound names have at most 3 words. Words that state the value's kind, subset, or owner where the scope does not (N11–N13) are the stated reason for a longer name. A concept that needs more for any other reason gets a shorter term defined in the glossary. |
 | N7 | Names are short, plain, and pronounceable. No slang, humor, regionalisms, or unexplained abbreviations. |
 | N8 | Prefer the platform/framework/industry's established term over a house synonym. |
 | N9 | One spelling locale — American English unless the project directs otherwise — in every identifier and doc. |
 | N10 | A typed literal is a module-scope constant whose name carries its kind or unit: a regex is `<NAME>_REGEX`, a duration is `<NAME>_MS`. The kind survives at the call site; a bare `/…/.test(x)` or `10 * 60 * 1000` does not. |
+| N11 | Narrow a generic name to the subset it covers. A helper that handles only PDFs, or uploads only into folders, says so: `uploadPdfToFolder`, not `uploadPdf`. |
+| N12 | Name the kind of value, not a neighboring thing: a `{ width, height }` is dimensions, not a canvas. Keep the project's noun as the qualifier and end with the kind: `CanvasDimensions`. |
+| N13 | Name the owner when another owner is in scope: `currentImageComment`, not `ownComment`, and `offsetHours`, not `hours`. Add the qualifier only where the enclosing scope does not supply it. |
+| N14 | A name never claims more than the value holds: a row that is only soft-deleted carries `softDeletedAt`, not `deleted`. |
 
 Ticket and chat vocabulary does not override the codebase: when a ticket says
 "members" and the code says `Subscriber`, the code's term wins (N3). Propose a
@@ -37,6 +41,7 @@ vocabulary.
 | C3 | No idiom-dependent names (`spinUp`, `kickOff`): use plain verbs unless the idiom is the platform's own established term (then N8 governs). |
 | C4 | Domain terms are first-class: record each in the glossary with one meaning. |
 | C5 | No false friends: never use a term that already means something else on the platform (`thread`, `transaction`, `cache`) for a different concept. |
+| C6 | A rename moves the whole family: the type and every sibling, including lines the change never touched. It also moves the twin across an API or service boundary, in that side's own naming form. |
 
 ## Starter vocabulary
 

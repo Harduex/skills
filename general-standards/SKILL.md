@@ -9,7 +9,7 @@ Everything a project authors is technical writing — the code, the error
 messages, the README. These standards port the controlled-language system
 behind aerospace maintenance documentation (ASD-STE100) to all of it: a closed
 vocabulary, hard size limits, imperative structure, and safety-grade messages.
-59 rules, seven bands, stable IDs.
+64 rules, seven bands, stable IDs.
 
 **"General" names the layer, not the scope of the advice.** This is the base
 that every project sits on: a project's own coding-standards skill, its
@@ -46,7 +46,9 @@ any conflict.
 ## Author mode — code
 
 1. Naming something new? Search the glossary, then the codebase, then the
-   platform's vocabulary for the existing term (N1, N3).
+   platform's vocabulary for the existing term (N1, N3). Then make the name
+   state the value's kind, subset, and owner where the scope does not
+   (N11–N13). Never let the name claim more than the value holds (N14).
 2. About to inline a computation, conversion, or check? Read the shared
    utility modules' export lists first and reuse the operation that is
    already named there (M6). An expression does not announce itself as a
@@ -96,6 +98,9 @@ contrast, this layer governs how names, units, and prose read.
 ## Self-check before done
 
 - Every new name from an approved source? (N1)
+- Every new name states its kind, subset, and owner where the scope does not,
+  and claims no more than the value holds? Did each rename move its whole
+  family? (N11–N14, C6)
 - Every inlined computation checked against the shared utilities' exports? (M6)
 - Every change the smallest that satisfies the request — no unprompted refactor,
   rename, or abstraction, nothing dropped the task did not name? (M7)

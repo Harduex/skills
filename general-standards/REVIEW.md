@@ -40,7 +40,11 @@ There is no NITPICK tier: anything that would earn it either maps to a rule
 - **Both** — Does any new name alias an existing concept? (N3)
 - **Code** — Any banned vague word from the VOCABULARY.md table? (N1)
 - **Code** — Any noun-named function, verb-named type, non-predicate boolean? (N4)
-- **Code** — Any compound name over 3 words? (N6)
+- **Code** — Any compound name over 3 words whose extra words do not state a kind, subset, or owner the scope lacks? (N6)
+- **Code** — A generic name on a unit that covers only one subset? (N11)
+- **Code** — A name for a neighboring thing instead of the value's kind, such as `canvas` for its dimensions? (N12)
+- **Code** — An owner-free name (`own…`, a bare `hours`) where another owner is in scope, or a qualifier the scope already supplies? (N13)
+- **Code** — A name that claims more than the value holds, such as `deleted` for a soft delete? (N14)
 - **Code** — A unit whose behavior widened but whose name did not? (N2)
 - **Code** — A regex, duration, or other typed literal inline instead of a named constant carrying its kind or unit? (N10)
 - **Code** — Any name the ticket introduced that contradicts the codebase term? (N3)
@@ -114,6 +118,7 @@ There is no NITPICK tier: anything that would earn it either maps to a rule
 - Idiom-dependent names — `spinUp`, `kickOff`, `windDown`? (C3)
 - New domain term used without a glossary entry? (C4)
 - A term that already means something else on this platform? (C5)
+- A rename that left the type, a sibling, or the twin across an API boundary on the old name? (C6)
 
 ## Numeric triggers
 
@@ -124,7 +129,7 @@ There is no NITPICK tier: anything that would earn it either maps to a rule
 | nesting > 2 levels | S1 |
 | file > 400 lines | M2 |
 | class > 7 public members | M2 |
-| compound name > 3 words | N6 |
+| compound name > 3 words, beyond its kind, subset, or owner words (N11–N13) | N6 |
 | instruction sentence > 20 words | P1 |
 | descriptive sentence > 25 words | P1 |
 | paragraph > 6 sentences | P3 |
