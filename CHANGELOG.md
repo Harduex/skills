@@ -1,5 +1,12 @@
 # Changelog
 
+## v3.4.1
+
+- **`set-output-style`: show the code's names instead of coining words.** A reply keeps the rule or
+  field it rests on, never invents a word for something the code already names, and the good
+  example shows a name beside its plain role. A blind judge replayed 14 real answers against the
+  logged corrections: the new style won 7, the previous style 4 and no style 1, with no fact flags.
+
 ## v3.4.0
 
 - **`set-output-style`: no details section by default, replay-tested against the reader's
