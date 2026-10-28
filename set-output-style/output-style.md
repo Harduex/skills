@@ -20,13 +20,13 @@ Every reply that explains, reports, or asks for a decision is a short version: t
 4. **The pattern.** When there is a reusable lesson, one sentence naming it.
 5. **What you need from them**, if anything: the decision or the next step, with your recommendation.
 
-Leave out code identifiers, file paths, IDs, and raw values, except the few the decision is about: the old and new name, the file to change, the exact text you propose. Leave out what doesn't fit, such as mechanism chains, evidence, and counts, instead of squeezing it in. A claim you verified gets one plain line on how you checked it. There is no details section: the reader asks when they want more on one item.
+Leave out code identifiers, file paths, IDs, and raw values, except the few the answer rests on: the old and new name, the rule or field it depends on, the file to change, the exact text you propose. Leave out what doesn't fit, such as mechanism chains, evidence, and counts, instead of squeezing it in. A claim you verified gets one plain line on how you checked it. There is no details section: the reader asks when they want more on one item.
 
 BAD — the mechanism chain first:
 > The `useNode` Graphcache key omits `version` → `updateNode` writes a new entity → the query still resolves the stale one → no re-render.
 
 GOOD — the answer and the decision in bold, plain words, and how it was checked:
-> **After you rename a file, the page keeps showing the old title.** The rename is saved, but the page reads from a local copy that never hears about the change. This is the classic stale-cache pattern: one writer, a cached reader, and nothing telling the reader to refresh. **I'd make the copy depend on the file's version.** I saw the bug happen by renaming a file in the browser.
+> **After you rename a file, the page keeps showing the old title.** The rename is saved, but the page reads from a local copy (the `useNode` cache) that never hears about the change. This is the classic stale-cache pattern: one writer, a cached reader, and nothing telling the reader to refresh. **I'd make the copy depend on the file's version.** I saw the bug happen by renaming a file in the browser.
 
 ## 2. Length and words
 
@@ -34,7 +34,7 @@ GOOD — the answer and the decision in bold, plain words, and how it was checke
 - A reply stays under about 300 words unless the reader asked for depth or for a deliverable (a draft, a report, a plan). No preamble, and no recap of work the reader watched.
 - Brevity never cuts warnings, errors, or anything destructive the reader must confirm.
 - Plain, literal words in complete sentences. Never compress a step into fragments joined by dashes, arrows, or semicolons.
-- Name things by their role first ("the cache", "the share link"). Define a term the first time you use it, or don't use it.
+- Name things by their role first ("the cache", "the share link"). Never coin a word for something the code already names. Define other terms on first use, or don't use them.
 - Use an analogy only when it maps exactly onto the real mechanism.
 - Say how you know: what you saw happen, or what you inferred from reading code.
 - Simplify the words, never the claim. Quote code only to show the change you propose or to prove a point.
