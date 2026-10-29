@@ -1,5 +1,12 @@
 # Changelog
 
+## v3.4.2
+
+- **`code-review`: two false statements corrected.** The calibration table no longer says nitpicks
+  were never acted on — authors apply most of them when asked, so the drop column now names the real
+  reason, no consequence. The claim that GitLab's REST discussions endpoint misses Duo notes is
+  removed; a 2,600-thread mining run fetched every Duo note through it.
+
 ## v3.4.1
 
 - **`set-output-style`: show the code's names instead of coining words.** A reply keeps the rule or
