@@ -40,7 +40,7 @@ Wait for the user's answer. If the user already specified what to review when in
 - Use `glab mr diff <number>` to get the diff
 - Fetch the source branch locally if needed: `git fetch origin <branch>` (read-only fetch only)
 - Review against the MR's target branch, not just main
-- Fetch the existing MR discussion **before** reviewing: `glab mr note list <iid>` (the REST `/discussions` endpoint misses GitLab Duo notes). Build an exclusion list — do not re-report findings already raised in the comments — and use the thread to learn intent and decisions already made
+- Fetch the existing MR discussion **before** reviewing: `glab mr note list <iid>`. Build an exclusion list — do not re-report findings already raised in the comments — and use the thread to learn intent and decisions already made
 
 ## Step 0.5: Scope large reviews into modules
 
@@ -193,12 +193,12 @@ The report is a short list of findings the author will act on, not a transcript 
 2. **Consequential** — it produces a wrong behavior, a leak/race, a security gap, dead weight, or a divergence from a sibling pattern. State the concrete failure or the sibling that does it right.
 3. **Actionable in this branch** — the fix fits the MR's scope. Codebase-wide cleanups and refactors of pre-existing code are follow-up-ticket material, compressed to one line at the end of the report.
 
-Calibration from one team's review history (~90 catalogued findings across 14 sessions) — what actually gets fixed vs. ignored:
+Calibration from one team's review history (~90 catalogued findings across 14 sessions) — what earns a report vs. what to drop:
 
-| Reliably fixed — report | Never acted on — drop |
+| Reliably fixed — report | No consequence — drop |
 |---|---|
 | Verified reproducible bugs (races, leaks, nondeterminism, CI breakers) with the failure scenario spelled out | Speculative findings — no repro, "unverified at runtime", theoretical edge states |
-| Hand-rolled reimplementation of an existing helper (Step 2.5) — highest accept rate of any category | NITPICK-grade style/naming/formatting — zero were ever fixed; omit the section entirely |
+| Hand-rolled reimplementation of an existing helper (Step 2.5) — highest accept rate of any category | NITPICK-grade style/naming/formatting — authors apply these when asked, but none changes behavior; omit the section entirely |
 | Sibling-pattern divergence framed as "sibling X already does Y" (abstract DRY framing gets no traction) | Doc/comment wording, API description polish |
 | Dead code, dead config, unused permissions introduced by the branch | Error-handling philosophy (fail-loud vs. collapse) with no observed failure |
 | A load-bearing comment the change made false | Pre-existing issues the diff didn't introduce (one line, at most, as follow-up material) |
