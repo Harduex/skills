@@ -1,6 +1,6 @@
 ---
 name: extract-skill-from-session
-description: Turn a workflow you just ran — with the corrections that shaped it — into a reusable skill. Use when you ask whether a good session is worth a new skill or an update, when extracting a repeatable process from past sessions, or when deciding if a learning belongs in a skill versus a script, an AGENTS.md note, or memory.
+description: Turn a workflow you just ran — with the corrections that shaped it — into a reusable skill, or collect those corrections live while building so a skill can be extracted at the end. Use when you ask whether a good session is worth a new skill or an update, when you say at the start of a build that the agent should learn from your corrections, when extracting a repeatable process from past sessions, or when deciding if a learning belongs in a skill versus a script, an AGENTS.md note, or memory.
 ---
 
 # Extract Skill From Session
@@ -18,6 +18,19 @@ This is an **orchestrator**: it encodes only the judgment the mining/authoring s
 ## When to use / not
 
 Use when a workflow has **converged** — you re-derived or corrected it enough that codifying beats re-deriving. **Not** for a one-off, not before it has stabilized, and not for a single fact or preference (that is the lesson-capture capability, not this). The honest test: *would a future session redo this from scratch without it?*
+
+## Live mode · collect while building
+
+Use when the user says, before or during a build, that the agent should learn from their corrections so a skill can be extracted at the end. It is the same job in reverse: the lessons are collected as they happen instead of mined afterwards. Without that request, skip this section.
+
+1. **Open one log for this build**, tied to the thing being built: a file in your agent memory if you have one, otherwise a file outside the repo. It must survive compaction and a new session; mark it temporary in its first line, and in any memory index line that points at it.
+2. **Keep every round recoverable**: a new version file for a page or document, a commit for code. Never overwrite a version the user has seen.
+3. **Log each correction as one entry, before building the next round**: the round, the pattern it targets in general terms (never the user's wording), what the user actually meant, and how far not to go. Record only what the user said or what an overshoot showed; leave the limit out rather than guess it. A correction that undoes an earlier fix is a new entry marked as an overshoot of that one; leave the earlier entry as it was.
+   > `v3 · Pacing: a fix for autoplay must not add a click; the learner sets the pace, but the first step is already on screen.`
+4. **Re-read the whole log, including the entry just added, before building each new round**, and check the new round against every entry. A log that is not re-read does not stop the mistake coming back.
+5. **Change no skill while collecting.** Rules go in only after the user approves the final result.
+6. **When the user says the build is done**, run §0–§7 below with the log as the source for §1, and keep only the patterns that hold beyond this build.
+7. **Delete the log** once the skill ships or the user drops the idea, together with any memory index line pointing at it.
 
 ## 0 · Classify before you build
 
