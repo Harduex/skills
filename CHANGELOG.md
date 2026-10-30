@@ -1,5 +1,15 @@
 # Changelog
 
+## v3.6.0
+
+- **`extract-skill-from-session`: a live mode that collects corrections while building.** When the
+  user says at the start of a build that the agent should learn from their corrections, the agent
+  keeps every round recoverable, logs the pattern behind each correction (what was meant and how far
+  not to go) in one temporary log, re-reads it before every round, and runs the extraction from that
+  log at the end. The log is deleted once the skill ships. A fresh agent followed it through a
+  four-round test build; the gaps it found (log before re-reading, no guessed limits, overshoots as
+  new entries) are fixed.
+
 ## v3.5.0
 
 - **`teach`: every lesson is an interactive explorer with a feedback loop.** A lesson is a live
