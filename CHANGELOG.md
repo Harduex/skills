@@ -1,5 +1,17 @@
 # Changelog
 
+## v3.5.0
+
+- **`teach`: every lesson is an interactive explorer with a feedback loop.** A lesson is a live
+  picture of the real material with a guided path of short steps, in two areas: the picture and one
+  side pane for every word and control. Questions sit inside the path; a wrong answer can be
+  retried, revealed or explained with an optional "what is unclear" form, and the lesson ends with
+  a follow-up prompt the learner pastes back into a new `FEEDBACK.md`, so the next lesson targets
+  their mistakes. A new `starter.css` sets the default look (dark with a light toggle, system
+  sans-serif, one warm accent) and a rule formats code: quiet syntax colours, the step's focus in
+  the accent, one colour per kind of thing. A fresh agent built a test lesson from the skill alone,
+  and a headless browser check of it passed at desktop and phone width.
+
 ## v3.4.2
 
 - **`code-review`: two false statements corrected.** The calibration table no longer says nitpicks
