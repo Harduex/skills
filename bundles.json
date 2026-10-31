@@ -14,7 +14,8 @@
         "system-harness-graph",
         "auditing-agent-infra",
         "scaffold-project-harness",
-        "set-output-style"
+        "set-output-style",
+        "update-skills"
       ]
     },
     {
