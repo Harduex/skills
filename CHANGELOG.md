@@ -1,5 +1,11 @@
 # Changelog
 
+## v3.7.0
+
+- Add `update-skills` to `harness-evolution`. The skill asks which agents to update when unspecified and remembers verified sources and update methods in local reference storage.
+- Preserve skill storage, user-added files, and unrecognized local edits during updates. Seeded machine-specific source maps stay outside the published skill.
+- Validate agent selection, stale source discovery, storage collisions, and storage preservation during skill refresh.
+
 ## v3.6.0
 
 - **`extract-skill-from-session`: a live mode that collects corrections while building.** When the
