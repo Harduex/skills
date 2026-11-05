@@ -1,5 +1,17 @@
 # Changelog
 
+## v3.8.0
+
+- **`set-output-style`: start from the shipped style or a blank one, with optional
+  self-improvement.** The skill asks which style to install and at which level (user or project;
+  the session-only option is gone), then whether to turn on self-improvement. With it on, the skill
+  adds a rule to CLAUDE.md at the same level and creates a miss log beside the settings: each "I
+  didn't understand" is logged and tagged, praised replies are kept as good examples, and after six
+  gap entries a revision is proposed and replay-tested, and it may not make the good examples worse.
+  A blank style keeps Claude Code's coding instructions. A re-run asks before overwriting an
+  installed style that differs, since it may hold the user's own revisions. Fresh agents ran every
+  path in scratch folders, and the files they wrote passed all 30 end-state checks.
+
 ## v3.7.0
 
 - Add `update-skills` to `harness-evolution`. The skill asks which agents to update when unspecified and remembers verified sources and update methods in local reference storage.
