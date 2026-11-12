@@ -1,5 +1,12 @@
 # Changelog
 
+## v3.10.0
+
+- **`write-design-spec`: an accepted ADR does not change.** A later change to what an ADR records
+  gets a new ADR, whose Scope names the ADR or the part it replaces. The one edit allowed to the old
+  ADR is its status line, which points to the new one, so a reader of the old ADR can find the
+  current record.
+
 ## v3.9.0
 
 - **`using-evolving-harness`: the paper-trail commit convention is written down.** Planning
