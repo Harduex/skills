@@ -78,6 +78,8 @@ An ADR is the **as-built** counterpart of the spec — the spec is written *befo
 5. **Keep rollout out.** Feature flags, percentages, and milestone dates are rollout, not architecture — omit them.
 6. **Remove the superseded planning docs.** Once the ADR absorbs them, `git rm` the pre-build design spec / test plan / implementation plan **in the same commit that adds the ADR**, with the commit message noting they are preserved in git history — and repoint any ADR links off the deleted files. Confirm deletion + commit with the user first. When a finished branch carries planning artifacts but does not warrant an ADR (bug fix, small feature), propose a plain `Drop <feature> planning artifacts` commit instead — the artifacts still leave the tree at branch close.
 
+**An accepted ADR does not change.** When a later change alters what an ADR records, write a new ADR for that change, and say in its Scope which ADR, or which part of it, it replaces. The one edit allowed to the old ADR is its status line, which points to the new one: `**Status:** Accepted · Superseded in part by ADR-0007`.
+
 ## Review checklist
 
 - [ ] Every section earns its place against the reader's two questions; nothing dropped leaves an empty heading behind
