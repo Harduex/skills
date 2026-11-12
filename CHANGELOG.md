@@ -1,5 +1,15 @@
 # Changelog
 
+## v3.9.0
+
+- **`using-evolving-harness`: the paper-trail commit convention is written down.** Planning
+  artifacts land in a planning commit at the branch root. Later edits fold into it as fixups, and
+  the artifacts leave the tree at branch close, in the ADR commit or a plain drop commit. The branch
+  merges without squashing, so the main branch keeps both commits and any artifact can be restored
+  with `git show <sha>^:<path>`. distribute-fixups and write-design-spec each held one step of this.
+  The router now states the whole shape and points to them. The restore commands were run against a
+  real dropped spec.
+
 ## v3.8.0
 
 - **`set-output-style`: start from the shipped style or a blank one, with optional
