@@ -33,6 +33,31 @@ Rules:
   ran.
 - Every human approval gate is a real stop: present the artifact, wait.
 
+## Paper-trail commits
+
+Planning artifacts leave the tree when the work closes, but git history keeps
+them. A branch follows one commit shape: planning -> code -> drop or ADR.
+
+1. Commit every pre-build artifact (research, design spec, test plan,
+   implementation plan) first, as one or two `<ticket> … planning` commits.
+2. Commit each later artifact edit as `git commit --fixup=<planning-commit>`.
+   Never mix an artifact edit into a code commit (distribute-fixups).
+3. Squash the fixups with a non-interactive autosquash rebase, at the latest
+   before review.
+4. To keep the spec's evolution on a long branch, commit with
+   `git commit --squash=<planning-commit>` and a message that says what
+   changed and why. Run that rebase with `GIT_EDITOR=true` as well.
+5. At branch close, delete the artifacts in one commit: the commit that adds
+   the ADR (write-design-spec), or a `<ticket> Drop … planning artifacts`
+   commit when the branch needs no ADR. Its message says that git history
+   keeps them.
+6. Merge without squashing. A squash merge folds the add and the delete into
+   nothing, so no artifact reaches the main branch.
+
+End state: each artifact has two commits on the main branch, one that creates
+it and one that deletes it. To restore an artifact, find the deleting commit
+with `git log --diff-filter=D -- <path>`, then run `git show <sha>^:<path>`.
+
 ## The evolution loop (session end - this is the point of the framework)
 
 Before ending any substantial session:
