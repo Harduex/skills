@@ -1,13 +1,14 @@
 # Local source memory
 
-The installed `references/sources.local.json` stores discoveries for this machine.
-The canonical skill contains no populated source map. Each installation owns its local storage.
+The local reference, `${XDG_CONFIG_HOME:-$HOME/.config}/skills/update-skills/sources.json`, stores discoveries for this machine.
+Every agent and every installed copy of this skill share this one file. It lives outside any skill folder, so updates never replace it.
+The canonical skill contains no populated source map.
 
 ## First run
 
 1. If the local reference is absent, discover installations and sources for the requested agents.
 2. Ask only for information that local metadata and connected tools cannot establish.
-3. Write verified discoveries to the installed copy's `references/sources.local.json`.
+3. Write verified discoveries to the local reference. Create its folder when the folder is absent.
 4. Leave unverified commands or sources unset. Record the unresolved question instead.
 5. Never seed machine paths or learned records into the canonical skill repository.
 
@@ -21,8 +22,13 @@ The canonical skill contains no populated source map. Each installation owns its
 6. Write through a temporary sibling file, then replace the reference atomically.
 7. If another process changed the reference, merge independent records before saving.
 8. Never resolve conflicting records solely by timestamp.
-9. Keep each installed copy's storage independent. Do not synchronize local references during normal skill installation or updates.
-10. Seed a new installed copy only when the user requests seeding.
+9. Keep each agent's records under its own `agents.<id>` entry.
+
+## Legacy files (start of every run, before First run or Subsequent runs)
+
+1. Look for a legacy `references/sources.local.json` in each installed copy of this skill.
+2. Import a legacy file only when its path is not in `migrated_legacy`. Recheck its records against live state before saving them.
+3. Add the path to `migrated_legacy` after the import, and report the import. Leave the legacy file in place.
 
 ## Record format
 
@@ -31,6 +37,7 @@ Use JSON with `schema_version`, `agents`, and `sources`. Extend records when con
 | Field | Contents |
 |---|---|
 | `schema_version` | Integer format version, initially 1 |
+| `migrated_legacy` | Paths of legacy `references/sources.local.json` files already imported |
 | `agents.<id>.skill_roots` | Verified active standalone skill directories |
 | `agents.<id>.plugin_roots` | Verified active plugin directories |
 | `agents.<id>.protected_paths` | Agent-wide protected paths, relative to each skill directory |

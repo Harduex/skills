@@ -12,7 +12,7 @@ Refresh installed skills from their verified sources. Keep learned installation 
 1. Resolve the agents named in the current request.
 2. If no agents are named, ask which agents to update before making changes.
 3. Treat "all agents" as all discovered installations, then state that scope before proceeding.
-4. Read [references/memory.md](references/memory.md) and this installed copy's `references/sources.local.json`, when present.
+4. Read [references/memory.md](references/memory.md) and the local reference `${XDG_CONFIG_HOME:-$HOME/.config}/skills/update-skills/sources.json`, when present.
 5. Never infer current target agents from the previous run or the agent hosting this conversation.
 6. Check remembered paths, repository remotes, branches, and update methods against live state.
 7. Keep valid records. Rediscover only missing, changed, or invalid details.
@@ -34,7 +34,7 @@ Refresh installed skills from their verified sources. Keep learned installation 
 2. Identify source-owned files from the repository or package manifest.
 3. Identify storage from the skill instructions, existing local records, and destination-only files.
 4. Preserve local memory, indexes, databases, generated assets, caches, and user-added files.
-5. Preserve `references/sources.local.json` when updating this skill itself.
+5. Never store this skill's own records inside an installed skill folder.
 6. Record protected paths explicitly. A directory entry protects all descendants.
 7. Never copy source files onto protected paths, even when upstream introduces the same name.
 8. If source and storage paths collide, skip the conflicting writes and report the conflict.
