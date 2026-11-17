@@ -39,6 +39,13 @@ skill-name/            # directory name = skill name (must match frontmatter)
 └── scripts/           # Utility scripts (if needed)
 ```
 
+Most skills need no storage: their output belongs to the user's project,
+workspace, or agent config. A skill that needs storage (learned setup, user
+decisions, history) keeps it in `${XDG_CONFIG_HOME:-$HOME/.config}/skills/<skill-name>/`,
+never in the skill folder, which updates replace. Caches go in
+`${XDG_CACHE_HOME:-$HOME/.cache}/<skill-name>/`. Claude Code's `${CLAUDE_PLUGIN_DATA}`
+is not portable: it is Claude-only, per plugin, and deleted on uninstall.
+
 ## Frontmatter
 
 The Agent Skills spec allows exactly six fields; Claude Code adds optional
@@ -99,4 +106,5 @@ co-maintained set.
 - [ ] No time-sensitive info; consistent terminology
 - [ ] Concrete examples included; scripts handle their own errors
 - [ ] Cross-skill references follow the capability-vs-name rule
+- [ ] Any storage of its own lives in `${XDG_CONFIG_HOME:-$HOME/.config}/skills/<skill-name>/`
 - [ ] Re-tested with the skill loaded; reported gaps folded back in
