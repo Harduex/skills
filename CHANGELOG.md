@@ -1,5 +1,12 @@
 # Changelog
 
+## v3.11.1
+
+- **`manage-backlog` and `update-skills` save every time in UTC, with a `Z` suffix.** An agent in a
+  UTC+2 time zone wrote its local time as `16:40Z` when it was 14:40 UTC, so the saved times were two
+  hours ahead. Both storage pages now say to convert local time first. A fresh agent given the same
+  clock and time zone then wrote `14:40:00Z`.
+
 ## v3.11.0
 
 - **New `manage-backlog` skill in `delivery-lifecycle`.** It shows the user's open tasks as a short,
