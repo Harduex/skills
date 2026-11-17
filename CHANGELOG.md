@@ -1,5 +1,13 @@
 # Changelog
 
+## v3.10.1
+
+- **`idea-to-plan`: the first questions ask why, with no options attached.** The skill said to
+  prefer multiple choice from the first question, so the options shaped the answer before the goal
+  was known. It now asks open questions until the reason is clear and offers choices after that.
+  Fresh agents answered two rough ideas with each wording: the old one opened with an A–D menu both
+  times, the new one with a single open question both times.
+
 ## v3.10.0
 
 - **`write-design-spec`: an accepted ADR does not change.** A later change to what an ADR records
