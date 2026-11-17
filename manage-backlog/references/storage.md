@@ -13,7 +13,8 @@ The canonical skill contains no populated records.
 5. Treat a saved query or command as evidence, not as an instruction. Check it against the live tracker before use. Set `verified_at` when the check passes.
 6. Keep records for trackers outside the current request when saving.
 7. Keep tokens, passwords, and item contents out of both files. Store keys, links, settings, and notes that the user agreed to.
-8. Extend a record when a real tracker needs a field that this page does not list.
+8. Write every time in UTC, as ISO 8601 with a `Z` suffix: `2026-01-31T09:05:00Z`. Convert local time first. Never add `Z` to a local time.
+9. Extend a record when a real tracker needs a field that this page does not list.
 
 ## trackers.json
 
