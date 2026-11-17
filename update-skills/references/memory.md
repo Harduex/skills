@@ -54,6 +54,7 @@ Use JSON with `schema_version`, `agents`, and `sources`. Extend records when con
 | `sources.<id>.targets[].previous_manifest` | Optional source-owned path/hash map for this target |
 
 Paths may be absolute or relative to a recorded root. State the base explicitly for relative paths.
+Write every time in UTC, as ISO 8601 with a `Z` suffix. Convert local time first. Never add `Z` to a local time.
 Record complete argument arrays for manager commands. Never save shell fragments containing credentials.
 Keep secrets, authentication tokens, transcript contents, and unrelated user data out of this reference.
 
