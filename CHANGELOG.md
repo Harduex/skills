@@ -1,5 +1,19 @@
 # Changelog
 
+## v3.11.0
+
+- **New `manage-backlog` skill in `delivery-lifecycle`.** It shows the user's open tasks as a short,
+  linked, ranked list and triages them with the user, in any tracker: a connector-backed one such as
+  Jira or Notion, or a roadmap file in the repository. The first run in a folder asks where the
+  tasks live and learns the tracker. Later runs reuse that setup and the user's ranking, and say
+  what changed since the last run. An item counts as done only after someone saw the change work,
+  and every tracker write needs the user's yes. Fresh agents ran a repository roadmap from scratch
+  and a read-only Jira backlog twice. A reviewer and a second run checked the fixes.
+- **A skill's own storage lives in `${XDG_CONFIG_HOME:-$HOME/.config}/skills/<skill-name>/`.**
+  A Claude Code plugin update installs into a new version folder, so a file saved inside the
+  installed skill was left behind. `write-a-skill` now states the rule, and `update-skills` keeps
+  its learned sources there. It imports an older in-skill file once and records that it did.
+
 ## v3.10.1
 
 - **`idea-to-plan`: the first questions ask why, with no options attached.** The skill said to
