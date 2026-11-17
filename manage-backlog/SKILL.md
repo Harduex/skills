@@ -51,7 +51,7 @@ Never write state inside the skill folder or the skill repository.
 
 1. Fetch the live list with the saved query.
 2. Group the items by the saved ranking. Put unranked items under **New**. Skip empty groups.
-3. Show one line per item: the link, then a plain summary.
+3. Show one line per item: the link, then a plain summary. Number the items in the user's first group, because that order says what to start next. Use bullets in every other group, including **New**.
 4. Add "Changed since last run": new items, items gone with their new status, and items moved into the current sprint or iteration.
 5. Before you remove a gone item from the ranking, look it up by its key. If the item is still open, the saved query is stale: recheck the query and keep the ranking. Remove only items that are closed or deleted.
 6. Save `last_run`.
@@ -60,6 +60,9 @@ Never write state inside the skill folder or the skill repository.
 **Do next**
 1. [PROJ-12](https://tracker.example/PROJ-12) Add a dark mode toggle
 2. [PROJ-15](https://tracker.example/PROJ-15) Export reports as CSV (needs PROJ-12)
+
+**Soon**
+- [PROJ-21](https://tracker.example/PROJ-21) Fix the date format on invoices
 
 **Changed since last run**
 - [PROJ-9](https://tracker.example/PROJ-9) moved to Code Review, off the list
