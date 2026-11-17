@@ -1,5 +1,12 @@
 # Changelog
 
+## v3.11.2
+
+- **`manage-backlog` numbers only the items in the first group of the overview.** The other groups,
+  and **New**, use bullets. The skill showed one numbered example and no rule, so an agent numbered
+  all 25 items straight through, which suggested an order that only matters for what to start next.
+  A fresh agent given the rule and a four-group backlog numbered only the first group.
+
 ## v3.11.1
 
 - **`manage-backlog` and `update-skills` save every time in UTC, with a `Z` suffix.** An agent in a
