@@ -45,7 +45,7 @@ Read the codebase, docs, configs, and existing patterns **before** proposing any
 ### 2. Clarify intent
 
 
-Ask **one question at a time**. Prefer multiple choice. Focus on:
+Ask **one question at a time**. Until you know why the user wants this, ask open questions with no options attached, because options steer the answer. Once the why is clear, prefer multiple choice. Focus on:
 
 
 - What problem are we solving, for whom?
