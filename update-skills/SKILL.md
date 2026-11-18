@@ -1,6 +1,6 @@
 ---
 name: update-skills
-description: Update installed agent skills. Use when asked to refresh skills for Codex, Antigravity, or another coding agent.
+description: Updates installed agent skills and discovers available additions. Use when asked to refresh skills or check for new skills for Codex, Antigravity, or another coding agent.
 ---
 
 # Update Skills
@@ -28,6 +28,13 @@ Refresh installed skills from their verified sources. Keep learned installation 
 7. If ownership remains ambiguous, ask about that source and continue independent updates.
 8. Save verified discoveries to local memory, even when an update is blocked.
 
+## Discover uninstalled skills
+
+1. After checking source revisions, compare tracked standalone skill directories from verified sources with the active skills for each selected agent. Check the current source tree even when the saved revision is current. Exclude examples and skills already active through a plugin.
+2. Report each available addition with its name, source, and eligible agent. Label it new since the last check only when the prior verified source revision proves it.
+3. Ask which of those skills to install and for which selected agents. An explicit request naming both the skill and target agents already supplies approval. Continue refreshing installed skills while additions await a decision.
+4. Install only the approved additions through the verified source and supported installation method. Report which additions are still available.
+
 ## Protect local storage
 
 1. Read the installed skill's instructions and inventory its files before changing that skill.
@@ -54,7 +61,7 @@ Refresh installed skills from their verified sources. Keep learned installation 
 6. Compare differing installed files against Git history or the previous source manifest.
 7. Treat recognized older source versions as updates. Preserve unrecognized edits for review.
 8. Back up replaced files outside the installed skill tree.
-9. Update only the selected agents. Do not install additional standalone skills unless requested.
+9. Update only the selected agents. Install additional standalone skills only with the approval described in Discover uninstalled skills.
 10. Keep package adapters and agent-specific configuration intact.
 11. Never push, publish, or post as part of a skill update without explicit approval.
 
