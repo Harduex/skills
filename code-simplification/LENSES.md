@@ -45,6 +45,7 @@ A module earns its interface by hiding more than it exposes. See [DEEPENING.md](
 - **Conjoined methods** → you cannot understand one without reading the other → Inline Function. Keep pure helpers factored out. Inline single-caller functions that mutate state.
 - **Flag argument** → a boolean or mode selects which operation runs → Remove Flag Argument: split it into named functions.
 - **Information leakage** → one design decision is spread over several modules → move it into the one module that owns the decision.
+- **Temporal decomposition** → code split into steps by the order they run (read, then parse, then write), each step knowing the same format, and callers that must call them in sequence → merge the steps around the knowledge they share. Keep a split only where the steps use different information.
 - **Wrapper around a library that adds nothing** → Remove Middle Man and call the library directly.
 - **Deep or refusing inheritance** → a subclass uses only part of its parent → Replace Subclass with Delegate, Remove Subclass.
 
@@ -56,6 +57,7 @@ State is the main source of accidental complexity. Control flow comes next.
 - **Premature cache** → no evidence of a hot path or an expensive source → remove it only with proof it is not needed (GUARDRAILS.md, G6).
 - **Needless async or concurrency** → an async function that awaits nothing, or a queue with one producer and one consumer in-process → make it synchronous or direct.
 - **Catch-and-ignore around a call** → define the error out of existence. Change the semantics (for example "ensure absent") so the error cannot occur. Never apply this to validation or security failures.
+- **The same handler around many calls** → an identical try/catch or error mapping wrapped around each call → one handler at the level that sees them all, such as the request handler. Keep a separate handler where its caller reacts differently. Never apply this to validation or security failures.
 - **Deep nesting** → Guard Clauses: return early and leave the happy path unindented.
 - **Excess generics** → a type parameter used by one concrete type → de-generalize it to the concrete type.
 
@@ -63,7 +65,7 @@ State is the main source of accidental complexity. Control flow comes next.
 
 Fix the root cause at the right depth.
 
-- **Special case layered on shared infrastructure** → an `if (kind === 'x')` in a shared helper, or a per-caller workaround → change the underlying mechanism once, generally.
+- **Special case layered on shared infrastructure** → an `if (kind === 'x')` in a shared helper, or a per-caller workaround → change the underlying mechanism once, generally. When only one caller needs the special case, move it out to that caller instead and leave the shared mechanism general.
 - **Symptom patch** → a retry, a delay, or a null check that hides a cause nobody traced → trace the cause and fix it there. The removed patch goes with the fix.
 - **Shotgun surgery** → adding one instance of a concept touches many files → move the scattered pieces into one module. Count the files per instance before and after.
 
@@ -75,7 +77,7 @@ Code written by agents over-builds in recognizable ways. Judge against the surro
 - **Fallback chains** → "try new, else old" with no version signal, or silent defaults on bad internal state → keep one path and let failures stay visible.
 - **Compatibility shims** → re-exports, renamed unused variables, `// removed` markers, adapters for callers that no longer exist → delete them once nothing deployed, persisted, public, or external consumes them.
 - **Comment noise** → comments that restate the code or narrate the change → delete them. Keep non-obvious rationale.
-- **Over-configurability** → options, props, or parameters nobody passes → hardcode the value.
+- **Over-configurability** → options, props, or parameters nobody passes → hardcode the value. When every caller passes the same value, give it a default, and move the rare case to its own entry point.
 - **Single-use abstractions** → a helper, hook, or class with one caller that adds a name but hides nothing → inline it.
 - **Closed justification loops** → a fallback exists only because a test exercises it, and the test exists only for that fallback → treat the pair as one candidate and delete both together.
 - **Test bloat** → duplicated cases, implementation-detail assertions, mocks where a real in-process collaborator works → consolidate at the public interface.

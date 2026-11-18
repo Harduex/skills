@@ -27,6 +27,7 @@ Friction you feel while navigating is the signal:
 ## Proving the candidate
 
 - **Deletion test.** Merging the modules must concentrate complexity behind one interface. If it only moves the complexity, drop the candidate.
+- **Related enough to merge.** Merge pieces that share information, are always used together, overlap in concept, or cannot be understood without each other. Merging loosely related pieces makes both harder to use.
 - **Real seams only.** One adapter is a hypothetical seam. Two adapters make a real one. Do not keep an interface for a second implementation nobody has written.
 - **Past, not future.** A claim that "the next instance will be painful" needs past instances in `git log`.
 - **Recorded decisions.** If an ADR chose the current split, surface the conflict only when the friction is real, and cite the ADR.

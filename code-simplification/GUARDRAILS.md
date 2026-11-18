@@ -50,6 +50,7 @@ There are no intermediate levels. When unsure between two levels, choose the low
 - **G7 Readability.** Revealing intention outranks fewer elements. No nested ternaries, dense one-liners, or clever tricks presented as simplifications.
 - **G8 Legitimate indirection.** Proxies and decorators, deliberate dependency cuts, framework extension points, and test seams are kept on purpose.
 - **G9 Big-bang changes.** Every step leaves the system working. A simplification that needs a rewrite is a proposal for the user, not an edit.
+- **G10 False abstraction.** A deeper module, a new default, or an error defined away must not hide something a caller needs to know or decide. When a caller needs it, it stays visible.
 
 ## The report bar
 
@@ -65,7 +66,7 @@ The list is a short set of wins the user will act on, not a log of everything no
 | Verified dead code, dead config, or a rolled-out flag | Style, naming, formatting, or comment wording |
 | A layer or wrapper that collapses, with the file count | A new abstraction without two or more real consumers today |
 | A same-class sweep: "12 pass-through wrappers in `uploads/`" | The same class drip-fed as 12 separate items |
-| A special case that moves into the shared mechanism | Performance concerns, which are out of scope except under G6 |
+| A special case that moves into the shared mechanism, or out to its one caller | Performance concerns, which are out of scope except under G6 |
 | A closed justification loop, deleted as one unit | Pre-existing noise outside the scope |
 | | UI copy and wording, which are product calls |
 | | Any change to behavior. Note it after the list as an observation, never as a candidate. |
