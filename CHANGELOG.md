@@ -1,5 +1,11 @@
 # Changelog
 
+## v3.12.1
+
+- **`update-skills` discovers available additions.** Refreshes now list missing skills from
+  verified sources and ask which ones to install for each selected agent. Existing skills
+  can still be refreshed while that decision is pending.
+
 ## v3.12.0
 
 - **`code-simplification` gains working rules from *A Philosophy of Software Design*.** The lenses
