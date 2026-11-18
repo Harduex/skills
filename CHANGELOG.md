@@ -1,5 +1,18 @@
 # Changelog
 
+## v3.12.0
+
+- **`code-simplification` gains working rules from *A Philosophy of Software Design*.** The lenses
+  now merge steps split by the order they run, give a default to options every caller passes the
+  same way, collapse an identical error handler wrapped around many calls, and move a special case
+  out to its one caller. The deepening guide adds a test for whether pieces are related enough to
+  merge, and a new guardrail (G10) keeps a deeper module from hiding what a caller needs. On a
+  seeded diff, the new version also caught one caller's branch inside a shared helper, which the
+  old version missed, and added no weak candidates.
+- **`write-design-spec` says what happens to a replaced pattern.** When a design replaces an
+  existing pattern instead of mirroring it, its Key decisions row records whether the old one is
+  migrated in the change or retired by a named follow-up, and which side new code copies meanwhile.
+
 ## v3.11.2
 
 - **`manage-backlog` numbers only the items in the first group of the overview.** The other groups,
