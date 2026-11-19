@@ -1,5 +1,14 @@
 # Changelog
 
+## v3.12.2
+
+- **`code-review` loads the governing skills from every level.** A domain can be governed by a
+  skill installed for all projects and by a narrower one from the project itself. Reviewers loaded
+  only the most specific one, so the broader standards never reached a review. Step 2 now loads
+  both, and the project's rule wins where they disagree. In a replay, one of two reviews then
+  loaded both levels, where earlier reviews loaded only the project's, and it reported no
+  additional style findings.
+
 ## v3.12.1
 
 - **`update-skills` discovers available additions.** Refreshes now list missing skills from
