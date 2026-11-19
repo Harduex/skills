@@ -1,5 +1,17 @@
 # Changelog
 
+## v3.16.0
+
+- **`set-output-style` can learn a style from an interview.** Next to the shipped style and the
+  blank one, a third choice interviews the user with pairs of sample replies. Each pair is
+  written live on the user's own subject and differs in one presentation topic, such as length,
+  opening, layout or how a decision is laid out. The user picks X, Y or "About the same", or
+  writes a note. Two check pairs, with the sides swapped, drop any topic whose pick flips. The
+  style holds only rules the user chose, each worded as the side they picked, plus one example
+  that follows every rule. With fewer than three clear preferences, the skill says so and offers
+  the other styles. Tested with five simulated users of different tastes and subjects, and a
+  blind check that each shown pair differed in one topic only.
+
 ## v3.15.0
 
 - **`set-output-style` ships the replay test as `replay-test.md`.** The self-improvement rule said
