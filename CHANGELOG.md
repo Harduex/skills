@@ -1,5 +1,33 @@
 # Changelog
 
+## v3.13.0
+
+- **`code-review` opens the report with approach findings and lists what was not reviewed.**
+  Findings that question the approach itself (an existing thing to reuse instead, the wrong
+  layer, a new pattern beside an old one) now come first, even when the rest is grouped by
+  module, so they no longer end up at the bottom of the last module. A part that belongs in its
+  own merge request sorts with the rest. The summary gains a short "Not reviewed" item that names
+  the parts where a problem could still hide, so the reader can check them or ask for a deeper
+  review. In a blind replay of one past merge request, the new version found as many useful
+  findings as the old one, with similar noise. A first wording listed six or seven gaps, half of
+  them noise (generated files, empty commits); the final one listed three, all actionable.
+- **`code-review` opens the report with what the change does.** Reports used to start with the
+  reviewed range and a file-based module list, so the reader still had to ask what the merge
+  request was for. A plain summary now says what the change does and why in at most three
+  sentences, or one short bullet per part when the review splits the change, followed by one
+  sentence on what was reviewed. A wrong summary also warns the reader that the findings rest on a
+  misreading. In a replay of a past merge request, the report opened with "Users can now
+  attach PDFs to highlights.", and its findings matched earlier runs.
+- **`address-comments` proposes a code change when a reviewer could not follow the code.** A
+  question such as "why is this needed?" used to get an answer in the thread only, which later
+  readers never see. It is now classified `unclear code`, and the skill proposes the smallest
+  change that answers it in the code (a clearer name or shape, or else a comment that says why),
+  still gated on the author's choice. In a replay of a real thread, the old version replied only;
+  the new one proposed the code change first and kept the reply-only option.
+- **`address-comments` no longer says GitLab's `/discussions` drops bot notes.** The endpoint
+  returns bot reviewer threads (GitLab Duo) like any other; a live check of one merge request
+  returned all six Duo notes.
+
 ## v3.12.3
 
 - **`general-standards` review mode reports only findings with a consequence.** Every rule match
