@@ -10,29 +10,49 @@ Separately, run this for the standard.
 
 1. Load the band checklists below. Also have [VOCABULARY.md](VOCABULARY.md)
    vocabulary tables at hand.
-2. Sweep band by band. A code diff sweeps N → S → M → W → P → C. A document
+2. Bound the audit. When the target is a change (a diff, a branch, a merge
+   request), audit only the lines the change adds or alters. Code the change
+   did not touch is out of scope, unless the change copies that code. When
+   the target is a whole file or document, audit all of it.
+3. Sweep band by band. A code diff sweeps N → S → M → W → P → C. A document
    sweeps N → W → P → D → C, where the N band means terminology rather than
    identifiers. Coverage comes from the bands, not from reviewer taste.
-3. A candidate finding must name the rule ID it violates, or it is dropped.
+4. A candidate finding must name the rule ID it violates, or it is dropped.
    Taste is not a finding.
-4. One confirmed instance → sweep the whole diff for the same class and report
+5. One confirmed instance → sweep the whole diff for the same class and report
    it as one finding listing every site.
-5. Rank findings by severity. Then output in the format below.
+6. Decide each confirmed violation by [Fix or report](#fix-or-report). Then
+   rank the reported findings by severity and output them in the format below.
+
+## Fix or report
+
+The request decides what happens to a confirmed violation:
+
+- **Asked to write, fix, or rewrite the text** (your own change, a self-check
+  before done, a rewrite): fix every confirmed violation.
+- **Asked to review the text and report back** (another author's change or
+  document): report a violation only when the finding names its consequence.
+  The consequence is what a reader or maintainer gets wrong or pays because
+  of the violation. A false comment, a name that claims more than the value
+  holds, the same logic in two places that can drift, and a failure message
+  that hides its impact all qualify. A violation whose only argument is the
+  rule itself stays out of the report.
 
 ## Finding format
 
 `**[F#] [BLOCKER|ISSUE|SUGGESTION] [<ruleID>] path:line — Short title**`
-then one sentence naming the defect, and the suggested fix.
+then one sentence naming the defect and its consequence, and the suggested fix.
 
 Severity semantics (shared with the code-review capability):
 
 - **BLOCKER** — bugs, security, data-loss risk. A W1 severity inflation or
   burial that hides one of these is itself a BLOCKER.
-- **ISSUE** — verified standard violations and divergence from siblings.
+- **ISSUE** — a verified violation with a stated consequence, including a
+  divergence from a sibling.
 - **SUGGESTION** — improvement that still passes the bar.
 
-There is no NITPICK tier: anything that would earn it either maps to a rule
-(then it is an ISSUE/SUGGESTION with that rule ID) or gets dropped.
+There is no NITPICK tier. A violation with no consequence to name is fixed
+when you write the text, and left out when you report on it.
 
 ## Band checklists
 
@@ -138,7 +158,9 @@ There is no NITPICK tier: anything that would earn it either maps to a rule
 | hyphenated cluster | counts as 1 word (D2) |
 | any semicolon in running prose | D3 — always a finding (table cells are out of scope) |
 
-Exceeded + no written justification = ISSUE. Exceeded + stated reason = passes.
+Exceeded + no written justification = a confirmed violation, and
+[Fix or report](#fix-or-report) decides the rest. Exceeded + stated reason =
+passes.
 
 ## Rewrite mode
 

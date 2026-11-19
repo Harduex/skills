@@ -1,6 +1,6 @@
 ---
 name: general-standards
-description: The universal base layer of standards for everything a project authors, code and prose alike, derived from the ASD-STE100 controlled-language specification: a controlled naming vocabulary with a per-project glossary, small imperative units with guard conditions first, severity-accurate errors that state consequences, and a document band covering procedural and descriptive writing, sentence-length counting, punctuation, and cohesion. A project's own coding-standards skill and glossary complement and override it. Use when writing or naming code, authoring comments, docstrings, error messages, logs, or commit messages, writing or rewriting a README, specification, runbook, release note, or any technical document, auditing code or a document against a standard, rewriting someone else's prose into the standard, setting up or extending a project glossary, or when the user mentions coding standards, naming conventions, writing style, documentation style, or controlled vocabulary.
+description: "The universal base layer of standards for everything a project authors, code and prose alike, derived from the ASD-STE100 controlled-language specification: a controlled naming vocabulary with a per-project glossary, small imperative units with guard conditions first, severity-accurate errors that state consequences, and a document band covering procedural and descriptive writing, sentence-length counting, punctuation, and cohesion. A project's own coding-standards skill and glossary complement and override it. Use when writing or naming code, authoring comments, docstrings, error messages, logs, or commit messages, writing or rewriting a README, specification, runbook, release note, or any technical document, auditing code or a document against a standard, rewriting someone else's prose into the standard, setting up or extending a project glossary, or when the user mentions coding standards, naming conventions, writing style, documentation style, or controlled vocabulary."
 ---
 
 # General Standards: One Controlled Language for Code and Prose
@@ -78,8 +78,10 @@ any conflict.
 ## Review, audit, and rewrite modes
 
 Load [REVIEW.md](REVIEW.md). Sweep band by band: N → S → M → W → P → D → C
-(a code diff skips D, and a document skips S and M). A finding must name the rule
-ID it violates or it is dropped. Format:
+(a code diff skips D, and a document skips S and M). For a change, audit only
+the lines it adds or alters. A finding must name the rule ID it violates or it
+is dropped. When you report to another author rather than fix the text, a
+finding also names its consequence, or it stays out of the report. Format:
 
 `**[F1] [ISSUE] [N3] src/billing.ts:42 — Synonym drift: "client" aliases "customer"**`
 
