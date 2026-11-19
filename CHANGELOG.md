@@ -1,5 +1,16 @@
 # Changelog
 
+## v3.12.3
+
+- **`general-standards` review mode reports only findings with a consequence.** Every rule match
+  used to become an issue, so a review returned renames, size splits and abbreviation fixes that
+  the author then dropped. A finding reported to another author now names what a reader gets wrong
+  or pays, or it stays out. Writing, self-checks and rewrites still fix every violation. A review
+  of a change audits only the lines the change adds or alters. In a blind replay of a real review,
+  findings per review fell from 10–13 to 4–8, and every finding stated its consequence. Long
+  comment sentences are no longer reported. The description is now quoted, so strict YAML parsers
+  load the skill.
+
 ## v3.12.2
 
 - **`code-review` loads the governing skills from every level.** A domain can be governed by a
