@@ -22,7 +22,7 @@ The receiving side of code review: turn reviewer feedback on a merge/pull reques
 
 ## Phase 2 — Fetch and inventory
 
-- **No single endpoint returns every comment kind.** GitLab's REST `/discussions` silently omits bot reviewer notes; GitHub splits feedback across inline review comments, review summaries, and conversation comments. Sweep the forge's full set (per-forge cookbook in [REFERENCE.md](REFERENCE.md)) and reconcile your inventory against the MR/PR's visible comment count before concluding "no comments".
+- **On GitHub, no single endpoint returns every comment kind**: feedback is split across inline review comments, review summaries, and conversation comments. GitLab's REST `/discussions` returns every thread, bot reviewer notes included. Sweep the forge's full set (per-forge cookbook in [REFERENCE.md](REFERENCE.md)) and reconcile your inventory against the MR/PR's visible comment count before concluding "no comments".
 - Inventory every unresolved thread plus general non-threaded notes, honoring any author filter the user gave. Skip system/activity notes. Note per item: author, file:line anchor, resolved state, and the thread/comment ID needed for replying.
 
 ## Phase 3 — Validate each comment

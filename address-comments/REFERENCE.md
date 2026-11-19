@@ -13,7 +13,7 @@ glab mr view <iid> --unresolved   # only unresolved discussions
 glab mr note list <iid> -F json   # all discussions as JSON (despite the name, each element is a discussion with .notes[])
 ```
 
-- **Trap: the REST `/discussions` endpoint omits bot reviewer notes** (GitLab Duo). Use the commands above for coverage; use the API only for anchors/IDs, and reconcile counts between the two.
+- The REST `/discussions` endpoint returns every thread, bot reviewer notes (GitLab Duo) included, and carries the anchors and IDs that replies need. Reconcile its count with `glab mr view --comments` before reporting a total.
 - **Trap: `glab api --paginate` concatenates JSON arrays** (`[…][…]`). Merge before parsing:
 
 ```bash
