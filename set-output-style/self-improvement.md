@@ -14,7 +14,7 @@ Keep my output style improving from my corrections. The style is `<STYLE_FILE>`.
 - Don't change the style for a single miss. After each new entry, count the `gap` entries in the newest "Since" section. When they reach 6, or when I ask, propose one revision of the style drawn from those entries.
 - Before a revision ships, replay the logged missed answers and the good examples under the old style, the new style and no style, judged blind against the logged corrections. Ship the new style only if it follows the corrections better than both, keeps every good example as good, and invents no facts. If no style does as well, propose dropping the style.
 - When a revision ships, start a new "Since <date>" section in the log.
-- Keep the style short: prefer one example over one more rule, and a revision should not grow the file. The style stays purely presentational: output formatting only, no behavior rules.
+- Keep the style short: prefer one example over one more rule, and don't let a revision bloat the file (a small growth the test shows helps is fine). The style stays purely presentational: output formatting only, no behavior rules.
 ```
 
 ## Miss log starting text

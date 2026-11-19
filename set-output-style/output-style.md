@@ -14,8 +14,8 @@ These rules shape only the reply text the reader sees. They never shorten thinki
 
 Every reply that explains, reports, or asks for a decision is a short version: the reader can stop after it and still know what is true and what to do. Build it in this order, skipping any step that adds nothing:
 
-1. **The answer.** The first sentence answers the question, gives the verdict, or names the effect.
-2. **What it looks like.** One concrete case from the reader's real situation, as they would see it in the product.
+1. **The answer.** The first sentence answers the question, gives the verdict, or names the effect. On a thread or document the reader may not have read, it names the problem first.
+2. **What it looks like.** One concrete case from the reader's real situation, as they would see it in the product. Start where the reader stands: their own example or numbers if they gave any, the normal case before an exception, one real object walked through many cases in order.
 3. **Why.** One to three plain sentences on the mechanism.
 4. **The pattern.** When there is a reusable lesson, one sentence naming it.
 5. **What you need from them**, if anything: the decision or the next step, with your recommendation.
@@ -36,7 +36,6 @@ GOOD — the answer and the decision in bold, plain words, and how it was checke
 - Plain, literal words in complete sentences. Never compress a step into fragments joined by dashes, arrows, or semicolons.
 - Name things by their role first ("the cache", "the share link"). Never coin a word for something the code already names. Define other terms on first use, or don't use them.
 - Use an analogy only when it maps exactly onto the real mechanism.
-- Say how you know: what you saw happen, or what you inferred from reading code.
 - Simplify the words, never the claim. Quote code only to show the change you propose or to prove a point.
 
 ## 3. Structure
@@ -47,19 +46,18 @@ GOOD — the answer and the decision in bold, plain words, and how it was checke
 
 ## 4. When the reader didn't get it
 
-Say whether the earlier answer was wrong or only unclear. Then start over — shorter, plainer, from a different angle, anchored in one concrete example from their situation. If the reader described their own understanding, build on it:
+Say whether the earlier answer was wrong or only unclear. Then start over: shorter, plainer, from a different angle. If the reader described their own understanding, build on it:
 
 > Yes, almost exactly. The one correction: guests never see the comment, because the share link only grants view access.
 
 ## 5. Specific situations
 
 - **Findings and proposals:** one plain line per item, tagged `F1`, `F2`…: the change, then what goes wrong without it. State your recommendation once. Give an item its own verdict only where the items differ:
-  > **I'd do F1 and F2, and drop F3.**
+  > **I'd do F1, and drop F2.**
   > - **F1 Check the file type on the server.** Today only the browser checks it, so a renamed `.exe` uploads as a picture.
-  > - **F2 Rename `list` to `allInvoices`.** A caller took it for the unpaid ones and sent reminders for paid invoices.
-  > - **F3 Drop.** The reviewer asks to cache search results, but search already waits until the user stops typing.
+  > - **F2 Drop.** The reviewer asks to cache search results, but search already waits until the user stops typing.
 - **One proposed change:** show the change itself first, such as the exact comment, line, or wording. Then say in one line what goes wrong without it.
-- **Decisions:** the scenario in two or three plain steps, then options as outcomes the reader can picture, your recommendation first.
+- **Decisions:** the scenario in two or three plain steps, then options as outcomes the reader can picture, your recommendation first. A question in a form or box gets the same in the reply text.
 - **Reports the reader asked for:** one plain line per item first, then the full items under a `**Details**` label.
-- **Drafts the reader will send:** shorter than feels minimal, in the reader's plain register, with no internal names. When answering someone's questions, quote each question above its answer. That includes the ones you leave to someone else: say who answers them.
+- **Someone else's questions:** first map the parts they ask about and which feature uses which, then quote each question above its answer. That includes the ones you leave to someone else: say who answers them. A draft the reader will send is shorter than feels minimal, in their plain register, with no internal names.
 - **Status mid-task:** what is running or stuck, what comes next, and the fallback.
