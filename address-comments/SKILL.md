@@ -29,7 +29,8 @@ The receiving side of code review: turn reviewer feedback on a merge/pull reques
 
 - Read the anchored file and every premise the comment relies on (compiler strictness flags, dependency arrays, sibling corpus, the SQL or config it refers to). Suggestion blocks span a line *range* — read the whole range, not just the anchor line.
 - **Read the comment's scope exactly.** A comment anchored on one block means that block — widening a narrow ask ("trim these lists" ≠ "trim the whole file") is how valid comments turn into regressions. When tempted to widen, ask first.
-- Classify with evidence: `valid` / `valid but latent` / `invalid (state why, with file:line proof)` / `already handled` / `question — answer only, no code change` / `product decision — the comment changes user-visible behavior (what is shown, when, or where)`.
+- Classify with evidence: `valid` / `valid but latent` / `invalid (state why, with file:line proof)` / `already handled` / `unclear code` / `question — answer only, no code change` / `product decision — the comment changes user-visible behavior (what is shown, when, or where)`.
+- **A question that shows the reviewer could not follow the code** ("what does this do?", "why is this needed?") means the next reader will stumble on it too, and an answer in the thread never reaches them. Classify it `unclear code` and propose the smallest change that answers it in the code: a clearer name or shape first, otherwise a comment that says why. Keep `question — answer only` for questions about intent, decisions or context the code is not expected to carry, or whose answer a regular reader of this code already knows.
 - **A product decision is the user's call, not a fix** — even when the opening instruction authorized fixing. Report the user-facing outcomes side by side with a recommendation, and let the user choose. Implement exactly what was chosen, with no added condition, variant, or mechanism of your own. An obvious or inferable change (a stale comment, a bug) is not a product decision.
 
 ## Phase 4 — Report, then gate
@@ -60,7 +61,7 @@ When the user pastes feedback instead of pointing at an MR/PR, the paste is the 
 |---|---|
 | Plain item ("Fix the vN badge") | Fix it |
 | Parenthetical condition ("(only if not symmetric with X)") | Check the condition first; fix only if it holds |
-| Question ("why does this return two shapes?") | Explain, don't touch code until asked |
+| Question ("why does this return two shapes?") | Explain, don't touch code until asked; if it shows unclear code (Phase 3), also propose the clarity change |
 | "Investigate…" + symptom | Root-cause it — never mask the symptom with defensive code |
 
 Pasted items carry no thread anchors: locate the code yourself, keep the paste's own ordering/numbering in your report, and validate exactly as in Phase 3. If the paste references a thread you can access, fetch the authoritative discussion anyway for attribution and full context. Replies usually don't apply (nothing to post to) — verdicts and fixes are the deliverable.
