@@ -1,5 +1,19 @@
 # Changelog
 
+## v3.14.0
+
+- **`set-output-style` ships Scannable Answers v4.6: the problem first, a map of the parts, and
+  the reader's own case.** On a thread or document the reader may not have read, the reply's
+  first sentence names the problem. The concrete example starts where the reader stands: their
+  own example or numbers, the normal case before an exception, or one real object walked through
+  many cases. Someone else's questions get a map of the parts before the answers, and a decision
+  asked in a form or box is also explained in the reply text. In a blind replay with two rewrites
+  and two judges per style, v4.6 won 12 of 32 verdicts on logged misses against 8 for v4.5 and 2
+  for no style, and tied v4.5 on replies that had already landed. The rule about the reader's own
+  case needs new content, so a presentation-only replay could not test it.
+- **The style may grow a little when the test shows it helps.** The self-improvement rule now
+  says not to bloat the file, instead of never growing it.
+
 ## v3.13.0
 
 - **`code-review` opens the report with approach findings and lists what was not reviewed.**
