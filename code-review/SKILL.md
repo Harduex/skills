@@ -225,6 +225,8 @@ Suggested fix (if you have one).
 
 Prefix each finding with a short stable ID (`F1`, `F2`, …) so the user can answer by id and ask follow-up questions about a specific finding without re-quoting it.
 
+**Order.** Open the report with the findings that question the approach itself: an existing thing the change should reuse instead, logic in the wrong layer, or a new pattern beside an old one (Step 2.6 and the Design and Migration disposition dimensions of Step 5). A part that belongs in its own merge request is about scope, not approach, so it sorts with the rest. Approach findings stay at the top even when the rest is grouped by module. List the rest by severity, BLOCKER first. The order decides only where a finding appears; every finding still has to pass the report bar.
+
 Severity levels:
 - **BLOCKER** — Must fix before merge. Bugs, security issues, data loss risk.
 - **ISSUE** — Should fix. Verified design problems, behavior divergence from siblings, dead weight.
@@ -266,5 +268,6 @@ End the review with:
 1. **Verdict**: Approve, Request Changes, or Needs Discussion
 2. **One-line summary**: What this change does well and what needs attention
 3. **Risk assessment**: Low / Medium / High — based on blast radius and confidence in test coverage
+4. **Not reviewed**: the parts of this change where a problem could still hide because you did not review them or could not check them, such as behavior you could not run or an area you could not judge. Leave out what needs no review (generated code, empty commits) and how you read the diff. Usually one to three items; write "None" when nothing qualifies. The reader uses this list to check those parts or to ask for a deeper review of them.
 
 For the full security checklist and review psychology guidelines, see [REFERENCE.md](REFERENCE.md).
