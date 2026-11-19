@@ -1,5 +1,17 @@
 # Changelog
 
+## v3.15.0
+
+- **`set-output-style` ships the replay test as `replay-test.md`.** The self-improvement rule said
+  to replay a revision blind, but not how, so each revision rebuilt the method. The new file walks
+  through sorting the logged misses, building cases from the transcripts, a regression set of
+  replies that landed, two rewrites per style, blind judges with the user's own corrections as
+  requirements, and up to six blind pairs that the user judges. It also lists the test's limits.
+  It was written from the round that produced Scannable Answers v4.6.
+- **The miss log skips tired misses.** Before logging, the rule now checks that the first reply
+  really lacked what the re-explanation gave. In the v4.6 round, one of nineteen logged misses
+  turned out to be a reply that already had the answer.
+
 ## v3.14.0
 
 - **`set-output-style` ships Scannable Answers v4.6: the problem first, a map of the parts, and
