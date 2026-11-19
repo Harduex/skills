@@ -214,6 +214,8 @@ A typical branch review should deliver **~5–10 findings**. If you have more th
 
 ### Format
 
+**Open with the change.** Before the findings, say what the change does and why, in the terms a user or caller would notice; how it is built belongs in the findings. Keep it to at most three sentences; a change you split into parts gets one short bullet per part instead. Then say in one sentence what you reviewed: the merge request or range, its size, and the parts if you split it. If you could not tell what the change is for, say so; that is worth asking the author.
+
 Structure every finding as:
 
 ```
@@ -225,7 +227,7 @@ Suggested fix (if you have one).
 
 Prefix each finding with a short stable ID (`F1`, `F2`, …) so the user can answer by id and ask follow-up questions about a specific finding without re-quoting it.
 
-**Order.** Open the report with the findings that question the approach itself: an existing thing the change should reuse instead, logic in the wrong layer, or a new pattern beside an old one (Step 2.6 and the Design and Migration disposition dimensions of Step 5). A part that belongs in its own merge request is about scope, not approach, so it sorts with the rest. Approach findings stay at the top even when the rest is grouped by module. List the rest by severity, BLOCKER first. The order decides only where a finding appears; every finding still has to pass the report bar.
+**Order.** List first the findings that question the approach itself: an existing thing the change should reuse instead, logic in the wrong layer, or a new pattern beside an old one (Step 2.6 and the Design and Migration disposition dimensions of Step 5). A part that belongs in its own merge request is about scope, not approach, so it sorts with the rest. Approach findings stay at the top even when the rest is grouped by module. List the rest by severity, BLOCKER first. The order decides only where a finding appears; every finding still has to pass the report bar.
 
 Severity levels:
 - **BLOCKER** — Must fix before merge. Bugs, security issues, data loss risk.
