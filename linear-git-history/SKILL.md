@@ -90,7 +90,7 @@ Also: final tip passes typecheck + lint, and no `fixup!`/`WIP` subjects remain.
 Hold for the user's explicit approval. Record the pre-push remote tip first, then:
 
 ```bash
-git push --force-with-lease           # never --force; never to main
+git -C <repo-path> push --force-with-lease origin HEAD:<branch>   # never --force; never to main
 ```
 
 Re-verify the remote: `git fetch`, then `git diff <pre-push-remote> origin/<branch>` empty and tree hashes equal. The pre-push tip is recoverable via `origin/<branch>@{1}` in the reflog.

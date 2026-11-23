@@ -101,10 +101,10 @@ If `git diff` is non-empty, something was lost or doubled during the rebase. Inv
 Only after step 5 passes, hand the user the exact command and let them run it — a force-push rewrites published history, so it is never yours to run:
 
 ```bash
-git push --force-with-lease
+git -C <repo-path> push --force-with-lease origin HEAD:<branch>
 ```
 
-Use `--force-with-lease`, never `--force`. Never force-push to `main`; warn the user if they ask for it on a shared branch.
+Name the repository with `-C` and the branch with an explicit refspec: the user's terminal may sit in another repository, and a bare `git push` acts on whichever folder it runs in. Use `--force-with-lease`, never `--force`. Never force-push to `main`; warn the user if they ask for it on a shared branch.
 
 ## Red flags
 
