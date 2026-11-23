@@ -1,5 +1,14 @@
 # Changelog
 
+## v3.16.1
+
+- **Force-push commands handed to the user name their repository.** `distribute-fixups` and
+  `linear-git-history` now give `git -C <repo-path> push --force-with-lease origin HEAD:<branch>`
+  instead of a bare `git push --force-with-lease`. A bare push acts on whichever folder the
+  user's terminal is in, and in a session that spans several repositories that folder can be
+  another repository: one such push created a stray branch there and left the intended branch
+  unpushed. `AGENTS.md` gains the same working rule for every command handed over.
+
 ## v3.16.0
 
 - **`set-output-style` can learn a style from an interview.** Next to the shipped style and the
