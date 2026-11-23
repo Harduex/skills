@@ -1,6 +1,6 @@
 ---
-name: designing
-description: Designs user experiences — user flows, wireframes, interaction states, component behavior specs, and UX critique. Use when mapping a user journey, wireframing a screen, defining a component's interaction/empty/error states, evaluating usability, or critiquing an existing UX; for concrete styling/tokens, use the project's design-system skill if one exists.
+name: designing-ux
+description: Designs user experiences — user flows, wireframes, interaction states, component behavior specs, and UX critique. Use when mapping a user journey, wireframing a screen, defining a component's interaction/empty/error states, evaluating usability, or critiquing an existing UX. Not for system or software architecture. For concrete styling/tokens, use the project's design-system skill if one exists.
 ---
 
 # Product Design

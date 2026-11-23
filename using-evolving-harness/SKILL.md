@@ -14,7 +14,7 @@ Do not merge phases.
 | Phase | Owning skill | Enter when | Exit gate |
 |---|---|---|---|
 | 1. Frame | idea-to-plan | Raw idea or vague request | Human approves the plan outline |
-| 2. Design | designing / architecting -> write-design-spec | Approved outline | Human approves the design spec |
+| 2. Design | designing-ux / architecting -> write-design-spec | Approved outline | Human approves the design spec |
 | 3. Plan | planning | Approved design spec | Task list with verification steps exists |
 | 4. Test-first | write-test-cases | Plan approved | Failing tests exist for the first task |
 | 5. Build | autonomous-build-loop (debugger on failure) | Failing tests exist | verify-before-done passes |
