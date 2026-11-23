@@ -1,5 +1,20 @@
 # Changelog
 
+## v4.0.0
+
+- **`designing` is now `designing-ux` (breaking).** The skill covers user flows, wireframes,
+  interaction states and UX critique. Next to `architecting`, a bare "designing" read as system
+  design too. Its description now also says it is not for system or software architecture.
+  Invoke it as `designing-ux`.
+- **New `prototyping-ui` skill (delivery-lifecycle).** On request, the agent builds a few
+  structurally different versions of a screen or component in one offline HTML file. The user
+  picks one, or combines parts, and the same file is refined round by round until one settled
+  design is left, with its decisions listed on the page. The file then goes on the ticket as
+  context for the agent that implements it. It loads when the user asks in plain words and
+  never starts unasked: `designing-ux` offers it once, and `write-a-ticket` and
+  `explaining-visually` send prototype work to it. A fresh agent was run on five routing
+  prompts and a four-round loop, and the gaps it found were folded in.
+
 ## v3.16.1
 
 - **Force-push commands handed to the user name their repository.** `distribute-fixups` and
