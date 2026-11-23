@@ -1,6 +1,6 @@
 ---
 name: explaining-visually
-description: Decides when an answer needs a visual explanation — one self-contained HTML page with a labelled diagram, a step-through, or a slider explorable that the user opens in a browser — and writes that page. Use when the user asks to see, visualize, diagram, chart, animate, or play with something; when the user still does not understand after a text re-explanation of the same point; or when an answer's core is change over time, a what-if between interacting quantities, or a spatial layout that a Markdown table or a short ASCII sketch cannot carry. Not for requests to build an HTML page, site, or component as a deliverable, and not for facts, definitions, yes/no answers, commands, code to copy, or comparisons a short Markdown table covers.
+description: Decides when an answer needs a visual explanation — one self-contained HTML page with a labelled diagram, a step-through, or a slider explorable that the user opens in a browser — and writes that page. Use when the user asks to see, visualize, diagram, chart, animate, or play with something; when the user still does not understand after a text re-explanation of the same point; or when an answer's core is change over time, a what-if between interacting quantities, or a spatial layout that a Markdown table or a short ASCII sketch cannot carry. Not for requests to build an HTML page, site, component, or design prototype as a deliverable, and not for facts, definitions, yes/no answers, commands, code to copy, or comparisons a short Markdown table covers.
 ---
 
 # Explaining Visually
@@ -9,7 +9,7 @@ Text is the default. A page is a second channel for the few answers whose core i
 
 ## The gate — in order, stop at the first match
 
-1. **Text only** when the user prefers text; when they asked for an HTML page, site, or component as a deliverable (that is a normal build task); or when the answer is a fact, definition, yes/no, opinion, command, or code to copy.
+1. **Text only** when the user prefers text; when they asked for an HTML page, site, or component as a deliverable (that is a normal build task; a design mockup or prototype belongs to your set's UI-prototype skill); or when the answer is a fact, definition, yes/no, opinion, command, or code to copy.
 2. **Page** when the user asks to see, visualize, diagram, chart, animate, simulate, or play with it.
 3. **Page on the second miss** of the same point. A miss is a sign that a point has not landed: "I don't get it", "still confused", "what?", the same question rephrased, or a follow-up that repeats the misconception. "I keep mixing up X" counts as one miss. Aim the page at the step that is not landing.
 4. **Page, proactively,** when the core is change over time or a sequence of states (a step-through the user advances), a what-if between interacting quantities (sliders with live results), or a spatial layout (a labelled diagram), and a static table or short ASCII sketch can't show it because the user would need to vary an input, step through states, or see positions. You must be able to say what the page shows that text can't.

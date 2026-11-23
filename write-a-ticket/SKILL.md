@@ -12,6 +12,7 @@ description: Write a ticket someone else can act on — a story, a bug report, a
 Before writing a section, ask what already owns that detail.
 
 - **A spec, design doc or ADR owns the contract** → state the outcome, link the document, stop. Do not restate the design.
+- **A prototype owns the look and the interaction** → attach the page, say in one line what it settles ("Prototype: the settled layout and its states; match its behaviour with the project's components"), and keep the ticket to outcome and acceptance criteria. Do not describe the UI in prose beside it. Your set's UI-prototype skill builds the page.
 - **A merge request will own the implementation** → say what to build and how you will know it works, not which functions to touch.
 - **Nothing owns it.** A defect found in production, a security hole, a reproduction that took real effort → **the ticket is the record.** Evidence belongs in it: exact endpoints, versions, requests, observed responses, root cause. Density is correct here.
 

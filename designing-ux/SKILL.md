@@ -22,6 +22,7 @@ Adapt to the need:
 - **Wireframes** — low-fidelity layout descriptions with element placement and hierarchy
 - **Component specs** — interactive elements with all states, transitions, and edge cases
 - **Design critique** — evaluation of existing designs with specific improvement recommendations
+- **Clickable prototype** — when a design is easier to show than to describe, offer one in a single line, once per conversation and not again if declined; your set's UI-prototype skill builds it if the user says yes
 
 ## Example: Component spec
 
