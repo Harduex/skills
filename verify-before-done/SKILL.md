@@ -1,6 +1,6 @@
 ---
 name: verify-before-done
-description: Use before claiming any implementation is done, fixed, complete, or passing — and before committing or handing work over for testing. Green typecheck/lint is not verification; the changed behavior must be exercised and the evidence shown.
+description: Use before claiming any implementation is done, fixed, complete, or passing, before committing or handing work over for testing, and when a code review has to exercise someone else's change and try to break it. Green typecheck/lint is not verification; the changed behavior must be exercised and the evidence shown.
 ---
 
 # Verify Before Done
@@ -18,7 +18,7 @@ Before saying done / fixed / implemented / passing, or committing a nontrivial c
    - CLI/script → run the real command on real input
    - Behavior that depends on stored data → also check production-like data shapes (a read-only query on a shared environment), not only local fixtures
    - A missing login, second user or test runner is a lookup task first: find the project's test accounts, fixtures and seeding tools before you ask the human
-3. **Then try to break it** — once the main flow works, use it the way a careless user would: empty, oversized or invalid input; a second user or another role; repeating or interrupting the action (double click, refresh, back, a retried request). Scale the effort to the change. Anything that breaks is a finding: fix it, or report it instead of calling the change done.
+3. **Then try to break it** — once the main flow works, use it the way a careless user would, with cases the existing tests do not cover: empty, oversized or invalid input; a second user or another role; repeating or interrupting the action (double click, refresh, back, a retried request). Scale the effort to the change. Anything that breaks is a finding: fix it, or report it instead of calling the change done.
 4. **Show the evidence** — paste the test output, the observed behavior, the response body. A claim without its evidence is a hypothesis.
 
 ## Where the evidence goes
