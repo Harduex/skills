@@ -96,7 +96,7 @@ Follow these steps in order. Do not skip steps.
 
 Read commit messages (`git log main..HEAD`) or ask the user what the change is trying to accomplish. A review without understanding intent is just pattern matching.
 
-If the branch, commits, or MR reference a tracker issue (e.g. Jira `CLOUD-1234`), fetch that issue and read its **acceptance criteria** — that is the ground-truth definition of intent, and it lets you check the diff against what was actually asked for (missing ACs are a common defect class the code alone won't reveal).
+If the branch, commits, or MR reference a tracker issue (e.g. Jira `PROJ-1234`), fetch that issue and read its **acceptance criteria** — that is the ground-truth definition of intent, and it lets you check the diff against what was actually asked for (missing ACs are a common defect class the code alone won't reveal).
 
 ### 2. Read full files, not just diffs
 
@@ -153,6 +153,8 @@ Discover the project's lint, typecheck, and build commands from its `package.jso
 
 Report tool results but focus your review on what tools *cannot* catch.
 
+**Exercise it.** When the change can affect what a user or caller sees, drive it and try to break it with your set's workflow for verifying a change before calling it done, scaled to the change. What breaks is a finding; a flow you could not run goes in **Not reviewed**. When a surrounding loop has its own verify phase, leave this to that phase.
+
 ### 5. Evaluate the change across these dimensions
 
 - **Correctness**: Edge cases, null/undefined handling, race conditions, error propagation, async/await correctness
@@ -168,6 +170,10 @@ Report tool results but focus your review on what tools *cannot* catch.
 Collect the candidate findings, then dispatch **one separate verification subagent whose only job is to disprove them**. For each finding it runs the exact command that would falsify the claim — a grep for the symbol, `git log`/`git blame` on the line, reading the full function or the SQL body, a `psql` query, the tracker API — and reports the raw output. It never fixes code and never adds findings. Drop every finding the verifier cannot reproduce. Each surviving finding carries the command that proves it as an `Evidence:` line under the description.
 
 Stale facts, misread siblings, and wrong identifiers (a cloud id, a table name, a helper's real behavior) are the defect class this step exists for: a reviewer that asserts from memory is confidently wrong roughly a third of the time, and the author pays for every bogus finding in trust.
+
+### 7. Make sure the whole change was reviewed
+
+Review the whole change unless the user asked for only part of it. Before delivering, go through the changed files and the checks from Step 4, and review anything you skipped. What you still could not review, because a tool failed, access was missing or a check could not run, goes in the summary's **Not reviewed** item.
 
 ### Project-specific red flags
 
@@ -270,6 +276,6 @@ End the review with:
 1. **Verdict**: Approve, Request Changes, or Needs Discussion
 2. **One-line summary**: What this change does well and what needs attention
 3. **Risk assessment**: Low / Medium / High — based on blast radius and confidence in test coverage
-4. **Not reviewed**: the parts of this change where a problem could still hide because you did not review them or could not check them, such as behavior you could not run or an area you could not judge. Leave out what needs no review (generated code, empty commits) and how you read the diff. Usually one to three items; write "None" when nothing qualifies. The reader uses this list to check those parts or to ask for a deeper review of them.
+4. **Not reviewed**: the parts of this change where a problem could still hide because you did not review them or could not check them, such as behavior you could not run or an area you could not judge. Leave out what needs no review (generated code, empty commits), parts the user left out of scope, and how you read the diff. Usually one to three items; leave the item out when nothing qualifies. The reader uses this list to check those parts or to ask for a deeper review of them.
 
 For the full security checklist and review psychology guidelines, see [REFERENCE.md](REFERENCE.md).
