@@ -153,7 +153,9 @@ Discover the project's lint, typecheck, and build commands from its `package.jso
 
 Report tool results but focus your review on what tools *cannot* catch.
 
-**Exercise it.** When the change can affect what a user or caller sees, drive it and try to break it with your set's workflow for verifying a change before calling it done, scaled to the change. What breaks is a finding; a flow you could not run goes in **Not reviewed**. When a surrounding loop has its own verify phase, leave this to that phase.
+### 4.5 Exercise the change and try to break it
+
+The checks above and the author's tests show only what the author thought to check. When the change can affect what a user or caller sees, load your set's workflow for verifying a change before calling it done. Run its exercise and break steps on this change yourself, scaled to the change. What breaks is a finding; a flow you could not run goes in **Not reviewed**. When a surrounding loop has its own verify phase, leave this to that phase.
 
 ### 5. Evaluate the change across these dimensions
 
@@ -173,7 +175,7 @@ Stale facts, misread siblings, and wrong identifiers (a cloud id, a table name, 
 
 ### 7. Make sure the whole change was reviewed
 
-Review the whole change unless the user asked for only part of it. Before delivering, go through the changed files and the checks from Step 4, and review anything you skipped. What you still could not review, because a tool failed, access was missing or a check could not run, goes in the summary's **Not reviewed** item.
+Review the whole change unless the user asked for only part of it. Before delivering, go through the changed files and the checks from Steps 4 and 4.5, and review anything you skipped. What you still could not review, because a tool failed, access was missing or a check could not run, goes in the summary's **Not reviewed** item.
 
 ### Project-specific red flags
 
