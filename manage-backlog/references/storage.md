@@ -24,7 +24,8 @@ The canonical skill contains no populated records.
 | `trackers.<id>` | A short slug that names the tracker, for example `team-jira` or `app-roadmap` |
 | `trackers.<id>.type` | Tracker kind, for example `jira`, `notion`, `linear`, `github`, `roadmap-file` |
 | `trackers.<id>.connection` | The service the tracker lives on (site URL or workspace id, database id, or file path), plus the kind of connector or CLI that reached it. Tool names differ between agents, so do not store them |
-| `trackers.<id>.scope_query` | The query for open, not-started items in scope, in the tracker's own syntax. For a file: a plain rule, such as "entries whose status is todo" |
+| `trackers.<id>.scope_query` | The query for every open item in scope, both not started and in progress, in the tracker's own syntax. For a file: a plain rule, such as "entries whose status is not done" |
+| `trackers.<id>.in_progress_statuses` | The statuses, or the status category, that mean an item is in progress. Every other open status means not started |
 | `trackers.<id>.ownership` | `personal` or `shared` |
 | `trackers.<id>.ranking_home` | `tracker` or `decisions`, as the user agreed |
 | `trackers.<id>.close` | Statuses, transitions, and resolution names needed to close an item |
@@ -46,4 +47,4 @@ A worktree or a second clone matches by its remote.
 | `trackers.<id>.ranking[]` | `{key, tier, decided_at}` in the user's order, where `tier` is the group name. Only when `ranking_home` is `decisions` |
 | `trackers.<id>.notes.<key>` | `{text, added_at}`: a note the user attached to an item, such as a deferral reason |
 | `trackers.<id>.last_run.at` | Time of the last overview |
-| `trackers.<id>.last_run.items[]` | `{key, status, tier, sprint}` for each item that the last overview showed. `sprint` is the sprint or iteration name, or `null` |
+| `trackers.<id>.last_run.items[]` | `{key, status, tier, sprint}` for each item that the last overview showed, items in progress included. `tier` is the group name, or `In progress`. `sprint` is the sprint or iteration name, or `null` |

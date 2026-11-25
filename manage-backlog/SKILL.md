@@ -31,6 +31,7 @@ Never write state inside the skill folder or the skill repository.
 2. If nothing reaches the tracker, tell the user how to connect it, then stop. Never scrape a web page or drive a browser instead.
 3. If the connector reaches several sites or workspaces, ask which one.
 4. Check the saved query against the live tracker before use. If a detail fails, rediscover only that detail. Set `verified_at` when the check passes.
+5. If the saved query leaves out items in progress, widen the query to every open item in scope. Show the user the new query and its result count before you save the query.
 
 ## 3. Setup (first run in a folder)
 
@@ -38,7 +39,8 @@ Never write state inside the skill folder or the skill repository.
 2. Reach the tracker as section 2 says.
 3. For a repository roadmap, adopt the existing roadmap file and keep its format. If none exists, offer to create `docs/ROADMAP.md`: one entry per item, with a stable ID, a status, and a group. A roadmap file is its own ranking home: the order of its entries is the ranking. If the roadmap separates approved work from proposed or deferred ideas, triage only the approved, not-started entries.
 4. Discover these details from the tracker, then show them to the user and confirm:
-   - the query for open, not-started items in scope (default: assigned to the user), with its result count
+   - the query for every open item in scope, both not started and in progress (default: assigned to the user), with its result count
+   - the statuses that mean an item is in progress. Every other open status means not started.
    - how to close an item: statuses, transitions, and required resolutions
    - the link format for one item (for a file: an anchor in the file, through the repository URL when a remote exists)
    - the code repositories where the work lands (propose candidates from local git history)
@@ -50,13 +52,17 @@ Never write state inside the skill folder or the skill repository.
 ## 4. Overview
 
 1. Fetch the live list with the saved query.
-2. Group the items by the saved ranking. Put unranked items under **New**. Skip empty groups.
-3. Show one line per item: the link, then a plain summary. Number the items in the user's first group, because that order says what to start next. Use bullets in every other group, including **New**.
-4. Add "Changed since last run": new items, items gone with their new status, and items moved into the current sprint or iteration.
-5. Before you remove a gone item from the ranking, look it up by its key. If the item is still open, the saved query is stale: recheck the query and keep the ranking. Remove only items that are closed or deleted.
-6. Save `last_run`.
+2. Show the items in progress first, under **In progress**, with the status of each. This group has no ranking.
+3. Group the not-started items by the saved ranking. Put unranked items under **New**. Skip empty groups.
+4. Show one line per item: the link, then a plain summary. Number the items in the first group of the ranking, because that order says what to start next. Use bullets in every other group, including **In progress** and **New**.
+5. Add "Changed since last run": new items, started items, items gone with their new status, and items moved into the current sprint or iteration.
+6. Before you remove a gone item from the ranking, look it up by its key. If the item is still open, the saved query is stale: recheck the query and keep the ranking. Remove only items that are closed or deleted.
+7. Save `last_run`.
 
 ```
+**In progress**
+- [PROJ-8](https://tracker.example/PROJ-8) Add audit logging (In Review)
+
 **Do next**
 1. [PROJ-12](https://tracker.example/PROJ-12) Add a dark mode toggle
 2. [PROJ-15](https://tracker.example/PROJ-15) Export reports as CSV (needs PROJ-12)
@@ -65,7 +71,8 @@ Never write state inside the skill folder or the skill repository.
 - [PROJ-21](https://tracker.example/PROJ-21) Fix the date format on invoices
 
 **Changed since last run**
-- [PROJ-9](https://tracker.example/PROJ-9) moved to Code Review, off the list
+- [PROJ-8](https://tracker.example/PROJ-8) started, now In Review
+- [PROJ-9](https://tracker.example/PROJ-9) moved to Done, off the list
 ```
 
 ## 5. Triage
@@ -76,7 +83,7 @@ Never write state inside the skill folder or the skill repository.
    - Call an item done only after someone saw the change work: the user, or you by running or driving the changed behavior.
    - If a lead exists but nobody saw the change work, list the item as "looks done, needs a look". Say which items you checked.
 2. Bring evidence to the ranking, not a formula: the current sprint, blockers, dependencies, waiting on others, age, and past decisions (in `decisions.json` and in your memory, if you have one).
-3. Propose a ranking. Apply the user's changes exactly. The user's order wins over yours.
+3. Propose a ranking of the not-started items. Apply the user's changes exactly. The user's order wins over yours.
 4. Save the agreed ranking to `decisions.json` or the roadmap file. Agreeing to the ranking is the yes for that save. Save the notes that the user agreed to, with their item keys.
 
 ## 6. Writes
