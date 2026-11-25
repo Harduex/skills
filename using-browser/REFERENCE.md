@@ -6,6 +6,8 @@ Run each snippet with the browser tool's script-evaluation action.
 - [React-controlled inputs](#react-controlled-inputs)
 - [Contenteditable editors (Lexical)](#contenteditable-editors-lexical)
 - [Reading React state from the fiber](#reading-react-state-from-the-fiber)
+- [Drag and drop](#drag-and-drop)
+- [Slowing one request](#slowing-one-request)
 - [Touch emulation](#touch-emulation)
 - [Throttling WebRTC media](#throttling-webrtc-media)
 
@@ -67,6 +69,42 @@ for (; f; f = f.return) {
 ```
 
 It shows a context provider's value, a parent's hook state, or a prop that arrives `undefined` because the query that feeds it left a field out.
+
+## Drag and drop
+
+The browser fires `drop` only on a target whose last `dragover` handler called `preventDefault()`. When a drag ends with `dragend` and no `drop`, the target refused the drop; the tool did not fail. A tool's drag action runs the whole gesture in one call. To act in the middle of a drag (refetch the page, change the data from another tab), fire the events yourself and pass one `DataTransfer` through all of them:
+
+```js
+const dt = new DataTransfer();
+const fire = (el, type) =>
+  el.dispatchEvent(new DragEvent(type, { bubbles: true, cancelable: true, dataTransfer: dt }));
+
+fire(source, 'dragstart');
+// change the page or the data here
+fire(target, 'dragenter');
+fire(target, 'dragover');
+const accepted = !fire(target, 'drop'); // dispatchEvent returns false when a handler called preventDefault
+fire(source, 'dragend');
+```
+
+These events reach React's handlers on ordinary elements. Drawing surfaces still need the handler props, as above.
+
+## Slowing one request
+
+To act while a request is in flight (a second click, a navigation, a drop), make that one request slow. Install the wrapper before the page's own scripts run, through the tool's init-script option when it navigates: a client that kept its own reference to `fetch` earlier ignores the wrapper.
+
+```js
+window.__slow = {}; // { getNodeCounts: 4000 } holds the request whose body names getNodeCounts for 4 s
+const realFetch = window.fetch;
+window.fetch = async (...args) => {
+  const body = typeof args[1]?.body === 'string' ? args[1].body : '';
+  const name = Object.keys(window.__slow).find(key => body.includes(key));
+  if (name) await new Promise(resolve => setTimeout(resolve, window.__slow[name]));
+  return realFetch(...args);
+};
+```
+
+Set `window.__slow` from a later script, act during the delay, then clear it.
 
 ## Touch emulation
 
