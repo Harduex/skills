@@ -1,5 +1,25 @@
 # Changelog
 
+## v4.2.0
+
+- **`code-review` exercises the change in a step of its own.** The exercise paragraph sat inside
+  "Run available checks", so a green run of the author's tests read as having exercised the
+  change. A new step 4.5 says those tests show only what the author thought to check, and has the
+  reviewer load the verify workflow and run its exercise and break steps; step 7's final sweep
+  covers it. Replayed at the point where the author's tests had just gone green, three fresh
+  agents on the old text went straight to the verdict, and three on the new text loaded the verify
+  workflow first. A docs-only review still skips the step, and a backend review drives the API
+  through the project's own client instead of a browser.
+- **`verify-before-done` also serves reviews, and aims its break step at untested cases.** Its
+  description now covers a code review that has to exercise someone else's change, so a
+  capability reference to the verify workflow resolves to it. The break step asks for cases the
+  existing tests do not cover. Used on its own after an implementation, it stayed as thorough as
+  before.
+- **`using-browser` covers drag and drop and short races.** A drag that ends without a drop means
+  the target refused it; to act in the middle of a drag, the recipe fires the drag events with
+  one shared `DataTransfer`. A race too short to hit by hand opens with a `fetch` wrapper that
+  delays one request.
+
 ## v4.1.1
 
 - **`auditing-repo-for-leaks` flags what should have been ignored, and never reads what it
