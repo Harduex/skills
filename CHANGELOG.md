@@ -1,5 +1,15 @@
 # Changelog
 
+## v4.0.1
+
+- **`manage-backlog` shows items in progress.** The overview fetched only not-started items, so
+  an item assigned and started between two runs never appeared on any list. The saved query now
+  covers every open item in scope. Items in progress show first, under "In progress", with their
+  status and no ranking, and "Changed since last run" names the items that started. A saved query
+  that leaves them out is widened on the next run, and the user sees the new query and its result
+  count. Three fresh agents ran the new text against a mock tracker with an old query: all three
+  widened it, listed the started items first, and kept the ranking for not-started items only.
+
 ## v4.0.0
 
 - **`designing` is now `designing-ux` (breaking).** The skill covers user flows, wireframes,
