@@ -1,5 +1,20 @@
 # Changelog
 
+## v4.1.1
+
+- **`auditing-repo-for-leaks` flags what should have been ignored, and never reads what it
+  flags.** The scan gains `--unpushed`, which reads only commits that are on no remote, so a
+  pre-push check stops re-reporting what is already published; a repo with no remote gets its
+  full history. New advisories list committed files the repo's own `.gitignore` excludes, plus
+  logs and archives. Every check prints where a finding is (commit, file, line, gitleaks
+  fingerprint), never the matched value. The agent then reads only file names and commit
+  messages and lists private-looking files by name without opening them. Hard findings stay
+  blockers until the user says one is fake; its fingerprint then goes in `.gitleaksignore`, so it
+  stays quiet on every machine. On a test repo with planted fake leaks, an agent following the
+  old version opened every file and quoted a private note, email addresses and paths in its
+  report, and demoted a key it judged fake. With the new version it opened no file, quoted no
+  value, flagged the notes file by name and kept the key a blocker.
+
 ## v4.1.0
 
 - **New `using-browser` skill (delivery-lifecycle).** It says how to test a web app in a browser
