@@ -1,5 +1,40 @@
 # Changelog
 
+## v4.1.0
+
+- **New `using-browser` skill (delivery-lifecycle).** It says how to test a web app in a browser
+  well, whichever browser tool the agent has: a project browser skill first, then the tools the
+  session can call (for example Chrome DevTools MCP, Playwright MCP, a built-in browser pane or a
+  browser extension), preferring an isolated browser over the user's own. How to call the tool is
+  left to the tool's own instructions. The skill carries the pitfalls that make browser automation
+  mislead: React-controlled inputs, contenteditable editors such as Lexical, React handlers on
+  canvas and SVG, touch emulation, blocking dialogs, persistent profiles, short console history,
+  WebRTC throttling and testing as several users, with code for each in REFERENCE.md. It gives
+  the skills that point to "your project's browser-driving skill" a general one to land on. A
+  fresh agent ran four cases (choosing between an isolated browser and the user's own, typing into
+  a Lexical editor, checking a phone layout, confirming a saved comment) and followed the skill in
+  each.
+- **`verify-before-done` tries to break the change.** Once the main flow works, the agent uses it
+  the way a careless user would: bad input, a second user or role, and repeated or interrupted
+  actions, scaled to the change. Anything that breaks is fixed or reported instead of calling the
+  change done. A fresh agent given a rename-dialog scenario added empty, long and invalid names, a
+  double-clicked Save, refresh and Back, and a viewer-role check before it would say done.
+- **`code-review` checks that the whole change was reviewed.** A new step 7 reviews the whole
+  change unless the user asked for part of it: before delivering, the agent goes back over the
+  changed files and checks and reviews what it skipped. What still could not be reviewed (a failed
+  tool, missing access, a check that could not run) goes in the summary's "Not reviewed" item. That
+  item is now left out when nothing qualifies, instead of saying "None", and it no longer lists
+  parts the user left out of scope. Fresh agents ran three cases. With two files skipped and a type
+  check that could not run, the agent reviewed the two files and listed only the type check. With
+  everything reviewed, the report ended without the item. A backend-only review read as ambiguous,
+  which the out-of-scope wording fixes; that case was not re-run.
+- **`code-review` exercises user-visible changes.** When a change can affect what a user or caller
+  sees, the reviewer drives it and tries to break it through the verify-before-done workflow,
+  scaled to the change. What breaks is a finding; a flow it could not run goes in "Not reviewed".
+  Inside a loop with its own verify phase, such as `review-fix-loop`, the step is left to that
+  phase. A fresh agent ran three cases: a dialog change (exercised), the same change as one lens
+  of a review loop (left to the loop), and an internal rename (not exercised).
+
 ## v4.0.1
 
 - **`manage-backlog` shows items in progress.** The overview fetched only not-started items, so
@@ -784,7 +819,7 @@
 - **Claim-first prose rule.** Lead every paragraph and bullet with its point, explanation
   after — a paragraph that opens with setup makes the reader carry context before they know
   what it is for.
-- Reconciled `write-design-spec` drift from its maui-skills counterpart: the Architecture
+- Reconciled `write-design-spec` drift from its downstream project copy: the Architecture
   section now carries the change-footprint guidance (an inventory of what is being built,
   grouped by owning system, not a sequence ladder), matching what `architecture-diagrams`
   already prescribes for a design doc's first diagram.
@@ -907,7 +942,7 @@
   instead of `review-pass-N.md` / `review-final-report.md` — report files
   written for the person you are already talking to get deleted, and writing
   them slows the loop.
-- `architecting`: reconciled with the downstream `maui-skills` copy, which had
+- `architecting`: reconciled with the downstream project copy, which had
   drifted — took that copy's more concrete plan-drift paragraph and kept this
   one's stronger interrogation directives, then ordered the design-time rules
   (directives, interrogation, resilience) before the execution-time one (plan

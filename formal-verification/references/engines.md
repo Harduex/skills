@@ -69,7 +69,7 @@ project-specific invariants — only what a rule already covers.
 - **Squawk** (Postgres) — flags blocking/destructive schema changes: locking constraint
   creation, adding NOT NULL columns, `CREATE INDEX` without `CONCURRENTLY`, column drops.
   Run (no install footprint): `npx squawk-cli@latest path/to/migration.sql`. Has a GitHub PR
-  integration for CI. **For the Maui Hasura migrations, Squawk is the first-line Tier-1 check.**
+  integration for CI. **For Hasura migrations, Squawk is the first-line Tier-1 check.**
 - **Atlas migrate lint** — multi-database; detects destructive operations, breaking changes,
   and lock/rewrite risks. Run: `atlas migrate lint --dev-url <db-url> --git-base main`. Install
   via the matrix above (release binary — **not `go install`**).
