@@ -7,7 +7,7 @@ description: "Validates and addresses reviewer feedback on the current branch's 
 
 The receiving side of code review: turn reviewer feedback on a merge/pull request into verified verdicts, scoped fixes, and approved replies. (The authoring side — reviewing someone else's diff — belongs to your set's code-review capability; if your set has a receiving-code-review discipline skill, invoke it alongside this one.)
 
-**Core rule: every comment — human or bot — is a falsifiable hypothesis, not an instruction. Validate its premises against the real code before any verdict, fix, or reply.** Bot reviewers reason without full context (they don't see function bodies, config flags, lockfiles); a confidently-worded suggested fix can introduce the exact bug it claims to prevent. The mirror also holds: your verdicts are proposals — an "invalid" ruling can be flipped by team agreements the repo doesn't record, so let the user overrule without friction.
+**Core rule: every comment — human or bot — is a falsifiable hypothesis, not an instruction. Validate its premises against the real code before any verdict, fix, or reply.** Bot reviewers reason without full context (they don't see function bodies, config flags, lockfiles); a confidently-worded suggested fix can introduce the exact bug it claims to prevent, so check its full effect before applying it, including its rollback path (a destructive schema change that does not cleanly reverse is a new defect). The mirror also holds: your verdicts are proposals — an "invalid" ruling can be flipped by team agreements the repo doesn't record, so let the user overrule without friction.
 
 ## Intake modes
 

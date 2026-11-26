@@ -263,14 +263,6 @@ Only when the user asks — and **never post anything the user hasn't seen and a
 
 **Mechanics live in [REFERENCE.md](REFERENCE.md#publishing-mechanics-gitlab):** anchor verification against the fetched MR `head_sha` (never the local tree), the nested-JSON POST (`glab api -f` silently drops `position`), post-verification (`DiffNote` + non-null position), and replying to GitLab Duo threads. Follow them exactly — wrong anchors post "successfully" as misplaced noise.
 
-## Acting on review feedback
-
-When you implement a finding from a reviewer — human or automated:
-
-- **A suggested fix is a hypothesis, not an instruction — and can be worse than the bug.** Verify its full effect before applying, *including the rollback / undo path*. Automated reviewers especially reason without full context (they may not see function bodies, lockfiles, or the data model), so a confidently-worded fix — e.g. a destructive schema change that doesn't cleanly reverse — can introduce a new defect while "addressing" the finding.
-- **Scope the fix to exactly what was asked; don't generalize a narrow comment.** "Tighten the permissions on these two fields" means those two fields — not the whole permission set. Over-applying a scoped instruction to adjacent code is a common way to add a regression while resolving a valid comment. When tempted to widen the change, confirm scope with the reviewer first.
-- **Check the tool's native capability before scripting around it.** A flaky CLI call gets a documented flag or supported mode — not a hand-rolled retry/backoff loop.
-
 ## Finish with a summary
 
 End the review with:
