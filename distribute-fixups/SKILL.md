@@ -96,6 +96,12 @@ Compare against the fixup-stack tip, **never against the sha you started from**:
 
 If `git diff` is non-empty, something was lost or doubled during the rebase. Investigate before pushing — do NOT force-push a tree that differs from `<expected-tree>` without understanding why.
 
+Then re-read the message of every commit that took a fixup. The rebase keeps each target's old message, so a fix that changed what a commit does leaves its message wrong. To reword one, add an empty commit whose subject is `amend! <target's subject>` and whose body is the full new message, then run step 4 again. (`--fixup=reword:` refuses `-m` and `-F`, so it needs an editor.)
+
+```bash
+git commit --allow-empty -F <msgfile>       # line 1: amend! <target's subject>, a blank line, then the new message
+```
+
 ## Force-push
 
 Only after step 5 passes, hand the user the exact command and let them run it — a force-push rewrites published history, so it is never yours to run:
@@ -110,7 +116,7 @@ Name the repository with `-C` and the branch with an explicit refspec: the user'
 
 - `git diff <expected-tree> HEAD` is non-empty → STOP. Content was lost or doubled.
 - `fixup!` commits remain after rebase → autosquash didn't run; check the rebase actually used `--autosquash` and the fixup target shas are in range.
-- Repeated conflicts on the same hunk across multiple fixups → the fixups are out of order or one of them belongs to a different originating commit. Reorder via the targets, not by editing the rebase todo.
+- Repeated conflicts on the same hunk across multiple fixups → the fixups are out of order or one of them belongs to a different originating commit. Reorder via the targets, not by editing the rebase todo. One exception: when the conflicting targets end up squashed into one commit anyway, write the todo yourself and run it with `GIT_SEQUENCE_EDITOR="cp <todo-file>" git rebase -i <base>`. In it, `pick` the group's first commit, `fixup` its other commits, then `fixup` each fixup in the order you created it (they were made on top of the whole stack, so they apply cleanly), then `exec git commit --amend -F <msgfile>` for the combined message. Step 5 still applies.
 
 ## When NOT to use this
 

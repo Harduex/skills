@@ -66,15 +66,17 @@ Concise WHY, drafted from the actual diff — not a restatement of changed lines
 ### 5. Verify each commit builds in isolation
 
 ```bash
+git worktree add --detach <tmp-dir>
+ln -s "$PWD/node_modules" <tmp-dir>/node_modules   # link untracked dependencies; init submodules if the repo has them
 for sha in $(git rev-list --reverse <base>..HEAD); do
-  git checkout -q "$sha"
-  <typecheck> >/dev/null 2>&1 && <lint> >/dev/null 2>&1 \
+  git -C <tmp-dir> checkout -q "$sha"
+  (cd <tmp-dir> && <typecheck> && <lint>) >/dev/null 2>&1 \
     && echo "PASS $sha" || echo "FAIL $sha"
 done
-git checkout -q <branch>
+git worktree remove --force <tmp-dir>              # removes the link, not the linked folder
 ```
 
-A `FAIL` names a symbol referenced before it's defined → move that file/hunk to an earlier commit (its earliest consumer) and rebuild from step 3. Re-verify. Typecheckers recompile cold on each checkout, so the sweep is slow — run it in the background.
+The sweep runs in a separate worktree because checking old commits out in your own checkout changes the files a running dev server or another agent is using. A `FAIL` names a symbol referenced before it's defined → move that file/hunk to an earlier commit (its earliest consumer) and rebuild from step 3. Re-verify. Typecheckers recompile cold on each checkout, so the sweep is slow — run it in the background.
 
 ### 6. Verify zero net change
 
