@@ -23,7 +23,7 @@ Substantial branches, features, audits, or pre-merge hardening — where one rev
 4. **Fix** — resolve Critical + High + clear high-value items. **One commit per fix, never amend** (G5). Parallel fixers edit *disjoint* files (no git); you serialize the commits. Do small surgical fixes inline.
 5. **Verify** — typecheck + lint + tests green via your verification workflow; report evidence, not claims.
 6. **Adversarially verify the fixes** — a skeptic pass over the fix diffs (each verifier tries to *refute*), plus one fresh full-diff sweep for anything the fixes introduced or earlier passes missed.
-7. **Gate** — continue iff any **Critical OR genuine new/unresolved High** remains; else summarize the outcome and **stop**. Cap at ~3 passes. If the fixes changed user-visible behavior in a way prose can't settle, offer to film the re-verification via your set's verification-filming workflow — offer once, don't film unasked.
+7. **Gate** — continue iff any **Critical OR genuine new/unresolved High** remains; else summarize the outcome, ending with your code-review workflow's closing summary for the final diff, and **stop**. Cap at ~3 passes. If the fixes changed user-visible behavior in a way prose can't settle, offer to film the re-verification via your set's verification-filming workflow — offer once, don't film unasked.
 
 ## Non-obvious policy (why this loop, not a naive one)
 
