@@ -1,6 +1,6 @@
 ---
 name: set-output-style
-description: Sets up an answer-formatting output style at user or project level: the style shipped in output-style.md, a blank one, or one learned by interviewing the user with pairs of sample replies, with optional self-improvement from the user's corrections. Use when the user wants to install, start, learn, or change their output style. Purely cosmetic — never alters reasoning, tool usage, file edits, or the factual content of the work.
+description: "Sets up an answer-formatting output style at user or project level: the style shipped in output-style.md, a blank one, or one learned by interviewing the user with pairs of sample replies, with optional self-improvement from the user's corrections. Use when the user wants to install, start, learn, or change their output style. Purely cosmetic — never alters reasoning, tool usage, file edits, or the factual content of the work."
 disable-model-invocation: true
 ---
 

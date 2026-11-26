@@ -1,6 +1,6 @@
 ---
 name: quick-wins-analysis
-description: Use when asked to discover and analyze quick wins — high-value, low-effort improvements that ride the existing infrastructure — across a product or codebase: a "find quick wins / low-hanging fruit / what can we improve cheaply" scan spanning UX, architecture simplification, new features, cleanup/dead-code, and performance/cost. Also when judging whether a specific change is "worth it" (value vs effort, risk, and added surface area), tiering an improvement audit, or separating real quick wins from deferred/medium-term work.
+description: 'Use when asked to discover and analyze quick wins — high-value, low-effort improvements that ride the existing infrastructure — across a product or codebase: a "find quick wins / low-hanging fruit / what can we improve cheaply" scan spanning UX, architecture simplification, new features, cleanup/dead-code, and performance/cost. Also when judging whether a specific change is "worth it" (value vs effort, risk, and added surface area), tiering an improvement audit, or separating real quick wins from deferred/medium-term work.'
 ---
 
 # Quick Wins Analysis
@@ -27,7 +27,7 @@ When NOT to use: a single known fix (just do it); green-field design (architectu
 Adopt the lens the work needs — **senior architect + product owner + visionary** — and fix the scope (whole product, or one surface like the download/upload/comments area). **Read prior audits / domain docs first** so you don't re-walk solved ground.
 
 ### 2. Fan out parallel research by dimension
-**REQUIRED SUB-SKILL:** superpowers:dispatching-parallel-agents. One research subagent per **dimension**, so each lens runs blind to the others and you keep the overseer's context clean:
+Dispatch one research subagent per **dimension**, all at once (one after another if your harness can't run them in parallel), so each lens runs blind to the others and you keep the overseer's context clean. Each brief stands alone: the scope, its one dimension, the docs to read first, and the finding format below. No subagent sees another's results:
 - UX / UI · architecture simplification · new-feature opportunities · finish-it & cleanup (TODOs, incomplete features, **verified-dead code**) · performance & cost.
 
 Each returns **evidenced** findings: `{ what, category, effort, impact, file:line }`. Cross-surface comparison surfaces the highest-leverage items (e.g. a heavy lib eager-loaded on *every* view).
