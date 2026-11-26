@@ -94,7 +94,7 @@ When the user rejects a candidate for a load-bearing reason, offer to record it:
 
 ## Out of scope
 
-- Bug hunting. Use a code-review workflow.
+- Bug hunting. Use a code-review workflow, or a break-testing workflow on the running system.
 - Performance tuning. The rule is only "never slower".
 - Style and naming nitpicks.
 - Lines removed as a goal.
