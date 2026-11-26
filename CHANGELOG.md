@@ -1,5 +1,16 @@
 # Changelog
 
+## v5.0.1
+
+- **`code-review` ends with where a senior reviewer must still look.** A new Human review focus
+  item in the closing summary says whether the change needs a senior reviewer at all, names the
+  one to three parts to read closely with the reason for each, and lists what needs only a skim.
+  The reviewer finds the parts in the change and the code it reaches, ranked by what an
+  uncaught mistake would do, with no fixed list of risk areas. On a real 34-file merge request,
+  in two full review runs, it answered the senior question both times and named five of the six
+  parts the human reviewer expected; the previous wording gave no such list. `review-fix-loop`
+  ends with the same summary for the final diff.
+
 ## v5.0.0
 
 - **Removed `zero-assumptions` (breaking).** `architecting` already carried its requirements
