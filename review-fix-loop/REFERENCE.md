@@ -44,7 +44,7 @@ Adversarial-verify pass (step 6): per surviving finding, dispatch ≥1 skeptic p
 - **Correctness / security** — logic, auth/permission boundaries, injection, data-loss, migration reversibility. Compare any self-secured/permission code to its established analog.
 - **Logic / data** — pure-function correctness, state & concurrency (cancellation, re-entry, races), cache/consistency, error/degrade paths.
 - **UI** — design-system tokens vs hardcoded values, responsive behavior, accessibility, loading/empty states, copy.
-- **Tests** — coverage of the risky/new branches vs the test plan, flakiness, fixture/selector reuse, false-greens (a test that passes even when the code is wrong).
+- **Tests** — coverage of the risky/new branches vs the test plan, flakiness, fixture/selector reuse, false-greens (a test that passes even when the code is wrong). Also list the tests to cut: duplicates of another test's check, tests of framework or library behavior, and tests that pin implementation details instead of behavior. Each is a finding; cutting it is a fix like any other.
 - **Symmetry (G2)** — every new unit vs its closest existing sibling: naming/suffix conventions, file location, structure, error handling, test-title style. Unexplained divergence is a finding. This lens is what a correctness review misses.
 
 ## Commit & verify mechanics
