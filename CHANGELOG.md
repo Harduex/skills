@@ -1,5 +1,52 @@
 # Changelog
 
+## v5.0.0
+
+- **Removed `zero-assumptions` (breaking).** `architecting` already carried its requirements
+  questions word for word, and the skill went unused. `architecting` now asks open questions
+  until the why is clear and offers options only after, because options steer the answer; this
+  matches `idea-to-plan`.
+- **The `using-evolving-harness` workflow guide is opt-in and has eight phases.** It loads when
+  the user asks for it instead of claiming every non-trivial task, so it can sit beside another
+  workflow framework; when both cover a step, its phase owner runs it. New Simplify and Break
+  phases join the lifecycle, and Land ends with the human's test and a retro. A feature that
+  spans sessions logs its lessons as rulings and runs one retro at the end. Only a repeated
+  mistake has to end as a skill edit or a recorded decision; a one-off is not a signal.
+- **New `break-testing` skill (delivery-lifecycle).** It tells the tester what to achieve and what
+  counts as a finding, and leaves the exploring to the agent: a set-up it can finish alone,
+  states reached only the way a real user or client can, "works" said only about the cases
+  that ran, and test data removed at the end. On a small app with 12 planted bugs, two runs per
+  version, a plain prompt found 12 and 11 and this version 11 and 11, with no false findings and
+  complete reports; longer versions with a checklist and an attack catalogue found no more bugs
+  and made wrong claims. It loads on 10 of 10 QA requests and on none of 10 near-misses.
+  `verify-before-done` and `code-simplification` send whole-feature bug hunts to it.
+- **`autonomous-build-loop` builds each task through its own implementer and a two-verdict
+  check.** A zero-context implementer gets the slice and the governing rules quoted in full; a
+  fresh checker returns separate spec and quality verdicts before the task's commit, with a
+  bounded fix loop. A pre-flight scan checks the slices against the spec and the code before
+  task 1. Every dispatch names its model, decisions land as `Ruling:` lines, and product calls
+  that do not block the next task wait for one batch at the end. `checkpoint` hand-offs name
+  the skills the next session must load and read context use from the harness, not an estimate.
+- **`review-fix-loop` lists tests to cut and holds served code still.** The tests lens reports
+  duplicate, framework-testing and implementation-pinning tests as findings. While a browser
+  tester runs, nothing writes code that the shared dev server serves.
+- **`distribute-fixups` rewords stale commit messages, and `linear-git-history` checks commits in
+  a separate worktree.** After the autosquash, each commit that took a fixup has its message
+  re-read and, when the fix changed what the commit does, reworded with an `amend!` commit. The
+  per-commit build check runs in a detached worktree, so a running dev server keeps its files.
+- **Skill audits and skill writing check use before change.** `optimizing-skill-repo` changes a
+  skill only when real sessions use it and a plain prompt without it does worse. It no longer
+  renames folders to gerunds, which would have renamed most of the catalog and broken installs,
+  or adds checklists where they are missing. `write-a-skill` keeps checklists for fragile
+  procedures and gives a judgment task its goal and the failure to avoid.
+- **`code-review` leaves acting on review feedback to `address-comments`.** The duplicated
+  section is gone; the one point `address-comments` lacked, checking how a suggested fix rolls
+  back, moved there.
+- **Two skill headers parse as strict YAML.** `set-output-style` and `quick-wins-analysis` quote
+  their descriptions, because an unquoted colon followed by a space makes strict parsers reject
+  the header. `quick-wins-analysis` names its parallel research dispatch as a capability instead
+  of an external skill.
+
 ## v4.2.0
 
 - **`code-review` exercises the change in a step of its own.** The exercise paragraph sat inside
