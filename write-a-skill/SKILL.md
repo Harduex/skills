@@ -71,8 +71,9 @@ tables, portability rules, and string substitutions:
   no time-sensitive info.
 - References one level deep from SKILL.md; give reference files over 100
   lines a table of contents.
-- For multi-step workflows, provide a checklist the agent can copy and tick
-  off; for quality-critical output, add a validate → fix → repeat loop.
+- Give a checklist the agent can copy and tick off only for fragile
+  procedures; for a judgment task, state the goal and the failure to avoid.
+  For quality-critical output, add a validate → fix → repeat loop.
 
 ## When to Add Scripts
 

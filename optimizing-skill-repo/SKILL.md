@@ -15,7 +15,7 @@ Optimization checklist:
 - [ ] Phase 2: Inventory — classify each skill (keep/merge/drop/rewrite)
 - [ ] Phase 3: Research — fetch latest spec + best practices
 - [ ] Phase 4: Audit — check every skill against principles
-- [ ] Phase 5: Rewrite — apply fixes, deduplicate, add examples/checklists
+- [ ] Phase 5: Rewrite — apply fixes, deduplicate
 - [ ] Phase 6: Verify — final compliance pass
 ```
 
@@ -66,7 +66,7 @@ Check every skill against:
 - No time-sensitive information
 
 **Effectiveness patterns**:
-- Workflow checklist for multi-step processes
+- Checklist only for fragile multi-step procedures; judgment tasks get the goal, not steps
 - Input/output examples for skills where output format matters
 - Match freedom to fragility (high freedom for judgment, low for fragile ops)
 - Progressive disclosure (details in REFERENCE.md, not SKILL.md)
@@ -80,12 +80,14 @@ Present audit table with issues per skill.
 
 ### Phase 5: Rewrite
 
+Before changing a skill, check that real sessions use it and that a plain
+prompt without it does worse on the same task. If either check fails, leave
+the skill as it is.
+
 Apply fixes in batch:
 
-- Rename folders to gerund form (Anthropic convention)
 - Strip known-to-models content
 - Deduplicate shared content (pick one owner skill)
-- Add checklists and examples where missing
 - Split overlong SKILL.md into SKILL.md + REFERENCE.md
 - Generalize project-specific skills or drop them
 
