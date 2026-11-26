@@ -23,7 +23,7 @@
     {
       "name": "thinking",
       "source": "./plugins/thinking",
-      "description": "Reasoning and research toolkit: deep research, adversarial questioning, zero-assumption analysis, teaching, quick-wins triage."
+      "description": "Reasoning and research toolkit: deep research, adversarial questioning, teaching, quick-wins triage."
     },
     {
       "name": "agentic-notebook",

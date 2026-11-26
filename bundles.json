@@ -63,13 +63,12 @@
     },
     {
       "name": "thinking",
-      "description": "Reasoning and research toolkit: deep research, adversarial questioning, zero-assumption analysis, teaching, visual explanations, quick-wins triage.",
+      "description": "Reasoning and research toolkit: deep research, adversarial questioning, teaching, visual explanations, quick-wins triage.",
       "skills": [
         "deep-research",
         "researching",
         "genius-thinking",
         "grill-me",
-        "zero-assumptions",
         "teach",
         "explaining-visually",
         "quick-wins-analysis",

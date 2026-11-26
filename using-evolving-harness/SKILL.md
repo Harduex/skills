@@ -96,4 +96,4 @@ signal.
 ## When NOT to use this framework
 
 Pure Q&A, explanations, or research with no artifact to ship - route to the
-thinking bundle (deep-research, grill-me, zero-assumptions) instead.
+thinking bundle (deep-research, grill-me) instead.
