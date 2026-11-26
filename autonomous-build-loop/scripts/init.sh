@@ -147,10 +147,13 @@ scope expansion in `CHECKPOINT.md`.
 
 ## Completion
 
-One commit carries implementation and tests, the advanced `CHECKPOINT.md`, and
-`git rm docs/loop/__SLUG__/001-first-task.md`. No second state commit. Do not start
-the next task in the same step. If a human decision or evidence is needed instead,
-set the checkpoint to `waiting-human`, commit the evidence, and keep this file.
+After both check verdicts pass, one commit carries implementation and tests, the
+advanced `CHECKPOINT.md`, and `git rm docs/loop/__SLUG__/001-first-task.md`. No
+second state commit. Do not start the next task in the same step. A product or
+behavior decision that does not block this task becomes a `Ruling:` under Locked
+decisions, marked `provisional — end batch`. If this task cannot proceed without a
+human decision or evidence, set the checkpoint to `waiting-human`, commit the
+evidence, and keep this file.
 EOF
 
 mkdir -p "$jdir"

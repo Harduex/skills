@@ -2,6 +2,21 @@
 
 Depth for the loop in [SKILL.md](SKILL.md). Everything here is capability-based — adapt the mechanics to whatever file, subagent, and skill primitives your harness provides.
 
+## Contents
+
+- State files — the durable memory (contract, note, slices, closing out, journal)
+- State substrates — native and adopted
+- Resume protocol
+- Pre-flight scan
+- Implementer dispatch
+- Checker dispatch
+- Retry / escalation ladder
+- Standalone fallbacks
+- Evolving the harness
+- Knobs
+- Scripts
+- Failure-mode catalog
+
 ## State files — the durable memory
 
 Under `docs/loop/<slug>/`: one continuation note, one contract, and one file per task. Plus a git-ignored journal under `.loop/<slug>/`. They are the loop's memory; the transcript is not. Read them at the start of every cycle; write them at the end of every cycle.
@@ -81,7 +96,7 @@ git commit -m "feat(002): <the capability, imperative>"
 
 One commit carries implementation, tests, the advanced note, and the retired slice. Never a second "checkpoint commit" — the state update *is* part of completing the work, and a separate commit lets the two drift. If the task is not fully verified, the slice stays and the pointer does not move.
 
-**Human gate.** When a task needs a decision or evidence only a person can supply, set `Status: waiting-human`, write the exact decision or evidence needed, commit the prototype/evidence **keeping** the slice, and leave the pointer alone. The person records their answer in the note; the task's eventual completion commit records the durable decision, retires the slice, and advances the pointer.
+**Human gate.** When a task cannot proceed without a decision or evidence only a person can supply, set `Status: waiting-human`, write the exact decision or evidence needed, commit the prototype/evidence **keeping** the slice, and leave the pointer alone. The person records their answer in the note; the task's eventual completion commit records the durable decision, retires the slice, and advances the pointer.
 
 **Recovery.** Pointer names an existing slice → continue it. Pointer names a missing slice with a clean tree → the completion commit landed but the pointer didn't advance, or the pointer was hand-edited: read `git log -- docs/loop/<slug>/CHECKPOINT.md`, restore the intended pointer, then work. Uncommitted changes with the pointer still on a slice → the last session stopped mid-task; reconcile against that slice rather than advancing.
 
@@ -108,11 +123,11 @@ A run that is paused rather than finished keeps everything: the note records why
 - Did: added handler in api/widgets.ts; mirrored gadgets.ts structure and error handling.
 - Check: `pnpm test tests/e2e/widgets.create.spec.ts` → PASS. `pnpm tsc --noEmit` → PASS.
 - Attempt 1 failed: validation ran after the handler body; zBody() must wrap the route, not the payload.
-- Drift: gadgets uses `zBody()`, not manual parsing as the plan assumed → task 3 simplified.
+- Ruling: task 3 validates with `zBody()`, not the manual parsing the plan assumed — gadgets does it that way — cost if wrong: one wrapper to swap.
 - Next: implement task 3 (validation via zBody()).
 ```
 
-This is the Reflexion memory: failures with their cause so a later cycle doesn't repeat them, and the *measured* check result every cycle (L6), never an unverified claim. It is deliberately **not** committed — `init.sh` writes `.loop/.gitignore` containing `*`, so the directory is invisible to git without editing the repo's own ignore file. Durable outcomes graduate to the note; the rest dies with the branch. Keeping failed attempts out of history is the point: the audit trail records what was done, the journal records what was tried.
+This is the Reflexion memory: failures with their cause so a later cycle doesn't repeat them, and the *measured* check result every cycle (L6), never an unverified claim. It is also where every decision made on the human's behalf lands — pre-flight conflicts, plan drift, a finding parked at the cap, a provisional product call — one `Ruling:` line each, which the Gate summary lists in full before the journal is dropped; a ruling that dies with the journal was a decision made in secret. It is deliberately **not** committed — `init.sh` writes `.loop/.gitignore` containing `*`, so the directory is invisible to git without editing the repo's own ignore file. Durable outcomes graduate to the note; the rest dies with the branch. Keeping failed attempts out of history is the point: the audit trail records what was done, the journal records what was tried.
 
 ## State substrates — native and adopted (L10)
 
@@ -153,11 +168,31 @@ The files above are one *encoding* of four state roles. A repo that already runs
 
 **Starting a session, or right after a compaction:** run `$SKILL/scripts/status.sh <slug>` for an instant read of the note's status, the current slice, how many slices remain, whether the tree is clean, and the journal tail — then read the note, read the slice it names, and reconcile any uncommitted changes against that slice before touching anything. Do **not** let a session-start summary override the files (L4, and "trust live state, not snapshots"). Bound to a substrate, the same sequence runs against it via `$SKILL/scripts/status.sh --adopt <note> [slice-dir]`.
 
-**Before an expected compaction or at session end:** refresh the note (status, last verification, next action) and append a journal entry ending in a concrete `Next:`. Invoke your set's checkpoint/handoff capability to produce that header — it already knows how to write a no-context-needed resume block; ask it for the file-backed form so it lands in the file instead of the transcript, and when bound to a substrate, in that note's existing sections rather than a shape of your own.
+**Before an expected compaction or at session end:** read how full the context is from the harness's own usage or context readout, never from an estimate (one estimate was off by 2.5×), and hand off at the point the human set. Refresh the note (status, last verification, next action) and append a journal entry ending in a concrete `Next:`. The next action names each skill the next session must load and before which step; when the run is under a master workflow guide, loading that guide comes first. Invoke your set's checkpoint/handoff capability to produce that header — it already knows how to write a no-context-needed resume block; ask it for the file-backed form so it lands in the file instead of the transcript, and when bound to a substrate, in that note's existing sections rather than a shape of your own.
+
+## Pre-flight scan (before task 1)
+
+Check the slices once against the spec and the live code, writing what you checked into the journal as you go:
+
+- one row per pair of slices that share a file or an interface: what one produces against what the other consumes;
+- one row per slice: whether its tests match the code it asks for, and whether the files, symbols and siblings it names exist and behave as it assumes — open them (L7).
+
+"Clean" without those rows is not a scan. For each conflict, record a `Ruling:` and fix the slice text before dispatch (renumber if the fix reorders work). The spec binds the slices; a spec-versus-code conflict that changes behaviour is the human's call (SKILL.md → Gate, judgment gate).
+
+## Implementer dispatch
+
+One implementer subagent per task, one at a time — two on one tree collide. The slice is its requirements; the dispatch prompt adds only what the slice cannot carry:
+
+1. the note and slice paths, to read first;
+2. the rules that govern this change, quoted in full from the instruction files, memory, and the domain skills you bound;
+3. interfaces and rulings from earlier tasks the slice cannot know;
+4. the report contract: write the full report (what changed, RED and GREEN test output, concerns) to `.loop/<slug>/NNN-report.md`, stage the work without committing (you make the slice's atomic completion commit once the checker passes), dispatch no subagents, and return only a status (`done` · `done-with-concerns` · `needs-context` · `blocked`), a one-line test summary, and the concerns.
+
+Never paste earlier tasks' history into a dispatch: the implementer does not need it, and it stays resident in your context. `needs-context` → answer and re-dispatch. `blocked` → more context, a stronger model, a smaller slice, or a ruling on the plan — never the same dispatch unchanged.
 
 ## Checker dispatch (L2 — fresh context)
 
-**Preferred — subagent.** Dispatch with a general-purpose agent type (so it can load skills). Prompt it to (1) invoke your verification capability, (2) run each contract command, (3) return the schema below — pass/fail per contract ID plus the first failing output, not a transcript. Fresh context is what actually removes the shared blind spot.
+**Preferred — subagent.** Dispatch with a general-purpose agent type (so it can load skills). Prompt it to (1) invoke your verification capability and the domain skills the slice names, (2) run each contract command, (3) review the staged diff (`git diff --cached`) against the slice, treating the implementer's report as claims to check, and give two separate verdicts — **spec**: nothing missing, extra, or misunderstood against the slice's acceptance items and contract rows; **quality**: judged by the rules of the domain skills it loaded, every finding with `file:line` — (4) return the schema below, not a transcript. Fresh context is what actually removes the shared blind spot.
 
 ```jsonc
 {
@@ -165,9 +200,13 @@ The files above are one *encoding* of four state roles. A repo that already runs
   "results": [
     { "id": "C1", "pass": true,  "cmd": "pnpm test",           "firstFailure": null },
     { "id": "C4", "pass": false, "cmd": "pnpm test …create",   "firstFailure": "expected 201, got 500: ValidationError: body.name required" }
-  ]
+  ],
+  "spec":    { "pass": false, "findings": ["missing: new widgets default to draft (api/widgets.ts:41)"] },
+  "quality": { "pass": true, "skillsLoaded": ["<domain skill>"], "findings": [] }
 }
 ```
+
+A missed requirement, wrong or fragile behaviour, or a test that asserts nothing fails a verdict; polish is a minor finding — journal it, list it at the Gate, never loop on it. A quality verdict with an empty `skillsLoaded` does not count: re-dispatch. The same holds for your own standards pass on a subagent's diff — its journal line names the skills you loaded.
 
 **Fallback — deterministic, no subagents.** Run `$SKILL/scripts/check.sh <slug>` (or `check.sh --gates <path>` against a substrate-owned gate table): it executes the contract's declared commands and reports pass/fail per item. Or run the commands by hand and read exit codes. Determinism satisfies L2 for the *checks* themselves, but you lose fresh-eyes review — compensate by reviewing the diff cold at the gate (Standalone fallbacks → Check) before declaring green.
 
@@ -175,10 +214,12 @@ Only the schema flows back to the orchestrator, so its context stays clean acros
 
 ## Retry / escalation ladder (L5)
 
-1. **Attempt 1** — fix guided by the error message + the contract line it broke.
+A failed gate or a failed verdict enters the ladder. Each attempt is one fix round: resume the task's implementer with the open findings verbatim (or dispatch a fresh one with the slice, its report file, and the findings), then re-check scoped to those findings and the fix. Fixes never happen in the orchestrator's own context, where they would skip review.
+
+1. **Attempt 1** — fix guided by the error message + the contract line or finding it broke.
 2. **Attempt 2** — route through your debugging capability: reproduce → root cause → patch; re-check.
-3. **Attempt 3** — a *different* approach, not the same patch reshaped.
-4. **Still red** → set the task `blocked`, write the blocker and everything tried into `journal.md`, and escalate to the human. Never spin past the cap.
+3. **Attempt 3** — a *different* approach on a stronger model, not the same patch reshaped.
+4. **Still red** → stop and ask the human: set the task `blocked`, write the blocker and everything tried into `journal.md`, and put the open findings to them. Never spin past the cap.
 
 ## Standalone fallbacks — when no peer skill exists
 
@@ -190,7 +231,7 @@ The loop prefers a matching skill in your set for each phase (SKILL.md → Capab
 - **Research (per task).** Before editing, trace the code paths the task touches from entry point to the change site; open the nearest existing analog end-to-end and note the conventions to match; cite `file:line`.
 - **Build.** Mirror the sibling's structure, naming, and error handling. Keep logic in pure functions where practical and isolate side effects at the edges. Change only what the task needs.
 - **Test (test-first).** Write the failing test first and confirm it fails for the right reason (red); implement to green. Cover the new/risky branches and the boundaries. A test that still passes when the code is wrong is worse than no test.
-- **Check.** Run `$SKILL/scripts/check.sh <slug>` (or every contract command by hand) and show the output. Then review the diff cold for correctness/security (auth boundaries, injection, data loss), state and concurrency (cancellation, re-entry, races), error/degrade paths, and symmetry with siblings. With subagents, review in a fresh agent; without, review as a distinct pass after re-reading the diff from scratch.
+- **Check.** Run `$SKILL/scripts/check.sh <slug>` (or every contract command by hand) and show the output. Then review the diff cold, giving the spec verdict (against the slice) and the quality verdict separately; for quality check correctness/security (auth boundaries, injection, data loss), state and concurrency (cancellation, re-entry, races), error/degrade paths, and symmetry with siblings. With subagents, review in a fresh agent; without, review as a distinct pass after re-reading the diff from scratch.
 - **Debug (on a failing check).** Reproduce reliably; form one hypothesis; instrument to confirm or refute it rather than guess-patching; fix the root cause, not the symptom; re-run the check.
 - **Git hygiene (pre-handoff).** One logical change per commit; each commit builds green on its own; no add-then-remove churn; imperative subject lines stating the why. Never push without explicit approval.
 - **Leak check (pre-publish).** Scan the diff (and history, on a first publish) for secrets, tokens, PII, and machine-local paths. Publishing is irreversible regardless → it goes through the human checkpoint (L3).

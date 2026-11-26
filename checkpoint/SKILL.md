@@ -14,7 +14,10 @@ Capture only what the next session can't re-derive for itself:
 - **Decisions & constraints** — choices already made and their rationale; what's off the table.
 - **Key locations** — files/paths (with line refs), the branch, commands to build/run/test, env specifics.
 - **Next steps** — the immediate next action(s), in order.
+- **Skills to load** — each skill the next session must load, by name, and before which step (the domain skill before the first edit, the verification skill before claiming done). When the work runs under a master workflow guide that routes it through lifecycle phases, the note's first instruction is to load that guide.
 - **Gotchas** — pitfalls, dead ends, and surprises learned this session.
 - **Open questions / blockers** — anything awaiting a decision or external input.
 
 Be concrete — real names, paths, values — not vague summaries; point into the code rather than restating it. Drop any section that's genuinely empty instead of padding it. Keep it tight: enough to continue, no replay of the whole history.
+
+Judge how full the context is from the harness's own usage or context readout, never from an estimate (one estimate was off by 2.5×). The hand-off point is the human's to set.
