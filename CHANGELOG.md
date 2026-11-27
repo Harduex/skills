@@ -1,5 +1,20 @@
 # Changelog
 
+## v5.1.0
+
+- **New `performance-testing` skill (delivery-lifecycle).** It first decides whether a change's
+  cost can grow with load at all, then maps every layer the load reaches (UI, API, database,
+  jobs, shared pools and locks), loads through the system's own write path in steps that grow
+  data and concurrency separately, checks that the load landed, repeats key measurements with
+  less CPU, and reports each finding as caused by the change or older. On a test app with planted
+  problems, plain prompts already found most of them; with the skill, both runs found all of
+  them, kept the shared server up and labelled every finding new or older.
+- **`using-evolving-harness` phase 7 can add a performance pass.** It runs `performance-testing`
+  only when the change's cost can grow with load and says why in one line. A slowdown the change
+  caused goes back to Build; an older one goes to the human as a follow-up and does not block the
+  gate. Given two risky changes, the old guide planned little or no performance work and the new
+  one planned a full pass both times.
+
 ## v5.0.1
 
 - **`code-review` ends with where a senior reviewer must still look.** A new Human review focus
