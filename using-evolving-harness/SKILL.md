@@ -18,8 +18,8 @@ use this phase's owning skill for that step.
 
 | Phase | Owning skill | Enter when | Exit gate |
 |---|---|---|---|
-| 1. Research + brainstorm | idea-to-plan (researching or deep-research for unknowns) | Raw idea or vague request | Human approves a direction |
-| 2. Design | designing-ux / architecting -> write-design-spec (prototyping-ui, write-a-ticket as needed) | Approved direction | Human approves the design spec |
+| 1. Research + brainstorm | idea-to-plan (researching or deep-research for unknowns; investigate-before-asking when another team's system is involved) | Raw idea or vague request | Human approves a direction |
+| 2. Design | designing-ux / architecting -> write-design-spec (prototyping-ui, write-a-ticket, investigate-before-asking as needed) | Approved direction | Human approves the design spec and picks the run mode |
 | 3. Plan | planning -> a review of the plan in a fresh context -> the build loop's pre-flight scan | Approved design spec | The scan's rulings are in the build log |
 | 4. Build | autonomous-build-loop (debugger on failure) | Plan scanned | verify-before-done passes |
 | 5. Simplify | code-simplification | Build gate passed | Human has picked the items to apply |
@@ -39,6 +39,9 @@ the break pass runs last, on the final code. Rules:
   taking the trivial path.
 - Across sessions, hand off with checkpoint. The note's first step loads this
   skill, and it names the skills the next phase needs.
+- The build loop closes its run out at phase 8, not when phase 4 ends: the
+  build log keeps the run mode and the provisional rulings until the human
+  test.
 - Phase 7 decides whether to run performance-testing from the spec and the
   diff, and states the decision and its reason in one line. A slowdown this
   change caused goes back to phase 4 like any bug; an older one goes to the
@@ -48,7 +51,32 @@ the break pass runs last, on the final code. Rules:
 - If a phase's owning skill is not installed, say so and proceed with best
   judgment for that phase - never silently improvise while implying the skill
   ran.
-- Every human approval gate is a real stop: present the artifact, wait.
+- Every human approval gate is a real stop: present the artifact, wait. In an
+  autonomous run, the consultant stands in for every stop between the phase-2
+  gate and the phase-8 human test.
+
+## Autonomous run
+
+At the phase-2 gate, also ask which mode runs phases 3-8: **gated** (as above)
+or **autonomous**. Record the answer as a locked decision in the build log, so
+a resumed session keeps it. Phases 1 and 2 are gated in both modes: product,
+UX and system-design decisions are settled with the human before the build.
+
+In an autonomous run:
+
+- Every point that would stop for the human goes to the build loop's
+  consultant instead: phase 5's item choice, a product or behavior question,
+  a judgment gate or the retry cap during the build. Each pick is recorded as
+  a provisional ruling.
+- Nothing leaves the machine: no push, pull or merge request (draft included),
+  comment, message or upload. Reading files, the web and read-only queries is
+  allowed.
+- The run stops for the human only when the consultant escalates: an answer
+  would contradict the approved spec, or an action cannot be undone on this
+  machine.
+- The run ends at the phase-8 human test with one list: every provisional
+  ruling with its cost if wrong. A ruling the human overturns counts as a
+  correction in the evolution loop.
 
 ## Paper-trail commits
 

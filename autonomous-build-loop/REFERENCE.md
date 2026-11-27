@@ -10,6 +10,7 @@ Depth for the loop in [SKILL.md](SKILL.md). Everything here is capability-based 
 - Pre-flight scan
 - Implementer dispatch
 - Checker dispatch
+- Consultant dispatch (autonomous run)
 - Retry / escalation ladder
 - Standalone fallbacks
 - Evolving the harness
@@ -212,6 +213,19 @@ A missed requirement, wrong or fragile behaviour, or a test that asserts nothing
 
 Only the schema flows back to the orchestrator, so its context stays clean across many cycles.
 
+## Consultant dispatch (autonomous run)
+
+In an autonomous run, a question that would stop for the human goes to a consultant first. Dispatch a fresh-context agent on the strongest model available: the builder's context carries the same blind spots as the code it wrote. The prompt carries:
+
+1. the approved design spec and the contract, by path;
+2. the question and the options, with what each option does, written so an agent with no history can choose;
+3. the locked decisions, so the pick does not contradict them;
+4. the return contract: one pick, the reason, and the cost if wrong — or `escalate` with the reason when the right answer would contradict the approved spec, or the pick cannot be undone on this machine.
+
+The consultant only reads: files, web search and pages, read-only queries. A search query never carries private code. It never picks an option that sends anything off the machine; when no other option remains, the question joins the end batch and the run goes on. Record the pick as `Ruling: <pick> — <reason> — <cost if wrong>` under the note's locked decisions, marked `provisional — end batch`, and continue. `escalate` → set the note to `waiting-human` as the judgment gate describes.
+
+At the retry cap, ask the consultant once for a ruling that unblocks the task inside the spec, such as a re-scoped slice or a different design the spec allows. Run one more round on that ruling. If the round fails or the consultant escalates, stop for the human.
+
 ## Retry / escalation ladder (L5)
 
 A failed gate or a failed verdict enters the ladder. Each attempt is one fix round: resume the task's implementer with the open findings verbatim (or dispatch a fresh one with the slice, its report file, and the findings), then re-check scoped to those findings and the fix. Fixes never happen in the orchestrator's own context, where they would skip review.
@@ -273,7 +287,7 @@ Keep the run's working state where it is bound; durable lessons graduate *out* o
 
 ## Knobs (defaults, and how to change them)
 
-- **Stop boundary** — default: run to *merge-ready*, human checkpoint at every irreversible action. To allow unattended **draft** PRs, add "open draft PR" to the reversible set; keep merge, deploy, and comment-posting behind the checkpoint regardless.
+- **Stop boundary** — default: run to *merge-ready*, human checkpoint at every irreversible action. To allow unattended **draft** PRs (never in an autonomous run), add "open draft PR" to the reversible set; keep merge, deploy, and comment-posting behind the checkpoint regardless.
 - **Substrate** — default: subagent checker (above); single-context fallback documented above.
 - **State location** — default: committed `docs/loop/<slug>/` (auditable, survives machines) in native mode, the repo's own files when bound to a substrate; the failure journal is always ignored under `.loop/`. Gitignore the whole thing if you don't want loop state in history — you then forfeit cross-machine resume and the completed-task trail.
 - **Retiring slices** — default: a completed slice is deleted in its completion commit, leaving it in history only. To keep completed slices in the tree instead, mark them `done` in place; you then own the graveyard and a fresh session pays to read past it.
