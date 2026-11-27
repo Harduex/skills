@@ -1,5 +1,24 @@
 # Changelog
 
+## v5.2.0
+
+- **`using-evolving-harness` can run phases 3-8 autonomously.** At the phase-2 gate it asks
+  whether the rest runs gated or autonomous. In an autonomous run, every stop between that gate
+  and the phase-8 human test goes to a fresh-context consultant on the strongest model, and each
+  pick becomes a provisional ruling listed, with its cost if wrong, at the human test. Nothing
+  leaves the machine; the run stops only when an answer would contradict the approved spec or an
+  action cannot be undone locally. Phases 1 and 2 stay gated. Given the same three scenarios, the
+  old guide offered no mode, asked the human at phase 5 and asked to push; the new one asked for
+  the mode, sent phase 5 to the consultant and ended without pushing.
+- **`autonomous-build-loop` defines the consultant dispatch** next to its implementer and checker
+  dispatch, and under the router closes its run out at phase 8 so the mode and rulings survive.
+  On 24 real past questions, the consultant matched the human's answer 10 times (7 of 12 where the
+  human took the builder's suggestion, 3 of 12 where the human overrode it). It never picked an
+  option that leaves the machine (3 of 3), and on three spec cases it escalated or stayed inside
+  the spec each time.
+- **`investigate-before-asking` is an optional step in phases 1 and 2** when the design depends on
+  another team's system.
+
 ## v5.1.0
 
 - **New `performance-testing` skill (delivery-lifecycle).** It first decides whether a change's
