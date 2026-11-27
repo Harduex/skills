@@ -24,7 +24,7 @@ use this phase's owning skill for that step.
 | 4. Build | autonomous-build-loop (debugger on failure) | Plan scanned | verify-before-done passes |
 | 5. Simplify | code-simplification | Build gate passed | Human has picked the items to apply |
 | 6. Review | code-review -> review-fix-loop | Simplification applied | No open Critical or High finding |
-| 7. Break | break-testing | Review clean | Nothing found is left broken |
+| 7. Break | break-testing (performance-testing when the change's cost can grow with load) | Review clean | Nothing found is left broken |
 | 8. Land | distribute-fixups -> linear-git-history -> drop commit or ADR (write-design-spec) -> human test -> retro | Break clean | Human has tested |
 
 Each phase checks the one before it: Review checks the simplification, and
@@ -39,6 +39,10 @@ the break pass runs last, on the final code. Rules:
   taking the trivial path.
 - Across sessions, hand off with checkpoint. The note's first step loads this
   skill, and it names the skills the next phase needs.
+- Phase 7 decides whether to run performance-testing from the spec and the
+  diff, and states the decision and its reason in one line. A slowdown this
+  change caused goes back to phase 4 like any bug; an older one goes to the
+  human as a follow-up and does not block the gate.
 - Product and behavior questions collected during the build reach the human
   as one batch before the human test in phase 8.
 - If a phase's owning skill is not installed, say so and proceed with best
