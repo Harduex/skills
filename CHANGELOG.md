@@ -1,5 +1,11 @@
 # Changelog
 
+## v5.2.1
+
+- **`write-a-ticket` names the bug, not the fix, in a bug summary.** A story or task summary
+  still says what will be different once the work is done. A bug summary now says what goes wrong,
+  as the person who meets it would say it, so whoever triages the board recognises the symptom.
+
 ## v5.2.0
 
 - **`using-evolving-harness` can run phases 3-8 autonomously.** At the phase-2 gate it asks
