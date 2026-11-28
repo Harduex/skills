@@ -58,6 +58,17 @@ A multi-step feature or ticket you want driven end-to-end from a short prompt. *
 
 ## Capabilities by phase
 
+Before the final human handoff, invoke the leak-audit capability in gated and
+autonomous runs. Scan unpushed commits, or all local
+history before a first publication. Report remaining staged or uncommitted changes
+as unaudited unless checked separately. Route audit judgments through the active
+decision process. Record findings and provisional rulings before retiring the state.
+Re-run the audit after the retirement commit or any later commit. Include the final
+scope, result, unresolved findings, and provisional rulings in the human handoff.
+An incomplete scan or unresolved finding leaves the audit gate open. Independent
+local work can continue, and the human handoff must disclose the open gate.
+A clean audit does not authorize publication.
+
 Prefer the matching skill in your set (by its description). If none exists, use that phase's built-in fallback in [REFERENCE.md](REFERENCE.md) — the loop runs fully standalone.
 
 | Phase | Capability to invoke |
@@ -70,7 +81,7 @@ Prefer the matching skill in your set (by its description). If none exists, use 
 | Test | test-first authoring (write the failing test before the code) |
 | Check | verification — run the gates, evidence over claims; code review for the two task verdicts; formal verification for provable invariants |
 | On failure | systematic debugging (root cause before patch) |
-| Pre-handoff | git-history hygiene — linearize commits / distribute fixups; leak audit before any publish |
+| Pre-handoff | git-history hygiene — linearize commits / distribute fixups; leak audit before the final human handoff and any publish |
 | Recurrence | feed repeated failures back into your design-spec and test-planning workflows |
 | Harness evolution | lessons-capture / instruction-file optimization; skill authoring & workflow extraction — see *Evolving the harness* |
 

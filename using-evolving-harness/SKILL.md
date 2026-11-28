@@ -25,7 +25,7 @@ use this phase's owning skill for that step.
 | 5. Simplify | code-simplification | Build gate passed | Human has picked the items to apply |
 | 6. Review | code-review -> review-fix-loop | Simplification applied | No open Critical or High finding |
 | 7. Break | break-testing (performance-testing when the change's cost can grow with load) | Review clean | Nothing found is left broken |
-| 8. Land | distribute-fixups -> linear-git-history -> drop commit or ADR (write-design-spec) -> human test -> retro | Break clean | Human has tested |
+| 8. Land | distribute-fixups -> linear-git-history -> drop commit or ADR (write-design-spec) -> leak audit -> human test -> retro | Break clean | Human has tested; audit result and open findings disclosed |
 
 Each phase checks the one before it: Review checks the simplification, and
 the break pass runs last, on the final code. Rules:
@@ -77,6 +77,9 @@ In an autonomous run:
 - The run ends at the phase-8 human test with one list: every provisional
   ruling with its cost if wrong. A ruling the human overturns counts as a
   correction in the evolution loop.
+- Phase 8 audits leaks after the final local commit, before the human test,
+  even when nothing will be published. Follow the build loop's audit scope
+  and include the result and any open audit gate in the human handoff.
 
 ## Paper-trail commits
 
