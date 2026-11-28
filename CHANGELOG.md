@@ -1,5 +1,19 @@
 # Changelog
 
+## v5.2.2
+
+- **Leak audits run before the final human handoff in both run modes.** Phase 8
+  checks the final local history even when nothing will be published. Any later
+  commit requires another scan. The handoff states the inspected scope and any
+  unresolved findings or incomplete checks.
+- **Leak findings distinguish candidates from confirmed disclosures.** Delegated
+  reviewers can assess authorized evidence and record provisional decisions.
+  Unresolved findings keep the audit gate open while independent local work can
+  continue. A clean audit never authorizes publication.
+- **The scanner reports failures as incomplete instead of clean.** Positive and
+  negative controls test the scanner before the history sweep. Output redacts
+  secrets and states coverage limits. The skill also documents staged-index scans.
+
 ## v5.2.1
 
 - **`write-a-ticket` names the bug, not the fix, in a bug summary.** A story or task summary
